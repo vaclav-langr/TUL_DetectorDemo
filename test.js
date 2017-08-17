@@ -1,7 +1,7 @@
 var extractor = require('sound-parameters-extractor');
 
 function preProcess(data) {
-    var noiseCoefs = [-1, 1];
+    var noiseCoefs = [-1, 1]; //Should be only [-1, 1] at random or any number between <-1, 1>?
 
     var filtered = Array.from(data);
     var backup1 = filtered[0];
@@ -22,7 +22,7 @@ function divideIntoFrames(signal) {
     const windowSize = 400;
     const overlap = '40%';
     frames = extractor.framer(signal, windowSize, overlap);
-    frames = frames.slice(0,-3); //Throw away last 3 frames filled with zeros.
+    frames = frames.slice(0,-3); //Should throw away last 3 frames (mostly zeros or very little part of audio signal)?
     return frames;
 }
 
@@ -49,10 +49,36 @@ function computeMfcc(frames) {
     return mfccSignal;
 }
 
+function normalize(mfccFeatures, left, right) {
+    var normalized = new Array(mfccFeatures.length);
+    for(var col = 0; col < mfccFeatures.length; col++) {
+        normalized[col] = new Array(mfccFeatures[0].length);
+    }
+    var numFeatures = mfccFeatures[0].length;
+    for(var i = 0; i < numFeatures; i++) {
+        for(var j = 0; j < mfccFeatures.length; j++) {
+            var sum = 0;
+            var numElements = 0;
+            //Based on XML. Are indexes 0-49 left untouched? Same for last 50 indexes.
+            for(var k = j - left; k < j + right + 1; k++) {
+                if(k >= 0 && k < mfccFeatures.length) {
+                    sum += mfccFeatures[k][i];
+                    numElements += 1;
+                }
+            }
+            var mean = sum / numElements;
+            normalized[j][i] = mfccFeatures[j][i] / mean;
+        }
+    }
+    return normalized;
+}
+
 function extractFeatures(data) {
     var preProcessedSignal = preProcess(data);
     var framedSignal = divideIntoFrames(preProcessedSignal);
     var mfccFeatures = computeMfcc(framedSignal);
+    var normalizedFrames = normalize(mfccFeatures, 50, 50);
+    //How to detect in this step? Via DNN or a condition? If via DNN how to label frames?
 }
 
 function onChange() {
