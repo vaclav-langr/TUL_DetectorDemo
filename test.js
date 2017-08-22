@@ -26,12 +26,12 @@ function extractFeatures(data) {
 
         normalized = library.normalize(mfccFeatures);
         if(typeof normalized !== 'undefined') {
-            console.log(normalized);
+            //console.log(normalized);
         }
     }
     for(var i = 0; i < config.right; i++) {
         normalized = library.normalize(empty);
-        console.log(normalized);
+        //console.log(normalized);
     }
 }
 

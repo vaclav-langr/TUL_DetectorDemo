@@ -1,11 +1,19 @@
 var extractor = require('sound-parameters-extractor');
-fft = require('fft-js');
+fft = require('./fourier');
 resampler = require('audio-resampler');
 
 var config = require('./config').config;
 
 var buffer;
 var index = 0;
+
+var mfccConfig = {
+    fftSize : config.windowsSizePower,
+    bankCount : config.mfccCount,
+    lowFrequency : config.lowFrequency,
+    highFrequency : config.highFrequency,
+    sampleRate : config.sampleRate
+};
 
 var audioCtx = new AudioContext(); //Limited number of AudioContexts
 
@@ -36,19 +44,11 @@ const preProcess = function(data, previousLastSample, noiseCoefs) {
 }
 
 const computeMfcc = function(frame) {
-    var mfccConfig = {
-        fftSize : config.windowsSizePower / 2,
-        bankCount : config.mfccCount,
-        lowFrequency : config.lowFrequency,
-        highFrequency : config.highFrequency,
-        sampleRate : config.sampleRate
-    };
     var mfccMatrix = extractor.mfcc.construct(mfccConfig, mfccConfig.bankCount);
     var padding = Array(config.windowsSizePower - config.windowSize).fill(0);
     var paddedFrame = frame;
     paddedFrame = paddedFrame.concat(padding); //Fill to get power of two length to use FFT
-    var phasors = fft.fft(paddedFrame);
-    return mfccMatrix(fft.util.fftMag(phasors));
+    return mfccMatrix(fft.cfft(paddedFrame));
 }
 
 const resample = function (data, sampleRate, onCompleteFunction) {
