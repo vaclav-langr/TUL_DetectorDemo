@@ -7,7 +7,7 @@ var sampleRate;
 var micStream;
 var isRecording = false;
 
-const startRecording = function(onComplete) {
+const startRecording = function(onComplete, afterResample) {
     if(isRecording) {
         return;
     }
@@ -23,8 +23,7 @@ const startRecording = function(onComplete) {
             micStream = new MicrophoneStream(stream, options);
             micStream.on('data', function(chunk) {
                 var raw = MicrophoneStream.toRaw(chunk);
-                //library.resample(raw, sampleRate, console.log);
-                onComplete(raw);
+                onComplete(raw, sampleRate, afterResample);
             });
             micStream.on('format', function(format) {
                 sampleRate = format.sampleRate;

@@ -27,12 +27,12 @@ function extractFeaturesStream(data) {
 
         normalized = library.normalize(mfccFeatures);
         if(typeof normalized !== 'undefined') {
-            console.log(normalized);
+            console.log(normalized); // Detection
         }
     }
     for(var i = 0; i < config.right; i++) {
         normalized = library.normalize(empty);
-        console.log(normalized);
+        console.log(normalized); // Detection
     }
 }
 
@@ -41,23 +41,26 @@ function extractFeaturesFile(data) {
     var normalized, mfccFeatures;
 
     var preProcessed = library.preProcess(data, 0, [-1, 1]);
+
     var framedSignal = extractor.framer(preProcessed, config.windowSize, config.overlapPercent);
+    framedSignal = framedSignal.slice(0, -3);
 
     for(var i = 0; i < framedSignal.length; i++) {
         mfccFeatures = library.computeMfcc(framedSignal[i]);
 
         normalized = library.normalize(mfccFeatures);
         if(typeof normalized !== 'undefined') {
-            console.log(normalized);
+            console.log(normalized); // Detection
         }
     }
     for(var i = 0; i < config.right; i++) {
         normalized = library.normalize(empty);
-        console.log(normalized);
+        console.log(normalized); // Detection
     }
 }
 
 function onChange(file, onComplete) {
+    library.clearBuffer();
     var fr = new FileReader();
     fr.onload = function () {
         var wav = require('node-wav');

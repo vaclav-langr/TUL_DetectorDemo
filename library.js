@@ -4,7 +4,7 @@ resampler = require('audio-resampler');
 
 var config = require('./config').config;
 
-var buffer;
+var bufferNorm;
 var index = 0;
 
 var mfccConfig = {
@@ -64,29 +64,31 @@ const resample = function (data, sampleRate, onCompleteFunction) {
 }
 
 const normalize = function (data) {
-    if(typeof buffer === 'undefined') {
-        buffer = new Array(config.left + 1 + config.right);
-        for(var i = 0; i < buffer.length; i++) {
-            buffer[i] = new Array(data.length).fill(0);
-        }
-    }
     index = index + 1;
-    for(var i = 0; i < buffer.length - 1; i++) {
-        buffer[i] = buffer[i + 1];
+    for(var i = 0; i < bufferNorm.length - 1; i++) {
+        bufferNorm[i] = bufferNorm[i + 1];
     }
-    buffer[buffer.length - 1] = data;
+    bufferNorm[bufferNorm.length - 1] = data;
     if(index > config.right) {
         var normalized = new Array(data.length);
         var sum, mean;
         for(var i = 0; i < data.length; i++) {
             sum = 0;
-            for(var j = 0; j < buffer.length; j++) {
-                sum = sum + buffer[j][i];
+            for(var j = 0; j < bufferNorm.length; j++) {
+                sum = sum + bufferNorm[j][i];
             }
-            mean = sum / buffer.length;
-            normalized[i] = buffer[config.left][i] / mean;
+            mean = sum / bufferNorm.length;
+            normalized[i] = bufferNorm[config.left][i] / mean;
         }
         return normalized;
+    }
+};
+
+const clearBuffer = function () {
+    index = 0;
+    bufferNorm = new Array(config.left + 1 + config.right);
+    for(var i = 0; i < bufferNorm.length; i++) {
+        bufferNorm[i] = new Array(config.mfccCount).fill(0);
     }
 };
 
@@ -94,5 +96,6 @@ module.exports = {
     preProcess,
     computeMfcc,
     resample,
-    normalize
+    normalize,
+    clearBuffer
 };
