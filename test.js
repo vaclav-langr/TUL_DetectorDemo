@@ -9,6 +9,7 @@ function extractFeaturesStream(data) {
     var buffer = new Array(config.windowSize).fill(0);
     var lastSample = 0;
     var frame, normalized, preProcessedSignal, mfccFeatures;
+    var result = [];
 
     for(var i = 0; i < paddedSignal.length / config.overlap; i++) {
         frame = paddedSignal.slice(i*config.overlap, (i+1)*config.overlap);
@@ -27,36 +28,48 @@ function extractFeaturesStream(data) {
 
         normalized = library.normalize(mfccFeatures);
         if(typeof normalized !== 'undefined') {
-            console.log(normalized); // Detection
+            result.push(normalized);
         }
     }
     for(var i = 0; i < config.right; i++) {
         normalized = library.normalize(empty);
-        console.log(normalized); // Detection
+        result.push(normalized);
     }
+    console.log(result);
+    document.getElementById("stream-input").value = "";
 }
 
 function extractFeaturesFile(data) {
-    var empty = new Array(config.mfccCount).fill(0);
+    var empty = new Array(config.mfccCount * 3).fill(0);
     var normalized, mfccFeatures;
 
     var preProcessed = library.preProcess(data, 0, [-1, 1]);
 
     var framedSignal = extractor.framer(preProcessed, config.windowSize, config.overlapPercent);
     framedSignal = framedSignal.slice(0, -3);
+    var windowedFrame;
+    var result = [];
 
     for(var i = 0; i < framedSignal.length; i++) {
-        mfccFeatures = library.computeMfcc(framedSignal[i]);
-
-        normalized = library.normalize(mfccFeatures);
-        if(typeof normalized !== 'undefined') {
-            console.log(normalized); // Detection
-        }
+        windowedFrame = library.applyHammingWindow(framedSignal[i])
+        mfccFeatures = library.computeMfcc(windowedFrame);
+        result.push(mfccFeatures);
+    }
+    //var delta = extractor.parameters.deltaCustomAllSignal(result);
+    //var deltaDelta = extractor.parameters.deltaCustomAllSignal(delta);
+    for(var i = 0; i < result.length; i++) {
+        //result[i] = result[i].concat(delta[i]);
+        //result[i] = result[i].concat(deltaDelta[i]);
+    }
+    for(var i = 0; i < result.length; i++) {
+        normalized = library.normalize(result[i]);
+        console.log(normalized);
     }
     for(var i = 0; i < config.right; i++) {
         normalized = library.normalize(empty);
-        console.log(normalized); // Detection
+        console.log(normalized);
     }
+    document.getElementById("file-input").value = "";
 }
 
 function onChange(file, onComplete) {

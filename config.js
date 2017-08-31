@@ -7,7 +7,7 @@ const config = {
     windowsSizePower : 0,
     overlapPercent : 0,
     preemCoef : 0.97,
-    mfccCount : 39,
+    mfccCount : 13,
     sampleRate : 16000,
     lowFrequency : 1,
     highFrequency: 8000

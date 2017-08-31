@@ -16,9 +16,8 @@ const startRecording = function(onComplete, afterResample) {
         .then(function(stream) {
             var options = {
                 objectMode: false,
-                bufferSize: 512 //Can I throw away 10 samples from each frame? (cca 0.000625 second)
-                                // 512 samples with 48 kHz sample rate is 170 samples with 16 kHz sample rate
-                                // Need only 160 (windows shift)
+                bufferSize: 512 // Circular buffer. Copy to another buffer.
+                                // On callback copy to another array
             };
             micStream = new MicrophoneStream(stream, options);
             micStream.on('data', function(chunk) {

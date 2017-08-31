@@ -9,8 +9,6 @@ var empty = new Array(config.mfccCount).fill(0);
 function extractFeatures(data) {
     var normalized, preProcessedSignal, mfccFeatures;
 
-    data = data.slice(0, 160); // Question: Can I throw away 10 samples for each 170 new samples?
-
     preProcessedSignal = library.preProcess(data, lastSample, [-1,1]);
     lastSample = data[data.length - 1];
 
