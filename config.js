@@ -7,10 +7,12 @@ const config = {
     windowsSizePower : 0,
     overlapPercent : 0,
     preemCoef : 0.97,
-    mfccCount : 13,
+    mfccCount : 12,
     sampleRate : 16000,
-    lowFrequency : 1,
-    highFrequency: 8000
+    lowFrequency : 0,
+    highFrequency : 8000,
+    lifter : 22,
+    channels : 24
 };
 config.overlapPercent = (100 * config.overlap / config.windowSize) + '%';
 

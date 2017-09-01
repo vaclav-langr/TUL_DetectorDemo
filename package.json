@@ -28,10 +28,8 @@
     "fs": "0.0.1-security",
     "get-user-media-promise": "^1.1.1",
     "keras-js": "^0.3.0",
-    "meyda": "^4.0.5",
-    "mfcc": "0.0.3",
+    "linspace": "^1.0.0",
     "microphone-stream": "^3.0.7",
-    "node-mfcc": "0.0.2",
     "sound-parameters-extractor": "^1.4.0"
   }
 }

@@ -43,7 +43,7 @@ function extractFeaturesFile(data) {
     var empty = new Array(config.mfccCount * 3).fill(0);
     var normalized, mfccFeatures;
 
-    var preProcessed = library.preProcess(data, 0, [-1, 1]);
+    var preProcessed = library.preProcess(data, [-1, 1]);
 
     var framedSignal = extractor.framer(preProcessed, config.windowSize, config.overlapPercent);
     framedSignal = framedSignal.slice(0, -3);
@@ -51,24 +51,28 @@ function extractFeaturesFile(data) {
     var result = [];
 
     for(var i = 0; i < framedSignal.length; i++) {
-        windowedFrame = library.applyHammingWindow(framedSignal[i])
+        windowedFrame = library.applyHammingWindow(framedSignal[i]);
         mfccFeatures = library.computeMfcc(windowedFrame);
         result.push(mfccFeatures);
     }
-    //var delta = extractor.parameters.deltaCustomAllSignal(result);
-    //var deltaDelta = extractor.parameters.deltaCustomAllSignal(delta);
+    var mean;
+    for(var i = 0; i < result[0].length; i++) {
+        mean = 0;
+        for(var j = 0; j < result.length; j++) {
+            mean += result[j][i];
+        }
+        mean /= result.length;
+        for(var j = 0; j < result.length; j++) {
+            result[j][i] -= mean;
+        }
+    }
+    var delta = extractor.parameters.deltaCustomAllSignal(result);
+    var deltaDelta = extractor.parameters.deltaCustomAllSignal(delta);
     for(var i = 0; i < result.length; i++) {
-        //result[i] = result[i].concat(delta[i]);
-        //result[i] = result[i].concat(deltaDelta[i]);
+        result[i] = result[i].concat(delta[i]);
+        result[i] = result[i].concat(deltaDelta[i]);
     }
-    for(var i = 0; i < result.length; i++) {
-        normalized = library.normalize(result[i]);
-        console.log(normalized);
-    }
-    for(var i = 0; i < config.right; i++) {
-        normalized = library.normalize(empty);
-        console.log(normalized);
-    }
+    console.log(result)
     document.getElementById("file-input").value = "";
 }
 
