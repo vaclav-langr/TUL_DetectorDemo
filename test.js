@@ -40,7 +40,7 @@ function extractFeaturesStream(data) {
 }
 
 function extractFeaturesFile(data) {
-    var empty = new Array(config.mfccCount * 3).fill(0);
+    var empty = new Array((config.mfccCount + 1) * 3).fill(0);
     var normalized, mfccFeatures;
 
     var preProcessed = library.preProcess(data, [-1, 1]);
@@ -66,8 +66,8 @@ function extractFeaturesFile(data) {
             result[j][i] -= mean;
         }
     }
-    var delta = extractor.parameters.deltaCustomAllSignal(result);
-    var deltaDelta = extractor.parameters.deltaCustomAllSignal(delta);
+    var delta = library.computeDelta(result);
+    var deltaDelta = library.computeDelta(delta);
     for(var i = 0; i < result.length; i++) {
         result[i] = result[i].concat(delta[i]);
         result[i] = result[i].concat(deltaDelta[i]);

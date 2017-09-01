@@ -84,12 +84,11 @@ const preProcess = function(data, noiseCoefs) {
     var filtered = new Array(data.length);
     filtered[0] = Math.floor(data[0]*32768) - config.preemCoef*Math.floor(data[0]*32768);
     for(var i = 1; i < filtered.length; i++) {
-        filtered[i] = Math.floor(data[i]*32768) - config.preemCoef*Math.floor(data[i-1]*32768);
+        filtered[i] = Math.floor(data[i]*32768) - config.preemCoef*Math.floor(data[i-1]*32768) + generator();
     }
 
-    //var signal = filtered.map((val, index) => val + generator());
     return filtered;
-}
+};
 
 const applyHammingWindow = function (data) {
     var result = new Array(data.length);
@@ -99,7 +98,7 @@ const applyHammingWindow = function (data) {
         result[i] = data[i] * windowSample;
     }
     return result;
-}
+};
 
 const computeMfcc = function(frame) {
     if(typeof filters === 'undefined') {
@@ -159,7 +158,7 @@ const computeMfcc = function(frame) {
     }
     mfccVar = mfccVar.concat(energy);
     return mfccVar;
-}
+};
 
 const resample = function (data, sampleRate, onCompleteFunction) {
     if(sampleRate != config.sampleRate) {
@@ -171,7 +170,7 @@ const resample = function (data, sampleRate, onCompleteFunction) {
     } else {
         onCompleteFunction(data);
     }
-}
+};
 
 const normalize = function (data) {
     index = index + 1;
@@ -202,11 +201,39 @@ const clearBuffer = function () {
     }
 };
 
+const computeDelta = function(data) {
+    var norm = 0;
+    var w1, w2;
+    for(var i = 1; i < config.deltaWindow + 1; i++) {
+        norm += (i * i);
+    }
+    norm *= 2;
+    var deltas = new Array(data.length);
+    for(var i = 0; i < data.length; i++) {
+        deltas[i] = new Array(data[i].length).fill(0);
+        for(var j = 1; j < config.deltaWindow + 1; j++) {
+            w1 = i - j;
+            w2 = i + j;
+            if(w1 < 0) {
+                w1 = 0;
+            }
+            if(w2 >= data.length) {
+                w2 = data.length - 1;
+            }
+            for(var k = 0; k < data[i].length; k++) {
+                deltas[i][k] += (j * (data[w2][k] - data[w1][k])) / norm;
+            }
+        }
+    }
+    return deltas;
+};
+
 module.exports = {
     preProcess,
     computeMfcc,
     resample,
     normalize,
     clearBuffer,
-    applyHammingWindow
+    applyHammingWindow,
+    computeDelta
 };

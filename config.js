@@ -12,7 +12,8 @@ const config = {
     lowFrequency : 0,
     highFrequency : 8000,
     lifter : 22,
-    channels : 24
+    channels : 24,
+    deltaWindow : 2
 };
 config.overlapPercent = (100 * config.overlap / config.windowSize) + '%';
 
