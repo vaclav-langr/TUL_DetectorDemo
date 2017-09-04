@@ -1,41 +1,26 @@
 var library = require('./library');
 var config = require('./config').config;
 var extractor = require('sound-parameters-extractor');
+var ShiftBuffer = require('./ShiftBuffer').ShiftBuffer;
+var sbuffer = new ShiftBuffer(extractFeaturesStream);
+
+function splitStreamLikeData(data) {
+    var toPad = 170 - (data.length % 170);
+    data = Array.from(data).concat(new Array(toPad).fill(0));
+
+    var frame;
+    for(var i = 0; i < data.length / 170; i++) {
+        frame = data.slice(i*170, (i+1)*170);
+        frame = library.preProcess(frame, config.noiseCoefs);
+        sbuffer.addData(frame);
+    }
+}
 
 function extractFeaturesStream(data) {
-    var empty = new Array(config.mfccCount).fill(0);
-    var padding = new Array(config.overlap - (data.length % config.overlap)).fill(0);
-    var paddedSignal = Array.from(data).concat(padding);
-    var buffer = new Array(config.windowSize).fill(0);
-    var lastSample = 0;
-    var frame, normalized, preProcessedSignal, mfccFeatures;
-    var result = [];
-
-    for(var i = 0; i < paddedSignal.length / config.overlap; i++) {
-        frame = paddedSignal.slice(i*config.overlap, (i+1)*config.overlap);
-
-        preProcessedSignal = library.preProcess(frame, lastSample, config.noiseCoefs);
-        lastSample = frame[frame.length - 1];
-
-        for(var j = 0; j < config.overlap; j++) {
-            buffer[j] = buffer[j + config.overlap];
-        }
-        for(var j = 0; j < config.overlap; j++) {
-            buffer[j + config.windowSize - config.overlap] = preProcessedSignal[j];
-        }
-
-        mfccFeatures = library.computeMfcc(buffer);
-
-        normalized = library.normalize(mfccFeatures);
-        if(typeof normalized !== 'undefined') {
-            result.push(normalized);
-        }
-    }
-    for(var i = 0; i < config.right; i++) {
-        normalized = library.normalize(empty);
-        result.push(normalized);
-    }
-    console.log(result);
+    var windowedSignal = library.applyHammingWindow(data);
+    var mfccFeatures = library.computeMfcc(windowedSignal);
+    var normalized = library.normalize(mfccFeatures);
+    console.log(normalized);
     document.getElementById("stream-input").value = "";
 }
 
@@ -43,20 +28,30 @@ function extractFeaturesFile(data) {
     var empty = new Array((config.mfccCount + 1) * 3).fill(0);
     var normalized, mfccFeatures;
 
-    var preProcessed = library.preProcess(data, [-1, 1]);
+    var preProcessed = library.preProcess(data, config.noiseCoefs);
 
     var framedSignal = extractor.framer(preProcessed, config.windowSize, config.overlapPercent);
-    framedSignal = framedSignal.slice(0, -3);
     var windowedFrame;
-    var result = [];
+    var result = new Array(framedSignal.length);
 
     for(var i = 0; i < framedSignal.length; i++) {
         windowedFrame = library.applyHammingWindow(framedSignal[i]);
         mfccFeatures = library.computeMfcc(windowedFrame);
-        result.push(mfccFeatures);
+        result[i] = mfccFeatures;
     }
+
+    //should be before or after normalization?
+    var delta = library.computeDelta(result);
+    var deltaDelta = library.computeDelta(delta);
+    for(var i = 0; i < result.length; i++) {
+        result[i] = result[i].concat(delta[i]);
+        result[i] = result[i].concat(deltaDelta[i]);
+    }
+
+    //normalization, only used while training/testing with a whole file
+
     var mean;
-    for(var i = 0; i < result[0].length; i++) {
+    for(var i = 0; i < config.mfccCount + 1; i++) {
         mean = 0;
         for(var j = 0; j < result.length; j++) {
             mean += result[j][i];
@@ -66,13 +61,7 @@ function extractFeaturesFile(data) {
             result[j][i] -= mean;
         }
     }
-    var delta = library.computeDelta(result);
-    var deltaDelta = library.computeDelta(delta);
-    for(var i = 0; i < result.length; i++) {
-        result[i] = result[i].concat(delta[i]);
-        result[i] = result[i].concat(deltaDelta[i]);
-    }
-    console.log(result)
+    console.log(result);
     document.getElementById("file-input").value = "";
 }
 
@@ -88,7 +77,7 @@ function onChange(file, onComplete) {
 }
 
 document.getElementById("stream-input").addEventListener("change", function () {
-    onChange(document.getElementById("stream-input").files[0], extractFeaturesStream);
+    onChange(document.getElementById("stream-input").files[0], splitStreamLikeData);
 });
 
 document.getElementById("file-input").addEventListener("change", function () {

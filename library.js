@@ -82,7 +82,7 @@ const preProcess = function(data, noiseCoefs) {
     }
 
     var filtered = new Array(data.length);
-    filtered[0] = Math.floor(data[0]*32768) - config.preemCoef*Math.floor(data[0]*32768);
+    filtered[0] = Math.floor(data[0]*32768) - config.preemCoef*Math.floor(data[0]*32768) + generator();
     for(var i = 1; i < filtered.length; i++) {
         filtered[i] = Math.floor(data[i]*32768) - config.preemCoef*Math.floor(data[i-1]*32768) + generator();
     }
@@ -173,31 +173,31 @@ const resample = function (data, sampleRate, onCompleteFunction) {
 };
 
 const normalize = function (data) {
+    var normalized = new Array(data.length).fill(0);
     index = index + 1;
     for(var i = 0; i < bufferNorm.length - 1; i++) {
-        bufferNorm[i] = bufferNorm[i + 1];
+        bufferNorm[i] = bufferNorm[i + 1].slice();
     }
-    bufferNorm[bufferNorm.length - 1] = data;
+    bufferNorm[bufferNorm.length - 1] = data.slice();
     if(index > config.right) {
-        var normalized = new Array(data.length);
-        var sum, mean;
+        var mean;
         for(var i = 0; i < data.length; i++) {
-            sum = 0;
+            mean = 0;
             for(var j = 0; j < bufferNorm.length; j++) {
-                sum = sum + bufferNorm[j][i];
+                mean = mean + bufferNorm[j][i];
             }
-            mean = sum / bufferNorm.length;
+            mean /= bufferNorm.length;
             normalized[i] = bufferNorm[config.left][i] / mean;
         }
-        return normalized;
     }
+    return normalized;
 };
 
 const clearBuffer = function () {
     index = 0;
     bufferNorm = new Array(config.left + 1 + config.right);
     for(var i = 0; i < bufferNorm.length; i++) {
-        bufferNorm[i] = new Array(config.mfccCount * 3).fill(0);
+        bufferNorm[i] = new Array((config.mfccCount + 1)* 3).fill(0);
     }
 };
 
