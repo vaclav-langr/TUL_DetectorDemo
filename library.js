@@ -4,7 +4,7 @@ var linspace = require('linspace');
 var audioCtx = new AudioContext(); //Limited number of AudioContexts
 var config = require('./config').config;
 var index = 0;
-var filters, dct, lifter, bufferNorm;
+var filters, bufferNorm;
 
 function mel2hz(mel) {
     return 700 * (Math.exp(mel / 1127) - 1);
@@ -15,53 +15,39 @@ function hz2mel(hz) {
 }
 
 function createFilters() {
-    filters = new Array(Math.floor(config.windowsSizePower / 2));
+    filters = new Array(config.channels);
     for(var i = 0; i < filters.length; i++) {
-        filters[i] = new Array(config.channels).fill(0);
+        filters[i] = new Array(Math.floor(config.windowsSizePower / 2 + 1)).fill(0);
     }
 
     var lowMel = hz2mel(config.lowFrequency);
     var highMel = hz2mel(config.highFrequency);
 
-    var freqCoefs = linspace(lowMel, highMel, config.channels + 2);
+    var freqCoefs = linspace(lowMel, highMel, config.channels + 2);//Generating coeficients in mel scale
     for(var i = 0; i < freqCoefs.length; i++) {
-        freqCoefs[i] = Math.floor(mel2hz(freqCoefs[i]) / config.sampleRate * config.windowsSizePower);
+        freqCoefs[i] = mel2hz(freqCoefs[i]);//Transforming to frequency
+        freqCoefs[i] = freqCoefs[i]/config.highFrequency*(config.windowsSizePower/2 + 1);
+        freqCoefs[i] = Math.round(freqCoefs[i]);
     }
-    var p1, p2, linVar, index;
+    freqCoefs[0] = 1;
+
+    var l, c, h, value;
     for(var i = 0; i < config.channels; i++) {
-        p1 = freqCoefs[i+1] - freqCoefs[i];
-        p2 = freqCoefs[i+2] - freqCoefs[i+1];
+        l = freqCoefs[i]-1;
+        c = freqCoefs[i+1]-1;
+        h = freqCoefs[i+2]-1;
 
-        linVar = linspace(0, 1, p1 + 1);
-        index = 0;
-        for (var j = freqCoefs[i]; j < freqCoefs[i+1]+1; j++) {
-            filters[j][i] = linVar[index++];
+        value = 0;
+        for(var j = l; j < c; j++) {
+            filters[i][j] = value/(c-l);
+            value++;
         }
 
-        linVar = linspace(1, 0, p2 + 1);
-        index = 0;
-        for (var j = freqCoefs[i+1]; j < freqCoefs[i+2]+1; j++) {
-            filters[j][i] = linVar[index++];
+        value = h - c;
+        for(var j = c; j < h; j++) {
+            filters[i][j] = value / (h-c);
+            value--;
         }
-    }
-}
-
-function createDct() {
-    dct = new Array(config.channels);
-    for(var i = 0; i < dct.length; i++) {
-        dct[i] = new Array(config.mfccCount);
-    }
-    for(var i = 0; i < config.mfccCount; i++) {
-        for(var j = 0; j < config.channels; j++) {
-            dct[j][i] = Math.cos((i + 1) * Math.PI / config.channels * (j + 0.5));
-        }
-    }
-}
-
-function createLifter() {
-    lifter = new Array(config.mfccCount);
-    for(var i = 0; i < lifter.length; i++) {
-        lifter[i] = 1 + (config.lifter / 2) * Math.sin(Math.PI * (1 + i) / config.lifter);
     }
 }
 
@@ -80,11 +66,21 @@ const preProcess = function(data, noiseCoefs) {
     } else {
         generator = generateRandomFromCoefs.bind({coefs:noiseCoefs});
     }
+    var fullSize = new Array(data.length);
+    for(var i = 0; i < fullSize.length; i++) {
+        fullSize[i] = data[i] * 32768;
+        if(fullSize[i] < -32768) {
+            fullSize[i] = -32768;
+        }
+        if(fullSize[i] > 32768) {
+            fullSize[i] = 32768;
+        }
+    }
 
     var filtered = new Array(data.length);
-    filtered[0] = Math.floor(data[0]*32768) - config.preemCoef*Math.floor(data[0]*32768) + generator();
+    filtered[0] = fullSize[0] - config.preemCoef*fullSize[0] + generator();
     for(var i = 1; i < filtered.length; i++) {
-        filtered[i] = Math.floor(data[i]*32768) - config.preemCoef*Math.floor(data[i-1]*32768) + generator();
+        filtered[i] = fullSize[i] - config.preemCoef*fullSize[i-1] + generator();
     }
 
     return filtered;
@@ -104,60 +100,31 @@ const computeMfcc = function(frame) {
     if(typeof filters === 'undefined') {
         createFilters();
     }
-    if(typeof dct === 'undefined') {
-        createDct();
-    }
-    if(typeof lifter === 'undefined') {
-        createLifter();
-    }
     var padding = Array(config.windowsSizePower - config.windowSize).fill(0);
     var paddedFrame = frame.slice();
     paddedFrame = paddedFrame.concat(padding); //Fill to get power of two length to use FFT
 
     var phasors = fft.fft(paddedFrame);
-    var mags = fft.util.fftMag(phasors);
+    var mags = new Array(Math.floor(config.windowsSizePower / 2 + 1));
+    var real, imag;
+    for(var i = 0; i < mags.length; i++) {
+        real = Math.abs(phasors[i][0]);
+        imag = Math.abs(phasors[i][1]);
+        mags[i] = Math.sqrt(real*real + imag*imag);
+    }
 
     var melspec = new Array(config.channels);
     for(var i = 0; i < melspec.length; i++) {
         melspec[i] = 0;
         for(var j = 0; j < mags.length; j++) {
-            melspec[i] += (mags[j] * filters[j][i]);
+            melspec[i] += (mags[j] * filters[i][j]);
         }
         if(melspec[i] < 0.001) {
             melspec[i] = 0.001;
         }
         melspec[i] = Math.log(melspec[i]);
     }
-
-    var mfccVar = new Array(config.mfccCount); //First part of result
-    for(var i = 0; i < mfccVar.length; i++) {
-        mfccVar[i] = 0;
-        for(var j = 0; j < melspec.length; j++) {
-            mfccVar[i] += (melspec[j] * dct[j][i]);
-        }
-        mfccVar[i] *= Math.sqrt(2 / config.channels);
-        mfccVar[i] *= lifter[i];
-        if(isNaN(mfccVar[i])) {
-            mfccVar[i] = 0;
-        }
-        if(mfccVar[i] == Number.POSITIVE_INFINITY || mfccVar[i] == Number.NEGATIVE_INFINITY) {
-            mfccVar[i] = 0;
-        }
-    }
-
-    var energy = 0;
-    for(var i = 0; i < melspec.length; i++) {
-        energy += melspec[i];
-    }
-    energy *= Math.sqrt(2 / config.channels);
-    if(isNaN(energy)) {
-        energy = 0;
-    }
-    if(energy == Number.POSITIVE_INFINITY || energy == Number.NEGATIVE_INFINITY) {
-        energy = 0;
-    }
-    mfccVar = mfccVar.concat(energy);
-    return mfccVar;
+    return melspec;
 };
 
 const resample = function (data, sampleRate, onCompleteFunction) {
@@ -187,7 +154,7 @@ const normalize = function (data) {
                 mean = mean + bufferNorm[j][i];
             }
             mean /= bufferNorm.length;
-            normalized[i] = bufferNorm[config.left][i] / mean;
+            normalized[i] = bufferNorm[config.left][i] - mean;
         }
     }
     return normalized;
@@ -197,7 +164,7 @@ const clearBuffer = function () {
     index = 0;
     bufferNorm = new Array(config.left + 1 + config.right);
     for(var i = 0; i < bufferNorm.length; i++) {
-        bufferNorm[i] = new Array((config.mfccCount + 1)* 3).fill(0);
+        bufferNorm[i] = new Array(config.channels).fill(0);
     }
 };
 
@@ -234,6 +201,5 @@ module.exports = {
     resample,
     normalize,
     clearBuffer,
-    applyHammingWindow,
-    computeDelta
+    applyHammingWindow
 };
