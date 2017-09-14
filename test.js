@@ -3,6 +3,7 @@ var config = require('./config').config;
 var extractor = require('sound-parameters-extractor');
 var ShiftBuffer = require('./ShiftBuffer').ShiftBuffer;
 var sbuffer = new ShiftBuffer(extractFeaturesStream);
+const fft = require('fft-js');
 
 function splitStreamLikeData(data) {
     var toPad = 170 - (data.length % 170);
@@ -18,17 +19,16 @@ function splitStreamLikeData(data) {
 
 function extractFeaturesStream(data) {
     var windowedSignal = library.applyHammingWindow(data);
-    var mfccFeatures = library.computeMfcc(windowedSignal);
-    var normalized = library.normalize(mfccFeatures);
-    console.log(mfccFeatures);
+    var mfbankFeatures = library.computeMfbank(windowedSignal);
+    console.log(library.normalize(mfbankFeatures));
     document.getElementById("stream-input").value = "";
 }
 
 function extractFeaturesFile(data) {
     var empty = new Array(config.channels).fill(0);
-    var normalized, mfccFeatures;
+    var normalized, mfbankFeatures;
 
-    var preProcessed = library.preProcess(data);
+    var preProcessed = library.preProcess(data, config.noiseCoefs);
 
     var framedSignal = extractor.framer(preProcessed, config.windowSize, config.overlapPercent);
     var windowedFrame;
@@ -36,11 +36,10 @@ function extractFeaturesFile(data) {
 
     for(var i = 0; i < framedSignal.length; i++) {
         windowedFrame = library.applyHammingWindow(framedSignal[i]);
-        mfccFeatures = library.computeMfcc(windowedFrame);
-        result[i] = mfccFeatures;
+        mfbankFeatures = library.computeMfbank(windowedFrame);
+        result[i] = mfbankFeatures;
     }
 
-    //normalization, only used while training/testing with a whole file
     for(var i = 0; i < result.length; i++) {
         //console.log(library.normalize(result[i]));
     }

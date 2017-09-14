@@ -48,6 +48,7 @@ function createFilters() {
             filters[i][j] = value / (h-c);
             value--;
         }
+        console.log(filters[i].join(";"))
     }
 }
 
@@ -66,6 +67,7 @@ const preProcess = function(data, noiseCoefs) {
     } else {
         generator = generateRandomFromCoefs.bind({coefs:noiseCoefs});
     }
+
     var fullSize = new Array(data.length);
     for(var i = 0; i < fullSize.length; i++) {
         fullSize[i] = data[i] * 32768;
@@ -75,12 +77,13 @@ const preProcess = function(data, noiseCoefs) {
         if(fullSize[i] > 32768) {
             fullSize[i] = 32768;
         }
+        //fullSize[i] += generator()
     }
 
-    var filtered = new Array(data.length);
-    filtered[0] = fullSize[0] - config.preemCoef*fullSize[0] + generator();
+    var filtered = new Array(fullSize.length);
+    filtered[0] = fullSize[0] - config.preemCoef*fullSize[0];
     for(var i = 1; i < filtered.length; i++) {
-        filtered[i] = fullSize[i] - config.preemCoef*fullSize[i-1] + generator();
+        filtered[i] = fullSize[i] - config.preemCoef*fullSize[i-1];
     }
 
     return filtered;
@@ -96,7 +99,7 @@ const applyHammingWindow = function (data) {
     return result;
 };
 
-const computeMfcc = function(frame) {
+const computeMfbank = function(frame) {
     if(typeof filters === 'undefined') {
         createFilters();
     }
@@ -111,11 +114,12 @@ const computeMfcc = function(frame) {
         real = Math.abs(phasors[i][0]);
         imag = Math.abs(phasors[i][1]);
         mags[i] = Math.sqrt(real*real + imag*imag);
+        //mags[i] *= mags[i];
+        //mags[i] /= config.windowsSizePower;
     }
 
-    var melspec = new Array(config.channels);
+    var melspec = new Array(config.channels).fill(0);
     for(var i = 0; i < melspec.length; i++) {
-        melspec[i] = 0;
         for(var j = 0; j < mags.length; j++) {
             melspec[i] += (mags[j] * filters[i][j]);
         }
@@ -168,36 +172,9 @@ const clearBuffer = function () {
     }
 };
 
-const computeDelta = function(data) {
-    var norm = 0;
-    var w1, w2;
-    for(var i = 1; i < config.deltaWindow + 1; i++) {
-        norm += (i * i);
-    }
-    norm *= 2;
-    var deltas = new Array(data.length);
-    for(var i = 0; i < data.length; i++) {
-        deltas[i] = new Array(data[i].length).fill(0);
-        for(var j = 1; j < config.deltaWindow + 1; j++) {
-            w1 = i - j;
-            w2 = i + j;
-            if(w1 < 0) {
-                w1 = 0;
-            }
-            if(w2 >= data.length) {
-                w2 = data.length - 1;
-            }
-            for(var k = 0; k < data[i].length; k++) {
-                deltas[i][k] += (j * (data[w2][k] - data[w1][k])) / norm;
-            }
-        }
-    }
-    return deltas;
-};
-
 module.exports = {
     preProcess,
-    computeMfcc,
+    computeMfbank,
     resample,
     normalize,
     clearBuffer,
