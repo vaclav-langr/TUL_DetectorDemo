@@ -15,40 +15,30 @@ function hz2mel(hz) {
 }
 
 function createFilters() {
+    var low_freq_mel = hz2mel(config.lowFrequency);
+    var high_freq_mel = hz2mel(config.highFrequency);
+    var mels = linspace(low_freq_mel, high_freq_mel, config.channels + 2);
+    var hzs = mels.slice();
+    for(var i = 0; i < hzs.length; i++) {
+        hzs[i] = mel2hz(hzs[i]);
+    }
+    var bins = hzs.slice();
+    for(var i = 0; i < bins.length; i++) {
+        bins[i] = Math.floor((config.windowsSizePower + 1) * hzs[i] / config.sampleRate);
+    }
+
     filters = new Array(config.channels);
     for(var i = 0; i < filters.length; i++) {
         filters[i] = new Array(Math.floor(config.windowsSizePower / 2 + 1)).fill(0);
     }
 
-    var lowMel = hz2mel(config.lowFrequency);
-    var highMel = hz2mel(config.highFrequency);
-
-    var freqCoefs = linspace(lowMel, highMel, config.channels + 2);//Generating coeficients in mel scale
-    for(var i = 0; i < freqCoefs.length; i++) {
-        freqCoefs[i] = mel2hz(freqCoefs[i]);//Transforming to frequency
-        freqCoefs[i] = freqCoefs[i]/config.highFrequency*(config.windowsSizePower/2 + 1);
-        freqCoefs[i] = Math.round(freqCoefs[i]);
-    }
-    freqCoefs[0] = 1;
-
-    var l, c, h, value;
-    for(var i = 0; i < config.channels; i++) {
-        l = freqCoefs[i]-1;
-        c = freqCoefs[i+1]-1;
-        h = freqCoefs[i+2]-1;
-
-        value = 0;
-        for(var j = l; j < c; j++) {
-            filters[i][j] = value/(c-l);
-            value++;
+    for(var i = 1; i < config.channels + 1; i++) {
+        for(var j = bins[i - 1]; j < bins[i]; j++) {
+            filters[i - 1][j] = (j - bins[i - 1]) / (bins[i] - bins[i - 1]);
         }
-
-        value = h - c;
-        for(var j = c; j < h; j++) {
-            filters[i][j] = value / (h-c);
-            value--;
+        for(var j = bins[i]; j < bins[i + 1]; j++) {
+            filters[i - 1][j] = (bins[i + 1] - j) / (bins[i + 1] - bins[i]);
         }
-        console.log(filters[i].join(";"))
     }
 }
 
@@ -77,7 +67,7 @@ const preProcess = function(data, noiseCoefs) {
         if(fullSize[i] > 32768) {
             fullSize[i] = 32768;
         }
-        //fullSize[i] += generator()
+        fullSize[i] += generator()
     }
 
     var filtered = new Array(fullSize.length);
@@ -114,8 +104,6 @@ const computeMfbank = function(frame) {
         real = Math.abs(phasors[i][0]);
         imag = Math.abs(phasors[i][1]);
         mags[i] = Math.sqrt(real*real + imag*imag);
-        //mags[i] *= mags[i];
-        //mags[i] /= config.windowsSizePower;
     }
 
     var melspec = new Array(config.channels).fill(0);
