@@ -12,7 +12,7 @@ function splitStreamLikeData(data) {
     var frame;
     for(var i = 0; i < data.length / 170; i++) {
         frame = data.slice(i*170, (i+1)*170);
-        frame = library.preProcess(frame, config.noiseCoefs);
+        frame = library.preProcess(frame);
         sbuffer.addData(sbuffer, frame);
     }
 }
@@ -28,7 +28,7 @@ function extractFeaturesFile(data) {
     var empty = new Array(config.channels).fill(0);
     var normalized, mfbankFeatures;
 
-    var preProcessed = library.preProcess(data, config.noiseCoefs);
+    var preProcessed = library.preProcess(data);
 
     var framedSignal = extractor.framer(preProcessed, config.windowSize, config.overlapPercent);
     var windowedFrame;
@@ -37,11 +37,8 @@ function extractFeaturesFile(data) {
     for(var i = 0; i < framedSignal.length; i++) {
         windowedFrame = library.applyHammingWindow(framedSignal[i]);
         mfbankFeatures = library.computeMfbank(windowedFrame);
-        result[i] = mfbankFeatures;
-    }
-
-    for(var i = 0; i < result.length; i++) {
-        //console.log(library.normalize(result[i]));
+        normalized = library.normalize(result[i]);
+        result[i] = normalized;
     }
     console.log(result);
     document.getElementById("file-input").value = "";

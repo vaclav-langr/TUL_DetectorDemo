@@ -10,7 +10,10 @@ const config = {
     sampleRate : 16000,
     lowFrequency : 0,
     highFrequency : 8000,
-    channels : 39
+    channels : 39,
+    useRange: true,
+    minValue: 1.0,
+    returnValue: 0.0
 };
 config.overlapPercent = (100 * config.overlap / config.windowSize) + '%';
 

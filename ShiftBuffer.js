@@ -15,22 +15,29 @@ class ShiftBuffer{
 
     addData(instance, data) {
         var diff = config.overlap - instance.extraData;
-        instance.rotateBuffer(instance, diff);
-        for(var i = 0; i < diff; i++) {
-            instance.buffer[config.windowSize - diff + i] = data[i];
-        }
-        var tempBuffer = instance.buffer.slice();
-        instance.processFunction(tempBuffer);
-
-        instance.rotateBuffer(instance, data.length - diff);
-        instance.extraData = (data.length - diff);
-        for(var i = 0; i < data.length - diff; i++) {
-            instance.buffer[config.windowSize - instance.extraData + i] = data[diff + i];
-        }
-        if(instance.extraData == 160) {
-            var tempBuffer = this.buffer.slice();
-            instance.processFunction(tempBuffer);
+        if(data.length >= diff) {
             instance.extraData = 0;
+            instance.rotateBuffer(instance, diff);
+            var partData = data.splice(0, diff);
+            for(var i = 0; i < diff; i++) {
+                instance.buffer[config.windowSize - diff + i] = partData[i];
+            }
+            var tempBuffer = instance.buffer.slice();
+            instance.processFunction(tempBuffer);
+            while(data.length >= config.overlap) {
+                instance.rotateBuffer(instance, config.overlap);
+                partData = data.splice(0, config.overlap);
+                for(i = 0; i < config.overlap; i++) {
+                    instance.buffer[config.windowSize - config.overlap + i] = partData[i];
+                }
+                tempBuffer = instance.buffer.slice();
+                instance.processFunction(tempBuffer);
+            }
+        }
+        instance.extraData = data.length;
+        instance.rotateBuffer(instance, instance.extraData);
+        for(var i = 0; i < instance.extraData; i++) {
+            instance.buffer[config.windowSize - instance.extraData + i] = data[i];
         }
     }
 }

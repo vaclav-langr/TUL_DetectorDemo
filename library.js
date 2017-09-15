@@ -42,20 +42,20 @@ function createFilters() {
     }
 }
 
-function generateRandom() {
-    return (Math.random()*2 - 1);
+function generateRandomFromRange() {
+    return (Math.random()*(this.coefs[1] - this.coefs[0]) + this.coefs[0]);
 }
 
 function generateRandomFromCoefs() {
     return this.coefs[Math.floor(Math.random() * this.coefs.length)];
 }
 
-const preProcess = function(data, noiseCoefs) {
+const preProcess = function(data) {
     var generator;
-    if (typeof noiseCoefs === 'undefined') {
-        generator = generateRandom;
+    if (config.useRange) {
+        generator = generateRandomFromRange.bind({coefs:config.noiseCoefs});
     } else {
-        generator = generateRandomFromCoefs.bind({coefs:noiseCoefs});
+        generator = generateRandomFromCoefs.bind({coefs:config.noiseCoefs});
     }
 
     var fullSize = new Array(data.length);
@@ -111,10 +111,11 @@ const computeMfbank = function(frame) {
         for(var j = 0; j < mags.length; j++) {
             melspec[i] += (mags[j] * filters[i][j]);
         }
-        if(melspec[i] < 0.001) {
-            melspec[i] = 0.001;
+        if(melspec[i] < config.minValue) {
+            melspec[i] = config.returnValue;
+        } else {
+            melspec[i] = Math.log(melspec[i]);
         }
-        melspec[i] = Math.log(melspec[i]);
     }
     return melspec;
 };
@@ -145,7 +146,11 @@ const normalize = function (data) {
             for(var j = 0; j < bufferNorm.length; j++) {
                 mean = mean + bufferNorm[j][i];
             }
-            mean /= bufferNorm.length;
+            if(index < 100) {
+                mean /= index;
+            } else {
+                mean /= bufferNorm.length;
+            }
             normalized[i] = bufferNorm[config.left][i] - mean;
         }
     }
