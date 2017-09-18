@@ -23,14 +23,11 @@
   "dependencies": {
     "audio-resampler": "^1.0.1",
     "audiodata": "^1.1.0",
-    "dct": "0.0.3",
-    "fft-js": "0.0.11",
-    "fourier-transform": "^1.1.2",
+    "fft.js": "^4.0.3",
     "fs": "0.0.1-security",
     "get-user-media-promise": "^1.1.1",
     "keras-js": "^0.3.0",
     "linspace": "^1.0.0",
-    "logspace": "^1.0.1",
     "microphone-stream": "^3.0.7",
     "sound-parameters-extractor": "^1.4.0"
   }

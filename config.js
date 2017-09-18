@@ -13,7 +13,8 @@ const config = {
     channels : 39,
     useRange: true,
     minValue: 1.0,
-    returnValue: 0.0
+    returnValue: 0.0,
+    bitDepth: 16
 };
 config.overlapPercent = (100 * config.overlap / config.windowSize) + '%';
 

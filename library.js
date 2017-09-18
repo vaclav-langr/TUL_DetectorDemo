@@ -1,8 +1,12 @@
-const fft = require('fft-js');
+var config = require('./config').config;
+
+const FFT = require('fft.js');
 resampler = require('audio-resampler');
 var linspace = require('linspace');
+
+const f = new FFT(config.windowsSizePower);
+const phasors = f.createComplexArray();
 var audioCtx = new AudioContext(); //Limited number of AudioContexts
-var config = require('./config').config;
 var index = 0;
 var filters, bufferNorm;
 
@@ -50,30 +54,48 @@ function generateRandomFromCoefs() {
     return this.coefs[Math.floor(Math.random() * this.coefs.length)];
 }
 
-const preProcess = function(data) {
+const scaleSignal = function (data) {
+    var fullSize = new Array(data.length);
+    var scaleFactor = Math.pow(2, config.bitDepth - 1);
+    for(var i = 0; i < fullSize.length; i++) {
+        fullSize[i] = Math.round(data[i] * scaleFactor); //Scale to bit depth
+        if(fullSize[i] < -scaleFactor) {
+            fullSize[i] = -scaleFactor; //If smaller than bit depth, fix
+        }
+        if(fullSize[i] > scaleFactor) {
+            fullSize[i] = scaleFactor; //If greater than bit depth, fix
+        }
+    }
+    return fullSize;
+}
+
+const preProcess = function(data, lastSample) {
     var generator;
+    var dataCopy = data.slice();
+    var filtered = new Array(dataCopy.length);
+
+    //Determine which generator to use
     if (config.useRange) {
         generator = generateRandomFromRange.bind({coefs:config.noiseCoefs});
     } else {
         generator = generateRandomFromCoefs.bind({coefs:config.noiseCoefs});
     }
 
-    var fullSize = new Array(data.length);
-    for(var i = 0; i < fullSize.length; i++) {
-        fullSize[i] = data[i] * 32768;
-        if(fullSize[i] < -32768) {
-            fullSize[i] = -32768;
-        }
-        if(fullSize[i] > 32768) {
-            fullSize[i] = 32768;
-        }
-        fullSize[i] += generator()
+    //Check if exists lastSample (is used in live stream)
+    //If does not exist equals first sample of data
+    if(typeof lastSample == 'undefined') {
+        lastSample = dataCopy[0];
     }
 
-    var filtered = new Array(fullSize.length);
-    filtered[0] = fullSize[0] - config.preemCoef*fullSize[0];
+    //Add random noise
+    for(var i = 0; i < dataCopy.length; i++) {
+        dataCopy[i] += generator()
+    }
+
+    //Apply filter
+    filtered[0] = dataCopy[0] - config.preemCoef * lastSample;
     for(var i = 1; i < filtered.length; i++) {
-        filtered[i] = fullSize[i] - config.preemCoef*fullSize[i-1];
+        filtered[i] = dataCopy[i] - config.preemCoef*dataCopy[i-1];
     }
 
     return filtered;
@@ -83,8 +105,8 @@ const applyHammingWindow = function (data) {
     var result = new Array(data.length);
     var windowSample;
     for(var i = 0; i < result.length; i++) {
-        windowSample = 0.54 - 0.46 * Math.cos(2 * Math.PI * i / (result.length - 1));
-        result[i] = data[i] * windowSample;
+        windowSample = 0.54 - 0.46 * Math.cos(2 * Math.PI * i / (result.length - 1)); //Generate window sample on index i
+        result[i] = data[i] * windowSample; // Apply generated window sample
     }
     return result;
 };
@@ -95,14 +117,15 @@ const computeMfbank = function(frame) {
     }
     var padding = Array(config.windowsSizePower - config.windowSize).fill(0);
     var paddedFrame = frame.slice();
-    paddedFrame = paddedFrame.concat(padding); //Fill to get power of two length to use FFT
+    paddedFrame = paddedFrame.concat(padding); //Pad to get power of two length to use FFT
 
-    var phasors = fft.fft(paddedFrame);
+    f.realTransform(phasors, paddedFrame);
+    f.completeSpectrum(phasors);
     var mags = new Array(Math.floor(config.windowsSizePower / 2 + 1));
     var real, imag;
     for(var i = 0; i < mags.length; i++) {
-        real = Math.abs(phasors[i][0]);
-        imag = Math.abs(phasors[i][1]);
+        real = Math.abs(phasors[i*2]);
+        imag = Math.abs(phasors[i*2+1]);
         mags[i] = Math.sqrt(real*real + imag*imag);
     }
 
@@ -171,5 +194,6 @@ module.exports = {
     resample,
     normalize,
     clearBuffer,
-    applyHammingWindow
+    applyHammingWindow,
+    scaleSignal
 };
