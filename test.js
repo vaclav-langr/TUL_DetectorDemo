@@ -17,6 +17,10 @@ function splitStreamLikeData(data) {
         lastSample = scaled[scaled.length - 1];
         sbuffer.addData(sbuffer, preProcessed);
     }
+    var empty = new Array(config.channels).fill(0);
+    for(var i = 0; i < config.right; i++) {
+        console.log(library.normalize(empty)); // Detection
+    }
 }
 
 function extractFeaturesStream(data) {
