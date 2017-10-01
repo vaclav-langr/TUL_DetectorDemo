@@ -14,7 +14,8 @@ const config = {
     useRange: true,
     minValue: 1.0,
     returnValue: 0.0,
-    bitDepth: 16
+    bitDepth: 16,
+    nnetPath: ''
 };
 config.overlapPercent = (100 * config.overlap / config.windowSize) + '%';
 
