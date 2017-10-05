@@ -1,29 +1,49 @@
 const config = {
-    left : 50,
-    right : 50,
-    noiseCoefs : [-1, 1],
-    windowSize : 400,
-    overlap : 160,
-    windowsSizePower : 0,
-    overlapPercent : 0,
-    preemCoef : 0.97,
     sampleRate : 16000,
-    lowFrequency : 0,
-    highFrequency : 8000,
-    channels : 39,
-    useRange: true,
-    minValue: 1.0,
-    returnValue: 0.0,
     bitDepth: 16,
-    nnetPath: ''
+    segmenter : {
+        windowSize : 400,
+        overlap : 160,
+        windowsSizePower : 0,
+        overlapPercent : 0
+    },
+    melfbank : {
+        noiseCoefs : [-1, 1],
+        useRange: true,
+        preemCoef : 0.97,
+        lowFrequency : 0,
+        highFrequency : 8000,
+        channels : 39,
+        minValue: 1.0,
+        returnValue: 0.0
+    },
+    normalizer : {
+        left : 25,
+        right : 25
+    },
+    sequencer : {
+        size : 51,
+        position : 25
+    },
+    neurotizer : {
+        nnetPath: './Data/torch/10.nnet',
+        activations: [
+            'HardTanh',
+            'HardTanh',
+            'HardTanh',
+            'HardTanh',
+            'HardTanh',
+            'HardTanh',
+            'Softmax']
+    },
 };
-config.overlapPercent = (100 * config.overlap / config.windowSize) + '%';
+config.segmenter.overlapPercent = (100 * config.segmenter.overlap / config.segmenter.windowSize) + '%';
 
 var powerOfTwo = 1;
-while (powerOfTwo < config.windowSize) {
+while (powerOfTwo < config.segmenter.windowSize) {
     powerOfTwo = powerOfTwo * 2;
 }
-config.windowsSizePower = powerOfTwo;
+config.segmenter.windowsSizePower = powerOfTwo;
 
 
 module.exports = {

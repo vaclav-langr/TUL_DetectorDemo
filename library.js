@@ -4,7 +4,7 @@ const FFT = require('fft.js');
 resampler = require('audio-resampler');
 var linspace = require('linspace');
 
-const f = new FFT(config.windowsSizePower);
+const f = new FFT(config.segmenter.windowsSizePower);
 const phasors = f.createComplexArray();
 var audioCtx = new AudioContext(); //Limited number of AudioContexts
 var index = 0;
@@ -19,24 +19,24 @@ function hz2mel(hz) {
 }
 
 function createFilters() {
-    var low_freq_mel = hz2mel(config.lowFrequency);
-    var high_freq_mel = hz2mel(config.highFrequency);
-    var mels = linspace(low_freq_mel, high_freq_mel, config.channels + 2);
+    var low_freq_mel = hz2mel(config.melfbank.lowFrequency);
+    var high_freq_mel = hz2mel(config.melfbank.highFrequency);
+    var mels = linspace(low_freq_mel, high_freq_mel, config.melfbank.channels + 2);
     var hzs = mels.slice();
     for(var i = 0; i < hzs.length; i++) {
         hzs[i] = mel2hz(hzs[i]);
     }
     var bins = hzs.slice();
     for(var i = 0; i < bins.length; i++) {
-        bins[i] = Math.floor((config.windowsSizePower + 1) * hzs[i] / config.sampleRate);
+        bins[i] = Math.floor((config.segmenter.windowsSizePower + 1) * hzs[i] / config.sampleRate);
     }
 
-    filters = new Array(config.channels);
+    filters = new Array(config.melfbank.channels);
     for(var i = 0; i < filters.length; i++) {
-        filters[i] = new Array(Math.floor(config.windowsSizePower / 2 + 1)).fill(0);
+        filters[i] = new Array(Math.floor(config.segmenter.windowsSizePower / 2 + 1)).fill(0);
     }
 
-    for(var i = 1; i < config.channels + 1; i++) {
+    for(var i = 1; i < config.melfbank.channels + 1; i++) {
         for(var j = bins[i - 1]; j < bins[i]; j++) {
             filters[i - 1][j] = (j - bins[i - 1]) / (bins[i] - bins[i - 1]);
         }
@@ -75,10 +75,10 @@ const preProcess = function(data, lastSample) {
     var filtered = new Array(dataCopy.length);
 
     //Determine which generator to use
-    if (config.useRange) {
-        generator = generateRandomFromRange.bind({coefs:config.noiseCoefs});
+    if (config.melfbank.useRange) {
+        generator = generateRandomFromRange.bind({coefs:config.melfbank.noiseCoefs});
     } else {
-        generator = generateRandomFromCoefs.bind({coefs:config.noiseCoefs});
+        generator = generateRandomFromCoefs.bind({coefs:config.melfbank.noiseCoefs});
     }
 
     //Check if exists lastSample (is used in live stream)
@@ -93,9 +93,9 @@ const preProcess = function(data, lastSample) {
     }
 
     //Apply filter
-    filtered[0] = dataCopy[0] - config.preemCoef * lastSample;
+    filtered[0] = dataCopy[0] - config.melfbank.preemCoef * lastSample;
     for(var i = 1; i < filtered.length; i++) {
-        filtered[i] = dataCopy[i] - config.preemCoef*dataCopy[i-1];
+        filtered[i] = dataCopy[i] - config.melfbank.preemCoef*dataCopy[i-1];
     }
 
     return filtered;
@@ -115,13 +115,13 @@ const computeMfbank = function(frame) {
     if(typeof filters === 'undefined') {
         createFilters();
     }
-    var padding = Array(config.windowsSizePower - config.windowSize).fill(0);
+    var padding = Array(config.segmenter.windowsSizePower - config.segmenter.windowSize).fill(0);
     var paddedFrame = frame.slice();
     paddedFrame = paddedFrame.concat(padding); //Pad to get power of two length to use FFT
 
     f.realTransform(phasors, paddedFrame);
     f.completeSpectrum(phasors);
-    var mags = new Array(Math.floor(config.windowsSizePower / 2 + 1));
+    var mags = new Array(Math.floor(config.segmenter.windowsSizePower / 2 + 1));
     var real, imag;
     for(var i = 0; i < mags.length; i++) {
         real = Math.abs(phasors[i*2]);
@@ -129,13 +129,13 @@ const computeMfbank = function(frame) {
         mags[i] = Math.sqrt(real*real + imag*imag);
     }
 
-    var melspec = new Array(config.channels).fill(0);
+    var melspec = new Array(config.melfbank.channels).fill(0);
     for(var i = 0; i < melspec.length; i++) {
         for(var j = 0; j < mags.length; j++) {
             melspec[i] += (mags[j] * filters[i][j]);
         }
-        if(melspec[i] < config.minValue) {
-            melspec[i] = config.returnValue;
+        if(melspec[i] < config.melfbank.minValue) {
+            melspec[i] = config.melfbank.returnValue;
         } else {
             melspec[i] = Math.log(melspec[i]);
         }
@@ -162,7 +162,7 @@ const normalize = function (data) {
         bufferNorm[i] = bufferNorm[i + 1].slice();
     }
     bufferNorm[bufferNorm.length - 1] = data.slice();
-    if(index > config.right) {
+    if(index > config.normalizer.right) {
         var mean;
         for(var i = 0; i < data.length; i++) {
             mean = 0;
@@ -174,7 +174,7 @@ const normalize = function (data) {
             } else {
                 mean /= bufferNorm.length;
             }
-            normalized[i] = bufferNorm[config.left][i] - mean;
+            normalized[i] = bufferNorm[config.normalizer.left][i] - mean;
         }
     }
     return normalized;
@@ -182,9 +182,9 @@ const normalize = function (data) {
 
 const clearBuffer = function () {
     index = 0;
-    bufferNorm = new Array(config.left + 1 + config.right);
+    bufferNorm = new Array(config.normalizer.left + 1 + config.normalizer.right);
     for(var i = 0; i < bufferNorm.length; i++) {
-        bufferNorm[i] = new Array(config.channels).fill(0);
+        bufferNorm[i] = new Array(config.melfbank.channels).fill(0);
     }
 };
 

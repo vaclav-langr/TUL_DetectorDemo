@@ -1,11 +1,26 @@
 var library = require('./library');
 var config = require('./config').config;
 var extractor = require('sound-parameters-extractor');
+var network = require('./nnet');
 var ShiftBuffer = require('./ShiftBuffer').ShiftBuffer;
-var sbuffer = new ShiftBuffer(extractFeaturesStream);
+var signalBuffer = new ShiftBuffer(
+    config.segmenter.windowSize,
+    config.segmenter.overlap,
+    extractFeaturesStream);
+var sequenceBuffer = new ShiftBuffer(
+    config.melfbank.channels * config.sequencer.size,
+    config.melfbank.channels,
+    forwardNetwork
+);
+
+function forwardNetwork(data) {
+    var networkResult = network.computeNetworkOutput(data);
+    console.log(networkResult);
+}
 
 function splitStreamLikeData(data) {
     var toPad = 170 - (data.length % 170);
+    toPad += (config.normalizer.right * config.segmenter.overlap);
     data = Array.from(data).concat(new Array(toPad).fill(0));
     var lastSample = 0;
 
@@ -15,47 +30,44 @@ function splitStreamLikeData(data) {
         scaled = library.scaleSignal(frame);
         preProcessed = library.preProcess(scaled, lastSample);
         lastSample = scaled[scaled.length - 1];
-        sbuffer.addData(sbuffer, preProcessed);
-    }
-    var empty = new Array(config.channels).fill(0);
-    for(var i = 0; i < config.right; i++) {
-        console.log(library.normalize(empty)); // Detection
+        signalBuffer.addData(signalBuffer, preProcessed);
     }
 }
 
 function extractFeaturesStream(data) {
     var windowedSignal = library.applyHammingWindow(data);
     var mfbankFeatures = library.computeMfbank(windowedSignal);
-    console.log(library.normalize(mfbankFeatures)); // Detection
+    var normalized = library.normalize(mfbankFeatures);
+    sequenceBuffer.addData(sequenceBuffer, normalized);
     document.getElementById("stream-input").value = "";
 }
 
 function extractFeaturesFile(data) {
-    var empty = new Array(config.channels).fill(0);
+    var empty = new Array(config.segmenter.windowSize).fill(0);
     var normalized, mfbankFeatures;
 
     var scaled = library.scaleSignal(data);
     var preProcessed = library.preProcess(scaled);
 
-    var framedSignal = extractor.framer(preProcessed, config.windowSize, config.overlapPercent);
+    var framedSignal = extractor.framer(preProcessed, config.segmenter.windowSize, config.segmenter.overlapPercent);
+    for(var i = 0; i < config.normalizer.right; i++) {
+        framedSignal.push(empty);
+    }
+
     var windowedFrame;
-    var result = new Array(framedSignal.length + config.right);
 
     for(var i = 0; i < framedSignal.length; i++) {
         windowedFrame = library.applyHammingWindow(framedSignal[i]);
         mfbankFeatures = library.computeMfbank(windowedFrame);
         normalized = library.normalize(mfbankFeatures);
-        result[i] = normalized; // Detection
+        sequenceBuffer.addData(sequenceBuffer, normalized); //Detection
     }
-    for(i = 0; i < config.right; i++) {
-        result[framedSignal.length + i] = library.normalize(empty); // Detection
-    }
-    console.log(result);
     document.getElementById("file-input").value = "";
 }
 
 function onChange(file, onComplete) {
     library.clearBuffer();
+    sequenceBuffer.clearBuffer(sequenceBuffer);
     var fr = new FileReader();
     fr.onload = function () {
         var wav = require('node-wav');
