@@ -34,7 +34,7 @@ const config = {
             'HardTanh',
             'HardTanh',
             'HardTanh',
-            'Softmax']
+            'Softmax'],
     },
 };
 config.segmenter.overlapPercent = (100 * config.segmenter.overlap / config.segmenter.windowSize) + '%';

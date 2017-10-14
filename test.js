@@ -12,10 +12,11 @@ var sequenceBuffer = new ShiftBuffer(
     config.melfbank.channels,
     forwardNetwork
 );
+var FSM = require('./fsm');
 
 function forwardNetwork(data) {
     var networkResult = network.computeNetworkOutput(data);
-    console.log(networkResult);
+    console.log(FSM.switchState(networkResult[0], networkResult[1]));
 }
 
 function splitStreamLikeData(data) {
@@ -30,7 +31,7 @@ function splitStreamLikeData(data) {
         scaled = library.scaleSignal(frame);
         preProcessed = library.preProcess(scaled, lastSample);
         lastSample = scaled[scaled.length - 1];
-        signalBuffer.addData(signalBuffer, preProcessed);
+        signalBuffer.addData(preProcessed);
     }
 }
 
@@ -38,7 +39,7 @@ function extractFeaturesStream(data) {
     var windowedSignal = library.applyHammingWindow(data);
     var mfbankFeatures = library.computeMfbank(windowedSignal);
     var normalized = library.normalize(mfbankFeatures);
-    sequenceBuffer.addData(sequenceBuffer, normalized);
+    sequenceBuffer.addData(normalized);
     document.getElementById("stream-input").value = "";
 }
 
@@ -60,14 +61,14 @@ function extractFeaturesFile(data) {
         windowedFrame = library.applyHammingWindow(framedSignal[i]);
         mfbankFeatures = library.computeMfbank(windowedFrame);
         normalized = library.normalize(mfbankFeatures);
-        sequenceBuffer.addData(sequenceBuffer, normalized); //Detection
+        sequenceBuffer.addData(normalized); //Detection
     }
     document.getElementById("file-input").value = "";
 }
 
 function onChange(file, onComplete) {
     library.clearBuffer();
-    sequenceBuffer.clearBuffer(sequenceBuffer);
+    sequenceBuffer.clearBuffer();
     var fr = new FileReader();
     fr.onload = function () {
         var wav = require('node-wav');

@@ -9,8 +9,9 @@ const computeNetworkOutput = function(input) {
         activation = getActivation(config.neurotizer.activations[i]);
         output = activation(output);
     }
-    return output.indexOf(Math.max(...output));
-}
+    var outputIndex = output.indexOf(Math.max(...output));
+    return [outputIndex, output[outputIndex]];
+};
 
 function computeOutput(input, layer) {
     var result = new Array(network['noNeurons'][layer + 1]).fill(0);
@@ -68,5 +69,5 @@ function getActivation(type) {
 
 module.exports = {
     computeNetworkOutput
-}
+};
 

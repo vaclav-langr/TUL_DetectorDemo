@@ -7,43 +7,43 @@ class ShiftBuffer{
         this.extraData = 0;
     }
 
-    rotateBuffer(instance, rotateBy) {
-        for(var i = 0; i < instance.buffer.length; i++) {
-            instance.buffer[i] = instance.buffer[i + rotateBy];
+    rotateBuffer(rotateBy) {
+        for(var i = 0; i < this.buffer.length; i++) {
+            this.buffer[i] = this.buffer[i + rotateBy];
         }
     }
 
-    addData(instance, data) {
-        var diff = instance.rotation - instance.extraData;
+    addData(data) {
+        var diff = this.rotation - this.extraData;
         if(data.length >= diff) {
-            instance.extraData = 0;
-            instance.rotateBuffer(instance, diff);
+            this.extraData = 0;
+            this.rotateBuffer(diff);
             var partData = data.splice(0, diff);
             for(var i = 0; i < diff; i++) {
-                instance.buffer[instance.bufferSize - diff + i] = partData[i];
+                this.buffer[this.bufferSize - diff + i] = partData[i];
             }
-            var tempBuffer = instance.buffer.slice();
-            instance.processFunction(tempBuffer);
-            while(data.length >= instance.rotation) {
-                instance.rotateBuffer(instance, instance.rotation);
-                partData = data.splice(0, instance.rotation);
-                for(i = 0; i < instance.rotation; i++) {
-                    instance.buffer[instance.bufferSize - instance.rotation + i] = partData[i];
+            var tempBuffer = this.buffer.slice();
+            this.processFunction(tempBuffer);
+            while(data.length >= this.rotation) {
+                this.rotateBuffer(this.rotation);
+                partData = data.splice(0, this.rotation);
+                for(i = 0; i < this.rotation; i++) {
+                    this.buffer[this.bufferSize - this.rotation + i] = partData[i];
                 }
-                tempBuffer = instance.buffer.slice();
-                instance.processFunction(tempBuffer);
+                tempBuffer = this.buffer.slice();
+                this.processFunction(tempBuffer);
             }
         }
-        instance.extraData += data.length;
-        instance.rotateBuffer(instance, data.length);
+        this.extraData += data.length;
+        this.rotateBuffer(data.length);
         for(var i = 0; i < data.length; i++) {
-            instance.buffer[instance.bufferSize - data.length + i] = data[i];
+            this.buffer[this.bufferSize - data.length + i] = data[i];
         }
     }
 
-    clearBuffer(instance) {
-        instance.buffer = new Array(instance.bufferSize).fill(0);
-        instance.extraData = 0;
+    clearBuffer() {
+        this.buffer = new Array(this.bufferSize).fill(0);
+        this.extraData = 0;
     }
 }
 
