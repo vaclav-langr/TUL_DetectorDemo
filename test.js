@@ -12,6 +12,7 @@ var sequenceBuffer = new ShiftBuffer(
     config.melfbank.channels,
     forwardNetwork
 );
+var transformator = require('./transformator');
 var FSM = require('./fsm');
 
 function forwardNetwork(data) {
@@ -39,7 +40,8 @@ function extractFeaturesStream(data) {
     var windowedSignal = library.applyHammingWindow(data);
     var mfbankFeatures = library.computeMfbank(windowedSignal);
     var normalized = library.normalize(mfbankFeatures);
-    sequenceBuffer.addData(normalized);
+    var transformed = transformator.transform(normalized);
+    sequenceBuffer.addData(transformed);
     document.getElementById("stream-input").value = "";
 }
 

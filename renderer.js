@@ -6,6 +6,7 @@ var ShiftBuffer = require('./ShiftBuffer').ShiftBuffer;
 var signalBuffer = new ShiftBuffer(config.segmenter.windowSize, config.segmenter.overlap, extractFeatures);
 var sequenceBuffer = new ShiftBuffer(config.melfbank.channels * config.sequencer.size, config.melfbank.channels, forwardNetwork);
 var FSM = require('./fsm');
+var transformator = require('./transformator');
 
 var lastSample = 0;
 var empty = new Array(config.segmenter.overlap).fill(0);
@@ -27,7 +28,8 @@ function extractFeatures(data) {
     var windowed = library.applyHammingWindow(data);
     var mfbankFeatures = library.computeMfbank(windowed);
     var normalized = library.normalize(mfbankFeatures);
-    sequenceBuffer.addData(normalized);
+    var transformed = transformator.transform(normalized);
+    sequenceBuffer.addData(transformed);
 }
 
 document.getElementById('stop-button').addEventListener('click', function () {

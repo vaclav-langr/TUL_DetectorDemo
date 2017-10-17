@@ -2,7 +2,6 @@ var getUserMedia = require('get-user-media-promise');
 var MicrophoneStream = require('microphone-stream');
 
 resampler = require('audio-resampler');
-var library = require('./library');
 var sampleRate;
 var micStream;
 var isRecording = false;

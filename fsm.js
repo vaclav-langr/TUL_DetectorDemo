@@ -37,7 +37,7 @@ const switchState = function(label, prob) {
                 case 1:
                     currentState = States.s2;
                     break;
-                case 2:
+                case 5:
                     currentState = States.s5;
                     break;
             }

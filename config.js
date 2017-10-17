@@ -26,7 +26,7 @@ const config = {
         position : 25
     },
     neurotizer : {
-        nnetPath: './Data/torch/10.nnet',
+        nnetPath: '',
         activations: [
             'HardTanh',
             'HardTanh',
@@ -36,6 +36,16 @@ const config = {
             'HardTanh',
             'Softmax'],
     },
+    transformator : {
+        mean : {
+            path: '',
+            operation: 'sub'
+        },
+        std : {
+            path: '',
+            operation: 'div'
+        }
+    }
 };
 config.segmenter.overlapPercent = (100 * config.segmenter.overlap / config.segmenter.windowSize) + '%';
 
