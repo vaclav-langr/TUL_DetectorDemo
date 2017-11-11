@@ -53,7 +53,18 @@ function Softmax(input) {
         denom += result[i];
     }
     for(var i = 0; i < result.length; i++) {
-        result[i] /= denom;
+        result[i] *= (1/denom);
+    }
+    return result;
+}
+
+function Tanh(input) {
+    var result = new Array(input.length);
+    var positive, negative;
+    for(var i = 0; i < input.length; i++) {
+        positive = Math.exp(input[i]);
+        negative = Math.exp(-input[i]);
+        result[i] = (positive - negative) / (positive + negative);
     }
     return result;
 }
@@ -64,6 +75,8 @@ function getActivation(type) {
             return HardTanh;
         case 'softmax':
             return Softmax;
+        case 'tanh':
+            return Tanh;
     }
 }
 

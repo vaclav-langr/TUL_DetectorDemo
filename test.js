@@ -17,7 +17,9 @@ var FSM = require('./fsm');
 
 function forwardNetwork(data) {
     var networkResult = network.computeNetworkOutput(data);
-    console.log(FSM.switchState(networkResult[0], networkResult[1]));
+    var fsm = FSM.switchState(networkResult[0], networkResult[1]);
+
+    console.log(fsm);
 }
 
 function splitStreamLikeData(data) {
@@ -47,7 +49,7 @@ function extractFeaturesStream(data) {
 
 function extractFeaturesFile(data) {
     var empty = new Array(config.segmenter.windowSize).fill(0);
-    var normalized, mfbankFeatures;
+    var normalized, mfbankFeatures, transformed;
 
     var scaled = library.scaleSignal(data);
     var preProcessed = library.preProcess(scaled);
@@ -63,7 +65,8 @@ function extractFeaturesFile(data) {
         windowedFrame = library.applyHammingWindow(framedSignal[i]);
         mfbankFeatures = library.computeMfbank(windowedFrame);
         normalized = library.normalize(mfbankFeatures);
-        sequenceBuffer.addData(normalized); //Detection
+        transformed = transformator.transform(normalized);
+        sequenceBuffer.addData(transformed); //Detection
     }
     document.getElementById("file-input").value = "";
 }

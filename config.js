@@ -28,13 +28,13 @@ const config = {
     neurotizer : {
         nnetPath: '',
         activations: [
-            'HardTanh',
-            'HardTanh',
-            'HardTanh',
-            'HardTanh',
-            'HardTanh',
-            'HardTanh',
-            'Softmax'],
+            'Tanh',
+            'Tanh',
+            'Tanh',
+            'Tanh',
+            'Tanh',
+            'Tanh',
+            'Tanh'],
     },
     transformator : {
         mean : {

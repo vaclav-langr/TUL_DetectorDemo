@@ -13,8 +13,8 @@ var empty = new Array(config.segmenter.overlap).fill(0);
 
 function forwardNetwork(data) {
     var networkOutput = network.computeNetworkOutput(data);
-    var fsmOutput = FSM.switchState(networkOutput[0], networkOutput[1]);
-    console.log(fsmOutput)
+    var fsm = FSM.switchState(networkOutput[0], networkOutput[1]);
+    document.getElementById("fsm").innerText = "Result: " + fsm;
 }
 
 function prepareData(data) {

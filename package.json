@@ -27,7 +27,6 @@
     "fft.js": "^4.0.3",
     "fs": "0.0.1-security",
     "get-user-media-promise": "^1.1.1",
-    "keras-js": "^0.3.0",
     "linspace": "^1.0.0",
     "microphone-stream": "^3.0.7",
     "sound-parameters-extractor": "^1.4.0"

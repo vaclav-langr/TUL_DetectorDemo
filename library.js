@@ -143,13 +143,16 @@ const computeMfbank = function(frame) {
     return melspec;
 };
 
+var buffer;
 const resample = function (data, sampleRate, onCompleteFunction) {
-    if(sampleRate != config.sampleRate) {
-        var buffer = audioCtx.createBuffer(1, data.length, sampleRate);
+    if (buffer == null) {
+        buffer = audioCtx.createBuffer(1, data.length, sampleRate);
+    }
+    if (sampleRate != config.sampleRate) {
         buffer.copyToChannel(data,0,0);
-        resampler(buffer, config.sampleRate, function (event) {
-            onCompleteFunction(event.getAudioBuffer().getChannelData(0));
-        });
+         resampler(buffer, config.sampleRate, function (event) {
+             onCompleteFunction(event.getAudioBuffer().getChannelData(0));
+         });
     } else {
         onCompleteFunction(data);
     }
