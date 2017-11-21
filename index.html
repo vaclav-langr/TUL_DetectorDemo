@@ -15,11 +15,19 @@
       <button id="stop-button">Stop</button>
       <button id="start-button">Start</button>
       <br>
+      <input type="range" value="0.66" min="0" max="1" step="any" id="threshold">
+      Hodnota: <div id="thresh"></div>
+      <br>
       <div id="fsm"></div>
   </body>
 
   <script>
       require('./renderer.js')
       require('./test.js')
+
+      document.getElementById("thresh").innerText = document.getElementById("threshold").value;
+      document.getElementById("threshold").addEventListener("change", function () {
+          document.getElementById("thresh").innerText = document.getElementById("threshold").value;
+      });
   </script>
 </html>

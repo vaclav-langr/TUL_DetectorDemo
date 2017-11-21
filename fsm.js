@@ -9,16 +9,23 @@ var sum;
 
 const switchState = function(label, prob) {
     buffer.shift();
-    buffer.push(label);
+    if(label == 0) {
+        buffer.push(prob);
+    } else {
+        buffer.push(0.0);
+    }
     sum = buffer.reduce(function(a,b){return a+b});
+    sum /= buffer.length;
+
+    var thresh = document.getElementById("threshold").value;
     switch(currentState) {
         case States.sN:
-            if(sum < 7) {
+            if(sum > thresh) {
                 currentState = States.sS;
             }
             break;
         case States.sS:
-            if(sum > 6) {
+            if(sum < thresh) {
                 currentState = States.sN;
             }
             break;
