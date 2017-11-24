@@ -1,10 +1,12 @@
 var getUserMedia = require('get-user-media-promise');
 var MicrophoneStream = require('microphone-stream');
-
 resampler = require('audio-resampler');
+var audioSender = new (require('./audioSender').AudioSender)();
+
 var sampleRate;
 var micStream;
 var isRecording = false;
+var isSpeech = false;
 
 const startRecording = function(onComplete, afterResample) {
     if(isRecording) {
@@ -21,9 +23,13 @@ const startRecording = function(onComplete, afterResample) {
             micStream = new MicrophoneStream(stream, options);
             micStream.on('data', function(chunk) {
                 var raw = MicrophoneStream.toRaw(chunk);
+                if(isSpeech) {
+                    audioSender.addChunk(chunk);
+                }
                 onComplete(raw, sampleRate, afterResample);
             });
             micStream.on('format', function(format) {
+                audioSender.setFormat(format);
                 sampleRate = format.sampleRate;
                 console.log(format);
             });
@@ -40,7 +46,13 @@ const stopRecording = function() {
     micStream.stop();
 };
 
+const setSpeech = function(speech) {
+    this.isSpeech = speech;
+    audioSender.startSpeech();
+}
+
 module.exports = {
     startRecording,
-    stopRecording
+    stopRecording,
+    setSpeech
 }

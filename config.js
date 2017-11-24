@@ -45,6 +45,11 @@ const config = {
             path: '',
             operation: 'div'
         }
+    },
+    nanogrid: {
+        domain: '',
+        access_token: '',
+        ntx_token: ''
     }
 };
 config.segmenter.overlapPercent = (100 * config.segmenter.overlap / config.segmenter.windowSize) + '%';
