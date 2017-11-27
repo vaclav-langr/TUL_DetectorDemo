@@ -90,3 +90,30 @@ document.getElementById("stream-input").addEventListener("change", function () {
 document.getElementById("file-input").addEventListener("change", function () {
     onChange(document.getElementById("file-input").files[0], extractFeaturesFile);
 });
+
+document.getElementById("whole-file-input").addEventListener("change", function () {
+    const fs = require('fs');
+    const jwt = require('jsonwebtoken');
+    const config = require('./config').config;
+    const fileApi = require('../ntx-js/dist/src/clients/file').FileAPI;
+    const fileBlob = require('../ntx-js/dist/src/clients/file').FileBlob;
+
+    const tkn = jwt.decode(config.nanogrid.ntx_token);
+    const iss = tkn.iss;
+    var endpoint;
+    for(const a of tkn.aud) {
+        if(!a.startsWith(iss)) {
+            endpoint = a.replace(/\/$/, "");
+        }
+    }
+    endpoint = endpoint + "/api/v1/file/v2t";
+
+    const file = document.getElementById("whole-file-input").files[0];
+    const bytes = fs.readFileSync(file.path);
+    document.getElementById("whole-file-input").value = "";
+    const api = new fileApi(endpoint, config.nanogrid.ntx_token);
+    const results = api.v2t(new fileBlob(bytes));
+    results.subscribe((e) => {
+        console.log(e)
+    }, (err) => console.error("FAILED", err), () => console.log("DONE"))
+});
