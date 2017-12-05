@@ -26,22 +26,24 @@ class AudioSender{
                 result = a.replace(/\/$/, "");
             }
         }
+        result = result + "/ws/v1/v2t";
         this._client = new ntx(result, config.nanogrid.ntx_token, this._context);
+        console.log(this._client);
     }
 
     setFormat(format) {
         this._context = new engine.EngineContextStart({
             context: new engine.EngineContext({
                 audioFormat: new engine.AudioFormat({
-                        pcm: {
-                            sampleFormat: AudioFormat.AUDIO_SAMPLE_FORMAT_F32LE,
-                            sampleRate: SampleRate.AUDIO_SAMPLE_RATE_48000,
-                            channelLayout: ChannelLayout.AUDIO_CHANNEL_LAYOUT_MONO
-                        }
-                })
-            }),
-            v2t: new engine.EngineContext.V2TConfig(),
-            audioChannel: AudioChannel.AUDIO_CHANNEL_DOWNMIX,
+                    pcm: {
+                        sampleFormat: AudioFormat.AUDIO_SAMPLE_FORMAT_F32LE,
+                        sampleRate: SampleRate.AUDIO_SAMPLE_RATE_48000,
+                        channelLayout: ChannelLayout.AUDIO_CHANNEL_LAYOUT_MONO
+                    }
+                }),
+                v2t: new engine.EngineContext.V2TConfig({}),
+                audioChannel: AudioChannel.AUDIO_CHANNEL_DOWNMIX,
+            })
         });
 
         switch (format.sampleRate) {
@@ -185,6 +187,7 @@ class AudioSender{
 
     startSpeech() {
         if(this._result == null) {
+            console.log(this._client);
             this._result = this._client.v2t(this.sendAudio());
             this._result.subscribe((e) => {
                 console.log(e);
@@ -192,9 +195,16 @@ class AudioSender{
         }
     }
 
+    stopSpeech() {
+        this._result = null;
+    }
+
     sendAudio() {
+        var chunk = this._buffer.shift();
         return function () {
-            var chunk = this._buffer.shift();
+            if(typeof chunk === 'undefined') {
+                return Promise.resolve(null);
+            }
             const events = new engine.Events({
                 events: [new engine.Event({
                     audio: new engine.Event.Audio({

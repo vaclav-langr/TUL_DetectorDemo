@@ -48,7 +48,11 @@ const stopRecording = function() {
 
 const setSpeech = function(speech) {
     this.isSpeech = speech;
-    audioSender.startSpeech();
+    if(speech) {
+        audioSender.startSpeech();
+    } else {
+        audioSender.stopSpeech();
+    }
 }
 
 module.exports = {
