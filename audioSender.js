@@ -15,6 +15,7 @@ class AudioSender{
         this._buffer = [];
         this._client = null;
         this._context = null;
+        this._isSending = false;
     }
 
     setClient() {
@@ -28,7 +29,6 @@ class AudioSender{
         }
         result = result + "/ws/v1/v2t";
         this._client = new ntx(result, config.nanogrid.ntx_token, this._context);
-        console.log(this._client);
     }
 
     setFormat(format) {
@@ -186,8 +186,8 @@ class AudioSender{
     }
 
     startSpeech() {
-        if(this._result == null) {
-            console.log(this._client);
+        if(!this._isSending) {
+            this._isSending = true;
             this._result = this._client.v2t(this.sendAudio());
             this._result.subscribe((e) => {
                 console.log(e);
@@ -196,7 +196,7 @@ class AudioSender{
     }
 
     stopSpeech() {
-        this._result = null;
+        this._isSending = false;
     }
 
     sendAudio() {
