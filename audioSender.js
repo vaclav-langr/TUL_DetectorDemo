@@ -9,13 +9,14 @@ var AudioChannel = engine.EngineContext.AudioChannel;
 var ChannelLayout = engine.AudioFormat.ChannelLayout;
 var AudioFormat = engine.AudioFormat.SampleFormat;
 var SampleRate = engine.AudioFormat.SampleRate;
+var _context = null;
 
 class AudioSender{
     constructor(){
-        this._buffer = [];
+        this._buffer = new Array(50).fill(new Array(2048).fill(0.0));
         this._client = null;
-        this._context = null;
         this._isSending = false;
+        this.setClient();
     }
 
     setClient() {
@@ -28,11 +29,11 @@ class AudioSender{
             }
         }
         result = result + "/ws/v1/v2t";
-        this._client = new ntx(result, config.nanogrid.ntx_token, this._context);
+        this._client = new ntx(result, config.nanogrid.ntx_token, _context);
     }
 
     setFormat(format) {
-        this._context = new engine.EngineContextStart({
+        _context = new engine.EngineContextStart({
             context: new engine.EngineContext({
                 audioFormat: new engine.AudioFormat({
                     pcm: {
@@ -48,43 +49,43 @@ class AudioSender{
 
         switch (format.sampleRate) {
             case 8000:
-                this._context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_8000;
+                _context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_8000;
                 break;
             case 16000:
-                this._context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_16000;
+                _context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_16000;
                 break;
             case 32000:
-                this._context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_32000;
+                _context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_32000;
                 break;
             case 48000:
-                this._context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_48000;
+                _context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_48000;
                 break;
             case 96000:
-                this._context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_96000;
+                _context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_96000;
                 break;
             case 11025:
-                this._context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_11025;
+                _context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_11025;
                 break;
             case 22050:
-                this._context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_22050;
+                _context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_22050;
                 break;
             case 44100:
-                this._context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_44100;
+                _context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_44100;
                 break;
             default:
-                this._context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_NONE;
+                _context.context.audioFormat.pcm.sampleRate = SampleRate.AUDIO_SAMPLE_RATE_NONE;
                 break;
         }
 
         switch (format.channels) {
             case 1:
-                this._context.context.audioFormat.pcm.channelLayout = ChannelLayout.AUDIO_CHANNEL_LAYOUT_MONO;
+                _context.context.audioFormat.pcm.channelLayout = ChannelLayout.AUDIO_CHANNEL_LAYOUT_MONO;
                 break;
             case 2:
-                this._context.context.audioFormat.pcm.channelLayout = ChannelLayout.AUDIO_CHANNEL_LAYOUT_STEREO;
+                _context.context.audioFormat.pcm.channelLayout = ChannelLayout.AUDIO_CHANNEL_LAYOUT_STEREO;
                 break;
             default:
-                this._context.context.audioFormat.pcm.channelLayout = ChannelLayout.AUDIO_CHANNEL_LAYOUT_NONE;
+                _context.context.audioFormat.pcm.channelLayout = ChannelLayout.AUDIO_CHANNEL_LAYOUT_NONE;
                 break;
         }
 
@@ -93,41 +94,41 @@ class AudioSender{
                 if(format.float) {
                     switch(format.bitDepth) {
                         case 32:
-                            this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_F32BE;
+                            _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_F32BE;
                             break;
                         case 64:
-                            this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_F64BE;
+                            _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_F64BE;
                             break;
                     }
                 } else {
                     if(format.signed) {
                         switch(format.bitDepth) {
                             case 8:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S8;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S8;
                                 break;
                             case 16:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S16BE;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S16BE;
                                 break;
                             case 24:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S24BE;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S24BE;
                                 break;
                             case 32:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S32BE;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S32BE;
                                 break;
                         }
                     } else {
                         switch(format.bitDepth) {
                             case 8:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U8;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U8;
                                 break;
                             case 16:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U16BE;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U16BE;
                                 break;
                             case 24:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U24BE;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U24BE;
                                 break;
                             case 32:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U32BE;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U32BE;
                                 break;
                         }
                     }
@@ -137,41 +138,41 @@ class AudioSender{
                 if(format.float) {
                     switch(format.bitDepth) {
                         case 32:
-                            this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_F32LE;
+                            _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_F32LE;
                             break;
                         case 64:
-                            this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_F64LE;
+                            _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_F64LE;
                             break;
                     }
                 } else {
                     if(format.signed) {
                         switch(format.bitDepth) {
                             case 8:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S8;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S8;
                                 break;
                             case 16:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S16LE;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S16LE;
                                 break;
                             case 24:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S24LE;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S24LE;
                                 break;
                             case 32:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S32LE;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S32LE;
                                 break;
                         }
                     } else {
                         switch(format.bitDepth) {
                             case 8:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U8;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U8;
                                 break;
                             case 16:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U16LE;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U16LE;
                                 break;
                             case 24:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U24LE;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U24LE;
                                 break;
                             case 32:
-                                this._context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U32LE;
+                                _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U32LE;
                                 break;
                         }
                     }
@@ -200,8 +201,8 @@ class AudioSender{
     }
 
     sendAudio() {
-        var chunk = this._buffer.shift();
-        return function () {
+        var fn = function () {
+            var chunk = this._buffer.shift();
             if(typeof chunk === 'undefined') {
                 return Promise.resolve(null);
             }
@@ -213,7 +214,9 @@ class AudioSender{
                 })]
             });
             return Promise.resolve(events);
-        }
+        };
+        var instance = this;
+        return fn.bind(instance);
     }
 }
 

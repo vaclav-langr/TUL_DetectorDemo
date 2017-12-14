@@ -1,7 +1,8 @@
 var getUserMedia = require('get-user-media-promise');
 var MicrophoneStream = require('microphone-stream');
 resampler = require('audio-resampler');
-var audioSender = new (require('./audioSender').AudioSender)();
+const audioSender_1 = require('./audioSender');
+var audioSender = new audioSender_1.AudioSender();
 
 var sampleRate;
 var micStream;
@@ -17,8 +18,7 @@ const startRecording = function(onComplete, afterResample) {
         .then(function(stream) {
             var options = {
                 objectMode: false,
-                bufferSize: 512 // Circular buffer. Copy to another buffer.
-                                // On callback copy to another array
+                bufferSize: 512
             };
             micStream = new MicrophoneStream(stream, options);
             micStream.on('data', function(chunk) {
@@ -47,16 +47,17 @@ const stopRecording = function() {
 };
 
 const setSpeech = function(speech) {
-    this.isSpeech = speech;
+    isSpeech = speech;
     if(speech) {
         audioSender.startSpeech();
     } else {
         audioSender.stopSpeech();
+        audioSender = new audioSender_1.AudioSender();
     }
-}
+};
 
 module.exports = {
     startRecording,
     stopRecording,
     setSpeech
-}
+};

@@ -97,6 +97,11 @@ document.getElementById("whole-file-input").addEventListener("change", function 
     const config = require('./config').config;
     const fileApi = require('../ntx-js/dist/src/clients/file').FileAPI;
     const fileBlob = require('../ntx-js/dist/src/clients/file').FileBlob;
+    const websocket = require('../ntx-js/dist/src/clients/websocket');
+    const util = require('../ntx-js/dist/examples/util');
+    const engine_1 = require("../ntx-js/dist/src/generated/engine");
+    var engine = engine_1.ntx.v2t.engine;
+    var AudioChannel = engine_1.ntx.v2t.engine.EngineContext.AudioChannel;
 
     const tkn = jwt.decode(config.nanogrid.ntx_token);
     const iss = tkn.iss;
@@ -106,14 +111,34 @@ document.getElementById("whole-file-input").addEventListener("change", function 
             endpoint = a.replace(/\/$/, "");
         }
     }
-    endpoint = endpoint + "/api/v1/file/v2t";
+    endpoint = endpoint + "/ws/v1/v2t";
 
     const file = document.getElementById("whole-file-input").files[0];
+    document.getElementById("whole-file-input").value = "";
+/*
     const bytes = fs.readFileSync(file.path);
     document.getElementById("whole-file-input").value = "";
     const api = new fileApi(endpoint, config.nanogrid.ntx_token);
     const results = api.v2t(new fileBlob(bytes));
     results.subscribe((e) => {
         console.log(e)
-    }, (err) => console.error("FAILED", err), () => console.log("DONE"))
+    }, (err) => console.error("FAILED", err), () => console.log("DONE"))*/
+
+    const start = new engine.EngineContextStart({
+        context: new engine.EngineContext({
+            audioFormat: new engine.AudioFormat({
+                auto: new engine.AudioFormat.AutoDetect()
+            }),
+            v2t: new engine.EngineContext.V2TConfig({
+                //withVAD: new engine.EngineContext.VADConfig(),
+                //withPPC: new engine.EngineContext.PPCConfig()
+            }),
+            audioChannel: AudioChannel.AUDIO_CHANNEL_DOWNMIX,
+        })
+    });
+    const ws = new websocket.WSClient(endpoint, config.nanogrid.ntx_token, start);
+    const results = ws.v2t(util.inMemoryFileReader(file.path));
+    results.subscribe((e) => {
+        console.log(e);
+    }, (err) => console.error("FAILED", err), () => console.log("DONE"));
 });
