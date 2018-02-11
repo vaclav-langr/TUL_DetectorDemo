@@ -12,10 +12,10 @@ var SampleRate = engine.AudioFormat.SampleRate;
 var _context = null;
 
 class AudioSender{
-    constructor(){
-        this._buffer = new Array(50).fill(new Array(2048).fill(0.0));
+    constructor(buffer){
+        this._buffer = buffer.splice();
         this._client = null;
-        this._isSending = false;
+        this._isOpened = false;
         this.setClient();
     }
 
@@ -37,13 +37,61 @@ class AudioSender{
             context: new engine.EngineContext({
                 audioFormat: new engine.AudioFormat({
                     pcm: {
-                        sampleFormat: AudioFormat.AUDIO_SAMPLE_FORMAT_F32LE,
+                        sampleFormat: AudioFormat.AUDIO_SAMPLE_FORMAT_U8,
                         sampleRate: SampleRate.AUDIO_SAMPLE_RATE_48000,
                         channelLayout: ChannelLayout.AUDIO_CHANNEL_LAYOUT_MONO
                     }
                 }),
-                v2t: new engine.EngineContext.V2TConfig({}),
-                audioChannel: AudioChannel.AUDIO_CHANNEL_DOWNMIX,
+                v2t: new engine.EngineContext.V2TConfig({
+                    withLexicon: new engine.Lexicon({
+                        "alpha" : engine.Lexicon.Alphabet.LEXICON_ALPHABET_NONE,
+                        "items" : [
+                            {
+                                "user" : {
+                                    "pron" : "doleva",
+                                    "sym" : "left"
+                                }
+                            },
+                            {
+                                "user" : {
+                                    "pron" : "doprava",
+                                    "sym" : "right"
+                                }
+                            },
+                            {
+                                "user" : {
+                                    "pron" : "nahoru",
+                                    "sym" : "up"
+                                }
+                            },
+                            {
+                                "user" : {
+                                    "pron" : "dolu",
+                                    "sym" : "down"
+                                }
+                            },
+                            {
+                                "user" : {
+                                    "pron" : "klik",
+                                    "sym" : "click"
+                                }
+                            },
+                            {
+                                "user" : {
+                                    "pron" : "dvojtíklik",
+                                    "sym" : "doubleclick"
+                                }
+                            },
+                            {
+                                "user" : {
+                                    "pron" : "pravíklik",
+                                    "sym" : "rightclick"
+                                }
+                            }
+                        ]
+                    })
+                }),
+                audioChannel: AudioChannel.AUDIO_CHANNEL_LEFT,
             })
         });
 
@@ -179,6 +227,7 @@ class AudioSender{
                 }
                 break;
         }
+
         this.setClient();
     }
 
@@ -186,30 +235,36 @@ class AudioSender{
         this._buffer.push(chunk)
     }
 
-    startSpeech() {
-        if(!this._isSending) {
-            this._isSending = true;
-            this._result = this._client.v2t(this.sendAudio());
-            this._result.subscribe((e) => {
-                console.log(e);
-            }, (err) => console.error("FAILED", err), () => console.log("DONE"));
+    isOpened() {
+        if(this._isOpened) {
+            return true;
+        } else {
+            return false;
         }
     }
 
-    stopSpeech() {
-        this._isSending = false;
+    startSpeech() {
+        if(!this._isOpened) {
+            this._isOpened = true;
+            this._result = this._client.v2t(this.sendAudio());
+            this._result.subscribe((e) => {
+                if(e.hasOwnProperty('label')) {console.log(e.label)}
+            }, (err) => console.error("FAILED", err), () => console.log("DONE"));
+        }
     }
 
     sendAudio() {
         var fn = function () {
             var chunk = this._buffer.shift();
             if(typeof chunk === 'undefined') {
+                this._isOpened = false;
                 return Promise.resolve(null);
             }
+            //console.log(chunk.join())
             const events = new engine.Events({
                 events: [new engine.Event({
                     audio: new engine.Event.Audio({
-                        body: chunk,
+                        body: Array.from(new Uint8Array(chunk.buffer)),
                     })
                 })]
             });

@@ -18,10 +18,19 @@
       <button id="stop-button">Stop</button>
       <button id="start-button">Start</button>
       <br>
-      <input type="range" value="0.66" min="0" max="1" step="any" id="threshold">
+      <input type="range" value="0.5" min="0" max="1" step="any" id="threshold">
       Hodnota: <div id="thresh"></div>
       <br>
       <div id="fsm"></div>
+      <br>
+      <button id="rightclick">RightClick</button>
+      <button id="up">up</button>
+      <button id="click">Click</button>
+      <button id="doubleclick">DoubleClick</button>
+      <br>
+      <button id="left">Left</button>
+      <button id="down">down</button>
+      <button id="right">right</button>
   </body>
 
   <script>
@@ -32,5 +41,16 @@
       document.getElementById("threshold").addEventListener("change", function () {
           document.getElementById("thresh").innerText = document.getElementById("threshold").value;
       });
+
+      var controller_1 = require('./OperationController').OperationController;
+      var controller = new controller_1();
+
+      var buttons = ["rightclick", "up", "click", "doubleclick", "left", "down", "right"]
+
+      for(var i = 0; i < buttons.length; i++) {
+          document.getElementById(buttons[i]).onclick = function () {
+              controller.doOperation(this.id)
+          }
+      }
   </script>
 </html>

@@ -2,11 +2,14 @@ var getUserMedia = require('get-user-media-promise');
 var MicrophoneStream = require('microphone-stream');
 resampler = require('audio-resampler');
 const audioSender_1 = require('./audioSender');
-var audioSender = new audioSender_1.AudioSender();
+const config = require('./config').config;
+var audioSender = null;
 
 var sampleRate;
 var micStream;
 var isRecording = false;
+var buffer = new Array();
+var formatVar;
 var isSpeech = false;
 
 const startRecording = function(onComplete, afterResample) {
@@ -23,13 +26,21 @@ const startRecording = function(onComplete, afterResample) {
             micStream = new MicrophoneStream(stream, options);
             micStream.on('data', function(chunk) {
                 var raw = MicrophoneStream.toRaw(chunk);
-                if(isSpeech) {
-                    audioSender.addChunk(chunk);
+
+                if(buffer.length == (config.sequencer.size * 3)) {
+                    buffer.shift()
                 }
+                buffer.push(raw)
+                if(audioSender != null) {
+                    if (audioSender.isOpened() && isSpeech) {
+                        audioSender.addChunk(raw);
+                    }
+                }
+
                 onComplete(raw, sampleRate, afterResample);
             });
             micStream.on('format', function(format) {
-                audioSender.setFormat(format);
+                formatVar = format;
                 sampleRate = format.sampleRate;
                 console.log(format);
             });
@@ -49,11 +60,13 @@ const stopRecording = function() {
 const setSpeech = function(speech) {
     isSpeech = speech;
     if(speech) {
-        audioSender.startSpeech();
-    } else {
-        audioSender.stopSpeech();
-        audioSender = new audioSender_1.AudioSender();
+        if (audioSender == null || !audioSender.isOpened()) {
+            audioSender = new audioSender_1.AudioSender(buffer);
+            audioSender.setFormat(formatVar);
+            audioSender.startSpeech();
+        }
     }
+
 };
 
 module.exports = {

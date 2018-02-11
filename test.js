@@ -129,16 +129,13 @@ document.getElementById("whole-file-input").addEventListener("change", function 
             audioFormat: new engine.AudioFormat({
                 auto: new engine.AudioFormat.AutoDetect()
             }),
-            v2t: new engine.EngineContext.V2TConfig({
-                //withVAD: new engine.EngineContext.VADConfig(),
-                //withPPC: new engine.EngineContext.PPCConfig()
-            }),
+            v2t: new engine.EngineContext.V2TConfig({}),
             audioChannel: AudioChannel.AUDIO_CHANNEL_DOWNMIX,
         })
     });
     const ws = new websocket.WSClient(endpoint, config.nanogrid.ntx_token, start);
     const results = ws.v2t(util.inMemoryFileReader(file.path));
     results.subscribe((e) => {
-        console.log(e);
+        if(e.hasOwnProperty('label')) {console.log(e.label)}
     }, (err) => console.error("FAILED", err), () => console.log("DONE"));
 });

@@ -4,7 +4,8 @@
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
-    "start": "npm install && electron ."
+    "start": "npm install && electron .",
+    "robotRebuild": "npm rebuild --runtime=electron --target=1.6.15 --disturl=https://atom.io/download/atom-shell --abi=53"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -31,6 +32,7 @@
     "linspace": "^1.0.0",
     "microphone-stream": "^3.0.7",
     "ntx-js": "../ntx-js",
+    "robotjs": "^0.4.7",
     "sound-parameters-extractor": "^1.4.0"
   }
 }
