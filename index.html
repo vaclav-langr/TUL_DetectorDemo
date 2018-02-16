@@ -2,7 +2,8 @@
 <html>
   <head>
       <meta charset="UTF-8">
-      <title>Hello World!</title>
+      <title>MyVoice V2</title>
+      <link rel="stylesheet" type="text/css" href="./style.css">
   </head>
   <body>
       Whole file:<br>
@@ -21,16 +22,17 @@
       <input type="range" value="0.5" min="0" max="1" step="any" id="threshold">
       Hodnota: <div id="thresh"></div>
       <br>
-      <div id="fsm"></div>
-      <br>
-      <button id="rightclick">RightClick</button>
-      <button id="up">up</button>
-      <button id="click">Click</button>
-      <button id="doubleclick">DoubleClick</button>
-      <br>
-      <button id="left">Left</button>
-      <button id="down">down</button>
-      <button id="right">right</button>
+      <div id="commands"></div>
+      <footer>
+          <div id="lastCommand"></div>
+          <div>
+              <svg id="detector" width="100" height="100">
+                  <circle cx="50" cy="50" r="40"
+                          stroke="black" stroke-width="4" />
+                  Sorry, your browser does not support inline SVG.
+              </svg>
+          </div>
+      </footer>
   </body>
 
   <script>
@@ -42,15 +44,8 @@
           document.getElementById("thresh").innerText = document.getElementById("threshold").value;
       });
 
-      var controller_1 = require('./OperationController').OperationController;
+      var controller_1 = require('./Controllers/MainController').MainController;
       var controller = new controller_1();
-
-      var buttons = ["rightclick", "up", "click", "doubleclick", "left", "down", "right"]
-
-      for(var i = 0; i < buttons.length; i++) {
-          document.getElementById(buttons[i]).onclick = function () {
-              controller.doOperation(this.id)
-          }
-      }
+      controller.updateGUI()
   </script>
 </html>

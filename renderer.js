@@ -19,7 +19,6 @@ function forwardNetwork(data) {
     } else {
         Recorder.setSpeech(false);
     }
-    document.getElementById("fsm").innerText = "Result: " + fsm;
 }
 
 function prepareData(data) {

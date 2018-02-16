@@ -1,6 +1,5 @@
 var getUserMedia = require('get-user-media-promise');
 var MicrophoneStream = require('microphone-stream');
-resampler = require('audio-resampler');
 const audioSender_1 = require('./audioSender');
 const config = require('./config').config;
 var audioSender = null;

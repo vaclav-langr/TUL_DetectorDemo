@@ -3,6 +3,7 @@ const ntx = require('../ntx-js/dist/src/clients/websocket').WSClient;
 const engine_1 = require('../ntx-js/dist/src/generated/engine');
 const os = require('os');
 const jwt = require('jsonwebtoken');
+const MainController = require('./Controllers/MainController').MainController;
 
 const engine = engine_1.ntx.v2t.engine;
 var AudioChannel = engine.EngineContext.AudioChannel;
