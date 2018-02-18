@@ -7,9 +7,27 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
+process.env.NODE_ENV = 'development'
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+let template = [
+  {
+    label: "Soubor",
+    submenu: [
+      {
+        label: 'Nastavení'
+      },
+      {
+        label: 'Zavřít',
+        accelerator: process.platform === 'darwin' ? "Command+Q" : "Ctrl+Q",
+        click: () => app.quit()
+      }
+    ]
+  }
+]
+
+let mainWindow, testingWindow
 
 function createWindow () {
   // Create the browser window.
@@ -17,6 +35,8 @@ function createWindow () {
 
   mainWindow.setAlwaysOnTop(true, "normal");
   mainWindow.setMinimizable(false);
+  mainWindow.setResizable(false)
+  electron.Menu.setApplicationMenu(electron.Menu.buildFromTemplate(template))
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -24,9 +44,6 @@ function createWindow () {
     protocol: 'file:',
     slashes: true
   }))
-
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -61,3 +78,40 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+if(process.platform == 'darwin'){
+  template.unshift({});
+}
+
+if(process.env.NODE_ENV !== 'production') {
+  template.push({
+    label: 'Development',
+    submenu: [{
+      label: 'Development tools',
+      accelerator: process === 'darwin' ? 'Command+I' : 'Ctrl+I',
+      click: (item, focusedWindow) => focusedWindow.toggleDevTools()
+    },
+      {
+        label: 'Testing',
+        click: () => createTestingWindow()
+      }
+    ]
+  })
+}
+
+function createTestingWindow() {
+  testingWindow = new BrowserWindow(
+      {
+        width: 800,
+        height: 600
+      }
+  )
+  testingWindow.loadURL(url.format({
+    pathname: path.join(__dirname, 'testing.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
+  testingWindow.on("close", function () {
+    testingWindow = null
+  })
+}

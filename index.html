@@ -1,19 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="cs">
   <head>
       <meta charset="UTF-8">
       <title>MyVoice V2</title>
       <link rel="stylesheet" type="text/css" href="./style.css">
   </head>
   <body>
-      Whole file:<br>
-      <input id="whole-file-input" type="file">
-      <br>
-      Offline test:<br>
-      Stream-like: <input id="stream-input" type="file">
-      <br>
-      File: <input id="file-input" type="file">
-      <br>
       Online stream:
       <br>
       <button id="stop-button">Stop</button>
@@ -37,7 +29,7 @@
 
   <script>
       require('./renderer.js')
-      require('./test.js')
+      var config = require('./config').config;
 
       document.getElementById("thresh").innerText = document.getElementById("threshold").value;
       document.getElementById("threshold").addEventListener("change", function () {
