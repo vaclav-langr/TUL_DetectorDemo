@@ -1,57 +1,55 @@
+var store_1 = require('electron-store');
+var store = new store_1();
+
 const config = {
-    sampleRate : 16000,
-    bitDepth: 16,
+    sampleRate : store.get("sampleRate", 16000),
+    bitDepth: store.get("bitDepth", 16),
     segmenter : {
-        windowSize : 400,
-        overlap : 160,
+        windowSize : store.get("segmenter.windowSize", 400),
+        overlap : store.get("segmenter.overlap", 160),
         windowsSizePower : 0,
         overlapPercent : 0
     },
     melfbank : {
-        noiseCoefs : [-1, 1],
-        useRange: true,
-        preemCoef : 0.97,
-        lowFrequency : 0,
-        highFrequency : 8000,
-        channels : 39,
-        minValue: 1.0,
-        returnValue: 0.0
+        noiseCoefs : [store.get('melfbank.noiseCoefsLower', -1), store.get('melfbank.noiseCoefsHigher', 1)],
+        useRange: store.get('melfbank.useRange', true),
+        preemCoef : store.get('melfbank.preemCoef', 0.97),
+        lowFrequency : store.get('melfbank.lowFrequency', 0),
+        highFrequency : store.get('melfbank.highFrequency', 8000),
+        channels : store.get('melfbank.channels', 39),
+        minValue: store.get('melfbank.minValue', 1.0),
+        returnValue: store.get('melfbank.returnValue', 0.0)
     },
     normalizer : {
-        left : 25,
-        right : 25
+        size : store.get('normalizer.size', 51),
+        position : store.get('normalizer.position', 25)
     },
     sequencer : {
-        size : 51,
-        position : 25
+        size : store.get('sequencer.size', 51),
+        position : store.get('sequencer.position', 25)
     },
     neurotizer : {
-        nnetPath: '',
-        activations: [
-            'Tanh',
-            'Tanh',
-            'Tanh',
-            'Tanh',
-            'Tanh',
-            'Tanh',
-            'Tanh'],
+        nnetPath: store.get("neurotizer.nnetPath"),
+        activations: store.get("neurotizer.activations")
     },
     transformator : {
         mean : {
-            path: '',
+            path:  store.get("transformator.mean.path"),
             operation: 'sub'
         },
         std : {
-            path: '',
+            path: store.get("transformator.std.path"),
             operation: 'div'
         }
     },
     nanogrid: {
-        domain: '',
-        access_token: '',
-        ntx_token: ''
+        ntx_token: store.get("nanogrid.ntx_token")
+    },
+    fsm: {
+        threshold: store.get("fsm.threshold", 0)
     }
 };
+
 config.segmenter.overlapPercent = (100 * config.segmenter.overlap / config.segmenter.windowSize) + '%';
 
 var powerOfTwo = 1;
@@ -60,6 +58,7 @@ while (powerOfTwo < config.segmenter.windowSize) {
 }
 config.segmenter.windowsSizePower = powerOfTwo;
 
+console.log(config)
 
 module.exports = {
     config

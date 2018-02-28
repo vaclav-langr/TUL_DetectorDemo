@@ -24,7 +24,7 @@ function forwardNetwork(data) {
 
 function splitStreamLikeData(data) {
     var toPad = 170 - (data.length % 170);
-    toPad += (config.normalizer.right * config.segmenter.overlap);
+    toPad += (config.normalizer.position * config.segmenter.overlap);
     data = Array.from(data).concat(new Array(toPad).fill(0));
     var lastSample = 0;
 
@@ -55,7 +55,7 @@ function extractFeaturesFile(data) {
     var preProcessed = library.preProcess(scaled);
 
     var framedSignal = extractor.framer(preProcessed, config.segmenter.windowSize, config.segmenter.overlapPercent);
-    for(var i = 0; i < config.normalizer.right; i++) {
+    for(var i = 0; i < config.normalizer.position; i++) {
         framedSignal.push(empty);
     }
 

@@ -11,14 +11,36 @@ var ChannelLayout = engine.AudioFormat.ChannelLayout;
 var AudioFormat = engine.AudioFormat.SampleFormat;
 var SampleRate = engine.AudioFormat.SampleRate;
 var _context = null;
+var controller = new MainController();
 
 class AudioSender{
     constructor(buffer){
-        this._buffer = buffer.splice();
+        this._buffer = this.deepObjCopy(buffer);
         this._client = null;
         this._isOpened = false;
+        this._singleCommand = false;
         this.setClient();
     }
+
+    deepObjCopy (dupeObj) {
+        var retObj = new Object();
+        if (typeof(dupeObj) == 'object') {
+            if (typeof(dupeObj.length) != 'undefined')
+                var retObj = new Array();
+            for (var objInd in dupeObj) {
+                if (typeof(dupeObj[objInd]) == 'object') {
+                    retObj[objInd] = this.deepObjCopy(dupeObj[objInd]);
+                } else if (typeof(dupeObj[objInd]) == 'string') {
+                    retObj[objInd] = dupeObj[objInd];
+                } else if (typeof(dupeObj[objInd]) == 'number') {
+                    retObj[objInd] = dupeObj[objInd];
+                } else if (typeof(dupeObj[objInd]) == 'boolean') {
+                    ((dupeObj[objInd] == true) ? retObj[objInd] = true : retObj[objInd] = false);
+                }
+            }
+        }
+    return retObj;
+}
 
     setClient() {
         const tkn = jwt.decode(config.nanogrid.ntx_token);
@@ -50,43 +72,80 @@ class AudioSender{
                             {
                                 "user" : {
                                     "pron" : "doleva",
-                                    "sym" : "left"
+                                    "sym" : "MouseLeft"
                                 }
                             },
                             {
                                 "user" : {
                                     "pron" : "doprava",
-                                    "sym" : "right"
+                                    "sym" : "MouseRight"
                                 }
                             },
                             {
                                 "user" : {
                                     "pron" : "nahoru",
-                                    "sym" : "up"
+                                    "sym" : "MouseUp"
+                                }
+                            },
+                            {
+                                "user" : {
+                                    "pron" : "nahóru",
+                                    "sym" : "MouseUp"
                                 }
                             },
                             {
                                 "user" : {
                                     "pron" : "dolu",
-                                    "sym" : "down"
+                                    "sym" : "MouseDown"
                                 }
                             },
                             {
                                 "user" : {
                                     "pron" : "klik",
-                                    "sym" : "click"
+                                    "sym" : "Click"
                                 }
                             },
                             {
                                 "user" : {
                                     "pron" : "dvojtíklik",
-                                    "sym" : "doubleclick"
+                                    "sym" : "DoubleClick"
                                 }
                             },
                             {
                                 "user" : {
                                     "pron" : "pravíklik",
-                                    "sym" : "rightclick"
+                                    "sym" : "RightClick"
+                                }
+                            },
+                            {
+                                "user" : {
+                                    "pron" : "padesát",
+                                    "sym" : "50"
+                                }
+                            },
+                            {
+                                "user" : {
+                                    "pron" : "sto",
+                                    "sym" : "100"
+                                }
+                            },
+                            {
+                                "user" : {
+                                    "pron" : "pjetset",
+                                    "sym" : "500"
+                                }
+                            },
+                            {
+                                "user" : {
+                                    "pron" : "miš",
+                                    "sym" : "Mouse"
+                                }
+                            }
+                            ,
+                            {
+                                "user" : {
+                                    "pron" : "hlavňískupina",
+                                    "sym" : "MainGroup"
                                 }
                             }
                         ]
@@ -249,8 +308,16 @@ class AudioSender{
             this._isOpened = true;
             this._result = this._client.v2t(this.sendAudio());
             this._result.subscribe((e) => {
-                if(e.hasOwnProperty('label')) {console.log(e.label)}
-            }, (err) => console.error("FAILED", err), () => console.log("DONE"));
+                if(e.hasOwnProperty('label')) {
+                    if(e.label.hasOwnProperty('item')) {
+                        if(this._singleCommand == false) {
+                            console.log(e.label)
+                            this._singleCommand = true;
+                            controller.doOperation(e.label.item)
+                        }
+                    }
+                }
+            }, (err) => {console.error("FAILED", err); this._singleCommand = false;}, () => {console.log("DONE"); this._singleCommand = false;});
         }
     }
 
@@ -261,7 +328,7 @@ class AudioSender{
                 this._isOpened = false;
                 return Promise.resolve(null);
             }
-            //console.log(chunk.join())
+            //console.log(chunk.join(','))
             const events = new engine.Events({
                 events: [new engine.Event({
                     audio: new engine.Event.Audio({

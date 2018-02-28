@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Nastavení</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<form id="formNanogridSettings" class="container-fluid"><div class="form-group border border-top-0">
+    <label>Nanogrid</label>
+    <div class="row">
+        <div class="col">
+            Doména
+        </div>
+        <div class="col">
+            <div>
+                <input id="domain" type="text" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Přihlašovací jméno
+        </div>
+        <div class="col">
+            <div>
+                <input id="username" type="email" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Heslo
+        </div>
+        <div class="col">
+            <div>
+                <input id="password" type="password" class="form-control">
+            </div>
+        </div>
+    </div>
+    <button type="submit">Uložit</button></div></form>
+<form id="formFsmSettings" class="container-fluid"><div class="form-group border border-top-0">
+    <label>FSM</label>
+    <div class="row">
+        <div class="col">
+            Práh
+        </div>
+        <div class="col">
+            <div>
+                <input id="threshold" type="number" class="form-control" step="any" max="1.0" min="0.0">
+            </div>
+        </div>
+    </div>
+    <button type="submit">Uložit</button></div></form>
+</body>
+<script>
+    const store_1 = require('electron-store');
+    var store = new store_1();
+    
+    var nanogridSettings = document.getElementById("formNanogridSettings");
+    nanogridSettings.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        var domain = this.querySelector("#domain").value;
+        var username = this.querySelector("#username").value;
+        var password = this.querySelector("#password").value;
+
+        if(domain.slice(-1) != '/') {
+            domain = domain + "/";
+        }
+
+        store.set("nanogrid.domain", domain);
+        store.set("nanogrid.username", username);
+        store.set("nanogrid.password", password);
+    });
+
+    var fsmSettings = document.getElementById("formFsmSettings");
+    fsmSettings.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        var threshold = this.querySelector("#threshold").value;
+
+        threshold = parseFloat(threshold);
+
+        store.set("fsm.threshold", threshold);
+    });
+
+    function loadSettings() {
+        nanogridSettings.querySelector("#domain").value = store.get("nanogrid.domain");
+        nanogridSettings.querySelector("#username").value = store.get("nanogrid.username");
+        nanogridSettings.querySelector("#password").value = store.get("nanogrid.password");
+
+        fsmSettings.querySelector("#threshold").value = store.get("fsm.threshold");
+    }
+
+    loadSettings();
+</script>
+</html>

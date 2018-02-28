@@ -165,7 +165,7 @@ const normalize = function (data) {
         bufferNorm[i] = bufferNorm[i + 1].slice();
     }
     bufferNorm[bufferNorm.length - 1] = data.slice();
-    if(index > config.normalizer.right) {
+    if(index > config.normalizer.position) {
         var mean;
         for(var i = 0; i < data.length; i++) {
             mean = 0;
@@ -177,7 +177,7 @@ const normalize = function (data) {
             } else {
                 mean /= bufferNorm.length;
             }
-            normalized[i] = bufferNorm[config.normalizer.left][i] - mean;
+            normalized[i] = bufferNorm[config.normalizer.position][i] - mean;
         }
     }
     return normalized;
@@ -185,7 +185,7 @@ const normalize = function (data) {
 
 const clearBuffer = function () {
     index = 0;
-    bufferNorm = new Array(config.normalizer.left + 1 + config.normalizer.right);
+    bufferNorm = new Array(config.normalizer.size);
     for(var i = 0; i < bufferNorm.length; i++) {
         bufferNorm[i] = new Array(config.melfbank.channels).fill(0);
     }

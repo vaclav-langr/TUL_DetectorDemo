@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Nastavení</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<form id="formBasicSettings" class="container-fluid"><div class="form-group border border-top-0">
+        <label>Základní nastavení</label>
+        <div class="row">
+            <div class="col">
+                Vzorkovací frekvence (Hz)
+            </div>
+            <div class="col">
+                <div>
+                    <input id="sampleRate" type="number" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                Bitová hloubka
+            </div>
+            <div class="col">
+                <div>
+                    <input id="bitDepth" type="number" class="form-control">
+                </div>
+            </div>
+        </div>
+    <button type="submit">Uložit</button></div></form>
+<form id="formSegmenterSettings" class="container-fluid"><div class="form-group border border-top-0">
+        <label>Segmenter</label>
+        <div class="row">
+            <div class="col">
+                Velikost okna
+            </div>
+            <div class="col">
+                <div>
+                    <input id="windowSize" type="number" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                Přesah
+            </div>
+            <div class="col">
+                <div>
+                    <input id="overlapSize" type="number" class="form-control">
+                </div>
+            </div>
+        </div>
+    <button type="submit">Uložit</button></div></form>
+<form id="formMelbankSettings" class="container-fluid"><div class="form-group border border-top-0">
+    <label>Melbank</label>
+    <div class="row">
+        <div class="col">
+            Hodnoty šumu
+        </div>
+        <div class="col">
+            <div>
+                <input id="noiseLower" type="number" class="form-control" step="any"><input id="noiseHigher" type="number" class="form-control" step="any">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Hodnoty šumu jako rozsah
+        </div>
+        <div class="col">
+            <div>
+                <input id="noiseRange" type="checkbox" class="form-check-input">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Koeficient preemfáze
+        </div>
+        <div class="col">
+            <div>
+                <input id="preemCoef" type="number" class="form-control" step="any">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Minimální frekvence
+        </div>
+        <div class="col">
+            <div>
+                <input id="lowFrequency" type="number" class="form-control" step="any" min="0">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Maximální frekvence
+        </div>
+        <div class="col">
+            <div>
+                <input id="highFrequency" type="number" class="form-control" step="any" min="1">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Počet kanálů
+        </div>
+        <div class="col">
+            <div>
+                <input id="channels" type="number" class="form-control" min="1">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Minimální hodnota
+        </div>
+        <div class="col">
+            <div>
+                <input id="minValue" type="number" class="form-control" step="any">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Návratová hodnota (při hodnotě menší než minimální)
+        </div>
+        <div class="col">
+            <div>
+                <input id="returnValue" type="number" class="form-control" step="any">
+            </div>
+        </div>
+    </div>
+    <button type="submit">Uložit</button></div></form>
+<form id="formNormalizerSettings" class="container-fluid"><div class="form-group border border-top-0">
+        <label>Normalizer</label>
+        <div class="row">
+            <div class="col">
+                Velikost
+            </div>
+            <div class="col">
+                <div>
+                    <input id="size" type="number" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                Pozice
+            </div>
+            <div class="col">
+                <div>
+                    <input id="position" type="number" class="form-control">
+                </div>
+            </div>
+        </div>
+    <button type="submit">Uložit</button></div></form>
+<form id="formSequencerSettings" class="container-fluid"><div class="form-group border border-top-0">
+        <label>Sequencer</label>
+        <div class="row">
+            <div class="col">
+                Velikost
+            </div>
+            <div class="col">
+                <div>
+                    <input id="size" type="number" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                Pozice
+            </div>
+            <div class="col">
+                <div>
+                    <input id="position" type="number" class="form-control">
+                </div>
+            </div>
+        </div>
+    <button type="submit">Uložit</button></div></form>
+<form id="formNeurotizerSettings" class="container-fluid"><div class="form-group border border-top-0">
+    <label>Neurotizér</label>
+    <div class="row">
+        <div class="col">
+            Neuronová síť
+        </div>
+        <div class="col">
+            <div>
+                <label for="path" id="pathLabel"></label><input id="path" type="file" class="form-control" accept=".nnet" required>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Aktivační funkce
+        </div>
+        <div class="col">
+            <div>
+                <input id="layers" type="text" class="form-control">
+            </div>
+        </div>
+    </div>
+    <button type="submit">Uložit</button></div></form>
+<form id="formTransformatorSettings" class="container-fluid"><div class="form-group border border-top-0">
+    <label>Transformátor</label>
+    <div class="row">
+        <div class="col">
+            Střední hodnota
+        </div>
+        <div class="col">
+            <div>
+                <label for="meanPath" id="meanLabel"></label><input id="meanPath" type="file" class="form-control" accept=".list">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Směrodatná odchylka
+        </div>
+        <div class="col">
+            <div>
+                <label for="stdPath" id="stdLabel"></label><input id="stdPath" type="file" class="form-control" accept=".list">
+            </div>
+        </div>
+    </div>
+    <button type="submit">Uložit</button></div></form>
+</body>
+<script>
+    const store_1 = require('electron-store');
+    var store = new store_1();
+
+    var basicSettings = document.getElementById("formBasicSettings");
+    basicSettings.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        var sampleRate = this.querySelector("#sampleRate").value;
+        var bitDepth = this.querySelector("#bitDepth").value;
+
+        sampleRate = parseInt(sampleRate);
+        bitDepth = parseInt(bitDepth);
+
+        store.set("sampleRate", sampleRate);
+        store.set("bitDepth", bitDepth)
+    });
+
+    var segmenterSettings = document.getElementById("formSegmenterSettings");
+    segmenterSettings.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        var windowSize = this.querySelector("#windowSize").value;
+        var overlapSize = this.querySelector("#overlapSize").value;
+
+        windowSize = parseInt(windowSize);
+        overlapSize = parseInt(overlapSize);
+
+        store.set("segmenter.windowSize", windowSize);
+        store.set("segmenter.overlap", overlapSize);
+    });
+
+    var melbankSettings = document.getElementById("formMelbankSettings");
+    melbankSettings.addEventListener("submit", function (e) {
+        e.preventDefault()
+
+        var noiseLower = this.querySelector("#noiseLower").value;
+        var noiseHigher = this.querySelector("#noiseHigher").value;
+        var noiseRange = this.querySelector("#noiseRange").checked;
+        var preemCoef = this.querySelector("#preemCoef").value;
+        var lowFrequency = this.querySelector("#lowFrequency").value;
+        var highFrequency = this.querySelector("#highFrequency").value;
+        var channels = this.querySelector("#channels").value;
+        var minValue = this.querySelector("#minValue").value;
+        var returnValue = this.querySelector("#returnValue").value;
+
+        noiseLower = parseFloat(noiseLower);
+        noiseHigher = parseFloat(noiseHigher);
+        preemCoef = parseFloat(preemCoef);
+        lowFrequency = parseFloat(lowFrequency);
+        highFrequency = parseFloat(highFrequency);
+        channels = parseInt(channels);
+        minValue = parseFloat(minValue);
+        returnValue = parseFloat(returnValue);
+
+        store.set('melfbank.noiseCoefsLower', noiseLower);
+        store.set('melfbank.noiseCoefsHigher', noiseHigher);
+        store.set('melfbank.useRange', noiseRange);
+        store.set('melfbank.preemCoef', preemCoef);
+        store.set('melfbank.lowFrequency', lowFrequency);
+        store.set('melfbank.highFrequency', highFrequency);
+        store.set('melfbank.channels', channels);
+        store.set('melfbank.minValue', minValue);
+        store.set('melfbank.returnValue', returnValue);
+    });
+
+    var normalizerSettings = document.getElementById("formNormalizerSettings");
+    normalizerSettings.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        var size = this.querySelector("#size").value;
+        var position = this.querySelector("#position").value;
+
+        size = parseInt(size);
+        position = parseInt(position);
+
+        store.set("normalizer.size", size);
+        store.set("normalizer.position", position);
+    });
+
+    var sequencerSettings = document.getElementById("formSequencerSettings");
+    sequencerSettings.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        var size = this.querySelector("#size").value;
+        var position = this.querySelector("#position").value;
+
+        size = parseInt(size);
+        position = parseInt(position);
+
+        store.set("sequencer.size", size);
+        store.set("sequencer.position", position);
+    });
+
+    var neurotizerSettings = document.getElementById("formNeurotizerSettings");
+    neurotizerSettings.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        var path = "./Library/" + this.querySelector("#path").files[0].name;
+        var layers = (this.querySelector("#layers").value).split(",");
+
+        store.set("neurotizer.nnetPath", path);
+        store.set("neurotizer.activations", layers);
+    });
+
+    var transformatorSettings = document.getElementById("formTransformatorSettings");
+    transformatorSettings.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        var mean = "./Library/" + this.querySelector("#meanPath").files[0].name;
+        var std = "./Library/" + this.querySelector("#stdPath").files[0].name;
+
+        store.set("transformator.mean.path",mean);
+        store.set("transformator.std.path",std);
+    });
+
+    function loadSettings() {
+        basicSettings.querySelector("#sampleRate").value = store.get("sampleRate");
+        basicSettings.querySelector("#bitDepth").value = store.get("bitDepth");
+
+        segmenterSettings.querySelector("#windowSize").value = store.get("segmenter.windowSize");
+        segmenterSettings.querySelector("#overlapSize").value = store.get("segmenter.overlap");
+
+        melbankSettings.querySelector("#noiseLower").value = store.get('melfbank.noiseCoefsLower');
+        melbankSettings.querySelector("#noiseHigher").value = store.get('melfbank.noiseCoefsHigher');
+        melbankSettings.querySelector("#noiseRange").checked = store.get('melfbank.useRange');
+        melbankSettings.querySelector("#preemCoef").value = store.get('melfbank.preemCoef');
+        melbankSettings.querySelector("#lowFrequency").value = store.get('melfbank.lowFrequency');
+        melbankSettings.querySelector("#highFrequency").value = store.get('melfbank.highFrequency');
+        melbankSettings.querySelector("#channels").value = store.get('melfbank.channels');
+        melbankSettings.querySelector("#minValue").value = store.get('melfbank.minValue');
+        melbankSettings.querySelector("#returnValue").value = store.get('melfbank.returnValue');
+        melbankSettings.querySelector("#highFrequency").max = store.get('sampleRate') / 2;
+
+        normalizerSettings.querySelector("#size").value = store.get("normalizer.size");
+        normalizerSettings.querySelector("#position").value = store.get("normalizer.position");
+
+        sequencerSettings.querySelector("#size").value = store.get("sequencer.size");
+        sequencerSettings.querySelector("#position").value = store.get("sequencer.position");
+
+        neurotizerSettings.querySelector("#pathLabel").innerText = store.get("neurotizer.nnetPath");
+        neurotizerSettings.querySelector("#layers").value = store.get("neurotizer.activations").join(",");
+
+        transformatorSettings.querySelector("#meanLabel").innerText = store.get("transformator.mean.path");
+        transformatorSettings.querySelector("#stdLabel").innerText = store.get("transformator.std.path");
+    }
+
+    loadSettings();
+</script>
+</html>

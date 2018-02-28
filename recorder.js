@@ -11,6 +11,13 @@ var buffer = new Array();
 var formatVar;
 var isSpeech = false;
 
+function addToBuffer(raw) {
+    if(buffer.length == (config.sequencer.size * 2)) {
+        buffer.shift()
+    }
+    buffer.push(raw)
+}
+
 const startRecording = function(onComplete, afterResample) {
     if(isRecording) {
         return;
@@ -26,14 +33,14 @@ const startRecording = function(onComplete, afterResample) {
             micStream.on('data', function(chunk) {
                 var raw = MicrophoneStream.toRaw(chunk);
 
-                if(buffer.length == (config.sequencer.size * 3)) {
-                    buffer.shift()
-                }
-                buffer.push(raw)
                 if(audioSender != null) {
                     if (audioSender.isOpened() && isSpeech) {
                         audioSender.addChunk(raw);
+                    } else {
+                        addToBuffer(raw);
                     }
+                } else {
+                    addToBuffer(raw)
                 }
 
                 onComplete(raw, sampleRate, afterResample);
@@ -63,9 +70,10 @@ const setSpeech = function(speech) {
             audioSender = new audioSender_1.AudioSender(buffer);
             audioSender.setFormat(formatVar);
             audioSender.startSpeech();
+
+            buffer = new Array();
         }
     }
-
 };
 
 module.exports = {

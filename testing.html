@@ -10,7 +10,7 @@ Stream-like: <input id="stream-input" type="file">
 <br>
 File: <input id="file-input" type="file">
 <br>
-<input type="range" value="0.5" min="0" max="1" step="any" id="threshold">
+<input type="range" min="0" max="1" step="any" id="threshold">
 Hodnota: <div id="thresh"></div>
 <br>
 <footer>
@@ -26,5 +26,12 @@ Hodnota: <div id="thresh"></div>
 </body>
 <script>
     require('./test.js')
+    var config = require('./config').config;
+
+    document.getElementById("threshold").value = config.fsm.threshold;
+    document.getElementById("thresh").innerText = document.getElementById("threshold").value;
+    document.getElementById("threshold").addEventListener("change", function () {
+        document.getElementById("thresh").innerText = document.getElementById("threshold").value;
+    });
 </script>
 </html>

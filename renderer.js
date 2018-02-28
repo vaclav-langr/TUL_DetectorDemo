@@ -38,7 +38,7 @@ function extractFeatures(data) {
 
 document.getElementById('stop-button').addEventListener('click', function () {
     Recorder.stopRecording();
-    for(var i = 0; i < config.normalizer.right; i++) {
+    for(var i = 0; i < config.normalizer.position; i++) {
         prepareData(empty);
     }
 });

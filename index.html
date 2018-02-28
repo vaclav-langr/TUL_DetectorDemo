@@ -4,6 +4,7 @@
       <meta charset="UTF-8">
       <title>MyVoice V2</title>
       <link rel="stylesheet" type="text/css" href="./style.css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   </head>
   <body>
       Online stream:
@@ -11,7 +12,7 @@
       <button id="stop-button">Stop</button>
       <button id="start-button">Start</button>
       <br>
-      <input type="range" value="0.5" min="0" max="1" step="any" id="threshold">
+      <input type="range" min="0" max="1" step="any" id="threshold">
       Hodnota: <div id="thresh"></div>
       <br>
       <div id="commands"></div>
@@ -31,6 +32,7 @@
       require('./renderer.js')
       var config = require('./config').config;
 
+      document.getElementById("threshold").value = config.fsm.threshold;
       document.getElementById("thresh").innerText = document.getElementById("threshold").value;
       document.getElementById("threshold").addEventListener("change", function () {
           document.getElementById("thresh").innerText = document.getElementById("threshold").value;
@@ -39,5 +41,58 @@
       var controller_1 = require('./Controllers/MainController').MainController;
       var controller = new controller_1();
       controller.updateGUI()
+
+      var store_1 = require('electron-store');
+      var store = new store_1();
+
+      function getNtx() {
+          const got = require("got");
+          var domain = store.get("nanogrid.domain");
+          var token = store.get("nanogrid.access_token");
+          (async() => {
+              try {
+                  const response = await got.post(domain + "store/ntx-token", {
+                      json: true,
+                      headers: {"Authorization" : "Bearer " + token},
+                      body: {
+                          "id":"ntx.v2t.engine.EngineService/cz/voice-control/v2t",
+                          "label":"v2t"
+                      }
+                  });
+                  store.set("nanogrid.ntx_token", response.body.ntxToken);
+              } catch (error) {
+                  //display error to user
+                  console.log(error);
+              }
+          })();
+      }
+
+      function login() {
+          var domain = store.get("nanogrid.domain");
+          var username = store.get("nanogrid.username");
+          var password = store.get("nanogrid.password");
+          if(store.get("nanogrid.domain") != "" && store.get("nanogrid.username") != "" && store.get("nanogrid.password") != "") {
+              const got = require("got");
+
+              (async() => {
+                  try {
+                      const response = await got.post(domain + "login/access-token", {
+                          json: true,
+                          body: {
+                              "username":username,
+                              "password":password
+                          }
+                      });
+                      store.set("nanogrid.access_token", response.body.accessToken);
+                      getNtx();
+                  } catch (error) {
+                      //display error
+                      console.log(error);
+                  }
+              })();
+          }
+      }
+
+      login()
   </script>
 </html>
