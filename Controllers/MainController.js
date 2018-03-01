@@ -27,13 +27,14 @@ MainController.prototype.updateGUI = function (result, operation) {
 
     var commands = this.getPossibilities();
     for(var i = 0; i < commands.length; i++) {
-        var btn = document.createElement("button");
-        btn.appendChild(document.createTextNode(commands[i]));
-        element.appendChild(btn)
-        btn.onclick = function (e) {
-            this.doOperation(e.target.innerText);
-        };
-        btn.onclick = btn.onclick.bind(this);
+        var text = document.createElement("h4");
+        text.style = "line-height: 5px;text-align: center;";
+        text.appendChild(document.createTextNode(commands[i]));
+        element.appendChild(text)
+        //text.onclick = function (e) {
+        //    this.doOperation(e.target.innerText);
+        //};
+        //text.onclick = text.onclick.bind(this);
 
         element.appendChild(document.createElement("br"))
     }

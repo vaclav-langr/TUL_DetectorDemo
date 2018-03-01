@@ -1,13 +1,43 @@
+html, body {
+    height:100%;
+    margin:0;
+    padding:0;
+}
+
+header{
+    width: 100%;
+    background: lightgray;
+    position: fixed;
+    top: 0;
+    height: 110px !important;
+    z-index:100;
+}
+
+.content {
+    position:relative;
+    min-height: 100%;
+    width: 100%; /* Sizing - any length */
+    padding:130px 0 155px 0; /* Header height and footer height */
+    margin:0 auto 0 auto; /* Center content */
+}
+
+#scrollable {
+    height:100%;
+    background:white;
+    min-width: 300px;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    -o-box-sizing:border-box;
+    -ms-box-sizing:border-box;
+    box-sizing:border-box;
+}
+
 footer {
-    bottom:0;
-    position:fixed;
-    z-index:150;
-    _position:absolute;
-    _top:expression(eval(document.documentElement.scrollTop+
-        (document.documentElement.clientHeight-this.offsetHeight)));
-    height:135px;
-    background-color: lightgray;
-    min-width: 100%;
+    width: 100%;
+    background: lightgray;
+    position: fixed;
+    bottom: 0;
+    height: 135px;
 }
 
 svg {

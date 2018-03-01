@@ -7,21 +7,26 @@
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   </head>
   <body>
+  <header>
       Online stream:
       <br>
       <button id="stop-button">Stop</button>
       <button id="start-button">Start</button>
       <br>
       <input type="range" min="0" max="1" step="any" id="threshold">
-      Hodnota: <div id="thresh"></div>
-      <br>
-      <div id="commands"></div>
-      <footer>
+      <div id="thresh"></div>
+  </header>
+  <div class="content">
+    <div id="scrollable">
+        <div id="commands"></div>
+    </div>
+  </div>
+  <footer>
           <div id="lastCommand"></div>
           <div>
               <svg id="detector" width="100" height="100">
                   <circle cx="50" cy="50" r="40"
-                          stroke="black" stroke-width="4" />
+                          stroke="black" stroke-width="4"/>
                   Sorry, your browser does not support inline SVG.
               </svg>
           </div>
@@ -33,14 +38,17 @@
       var config = require('./config').config;
 
       document.getElementById("threshold").value = config.fsm.threshold;
-      document.getElementById("thresh").innerText = document.getElementById("threshold").value;
+      document.getElementById("thresh").innerText = "Hodnota: " + document.getElementById("threshold").value;
       document.getElementById("threshold").addEventListener("change", function () {
-          document.getElementById("thresh").innerText = document.getElementById("threshold").value;
+          document.getElementById("thresh").innerText = "Hodnota: " + document.getElementById("threshold").value;
       });
 
       var controller_1 = require('./Controllers/MainController').MainController;
       var controller = new controller_1();
       controller.updateGUI()
+
+      var detector = document.getElementById("detector");
+      detector.setAttribute("fill", "#660000")
 
       var store_1 = require('electron-store');
       var store = new store_1();
