@@ -29,19 +29,19 @@ MouseController.rightClick = function () {
 
 MouseController.prototype = new AbstractController();
 
-MouseController.prototype.returnCommand = "Mouse";
+MouseController.prototype.returnCommand = "Myš";
 
 MouseController.prototype.possibleCommands = {
-    "Click": MouseController.simpleClick,
-    "DoubleClick": MouseController.doubleClick,
-    "RightClick": MouseController.rightClick
+    "Klik": MouseController.simpleClick,
+    "Dvojitý klik": MouseController.doubleClick,
+    "Pravý klik": MouseController.rightClick
 }
 
 MouseController.prototype.possibleGroups = {
-    "MouseUp": new MouseUp(),
-    "MouseDown": new MouseDown(),
-    "MouseLeft": new MouseLeft(),
-    "MouseRight": new MouseRight()
+    "Nahoru": new MouseUp(),
+    "Dolu": new MouseDown(),
+    "Doleva": new MouseLeft(),
+    "Doprava": new MouseRight()
 };
 
 module.exports = {MouseController:MouseController};

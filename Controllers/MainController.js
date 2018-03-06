@@ -10,10 +10,10 @@ function MainController() {
 
 MainController.prototype = new AbstractController();
 
-MainController.prototype.returnCommand = "MainGroup";
+MainController.prototype.returnCommand = "Základní skupina";
 
 MainController.prototype.possibleGroups = {
-    "Mouse": new MouseController()
+    "Myš": new MouseController()
 };
 
 MainController.prototype.doOperation = function (operation) {
@@ -31,10 +31,10 @@ MainController.prototype.updateGUI = function (result, operation) {
         text.style = "line-height: 5px;text-align: center;";
         text.appendChild(document.createTextNode(commands[i]));
         element.appendChild(text)
-        //text.onclick = function (e) {
-        //    this.doOperation(e.target.innerText);
-        //};
-        //text.onclick = text.onclick.bind(this);
+        text.onclick = function (e) {
+            this.doOperation(e.target.innerText);
+        };
+        text.onclick = text.onclick.bind(this);
 
         element.appendChild(document.createElement("br"))
     }

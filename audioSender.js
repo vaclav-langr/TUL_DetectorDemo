@@ -72,49 +72,49 @@ class AudioSender{
                             {
                                 "user" : {
                                     "pron" : "doleva",
-                                    "sym" : "MouseLeft"
+                                    "sym" : "Doleva"
                                 }
                             },
                             {
                                 "user" : {
                                     "pron" : "doprava",
-                                    "sym" : "MouseRight"
+                                    "sym" : "Doprava"
                                 }
                             },
                             {
                                 "user" : {
                                     "pron" : "nahoru",
-                                    "sym" : "MouseUp"
+                                    "sym" : "Nahoru"
                                 }
                             },
                             {
                                 "user" : {
                                     "pron" : "nahóru",
-                                    "sym" : "MouseUp"
+                                    "sym" : "Nahoru"
                                 }
                             },
                             {
                                 "user" : {
                                     "pron" : "dolu",
-                                    "sym" : "MouseDown"
+                                    "sym" : "Dolu"
                                 }
                             },
                             {
                                 "user" : {
                                     "pron" : "klik",
-                                    "sym" : "Click"
+                                    "sym" : "Klik"
                                 }
                             },
                             {
                                 "user" : {
                                     "pron" : "dvojtíklik",
-                                    "sym" : "DoubleClick"
+                                    "sym" : "Dvojtý klik"
                                 }
                             },
                             {
                                 "user" : {
                                     "pron" : "pravíklik",
-                                    "sym" : "RightClick"
+                                    "sym" : "Pravý klik"
                                 }
                             },
                             {
@@ -138,14 +138,14 @@ class AudioSender{
                             {
                                 "user" : {
                                     "pron" : "miš",
-                                    "sym" : "Mouse"
+                                    "sym" : "Myš"
                                 }
                             }
                             ,
                             {
                                 "user" : {
                                     "pron" : "hlavňískupina",
-                                    "sym" : "MainGroup"
+                                    "sym" : "Hlavní skupina"
                                 }
                             }
                         ]
