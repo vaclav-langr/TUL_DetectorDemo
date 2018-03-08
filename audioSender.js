@@ -4,6 +4,7 @@ const engine_1 = require('../ntx-js/dist/src/generated/engine');
 const os = require('os');
 const jwt = require('jsonwebtoken');
 const MainController = require('./Controllers/MainController').MainController;
+const audioLogger = require('./audioLogger');
 
 const engine = engine_1.ntx.v2t.engine;
 var AudioChannel = engine.EngineContext.AudioChannel;
@@ -56,6 +57,8 @@ class AudioSender{
     }
 
     setFormat(format) {
+        audioLogger.setSampleRate(format.sampleRate);
+
         _context = new engine.EngineContextStart({
             context: new engine.EngineContext({
                 audioFormat: new engine.AudioFormat({
@@ -326,9 +329,10 @@ class AudioSender{
             var chunk = this._buffer.shift();
             if(typeof chunk === 'undefined') {
                 this._isOpened = false;
+                audioLogger.saveToWav();
                 return Promise.resolve(null);
             }
-            //console.log(chunk.join(','))
+            audioLogger.addToBuffer(chunk);
             const events = new engine.Events({
                 events: [new engine.Event({
                     audio: new engine.Event.Audio({

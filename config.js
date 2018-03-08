@@ -58,8 +58,6 @@ while (powerOfTwo < config.segmenter.windowSize) {
 }
 config.segmenter.windowsSizePower = powerOfTwo;
 
-console.log(config)
-
 module.exports = {
     config
 };
