@@ -30,6 +30,7 @@ const saveToWav = function () {
     WavEncoder.encode(audio).then((buffer) => {
         fs.writeFileSync("./log/" + (+new Date).toString() + ".wav", new Buffer(buffer))
     });
+    _buffer = [];
 };
 
 module.exports = {

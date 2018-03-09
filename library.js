@@ -192,11 +192,11 @@ const clearBuffer = function () {
 };
 
 module.exports = {
-    preProcess,
-    computeMfbank,
-    resample,
-    normalize,
-    clearBuffer,
-    applyHammingWindow,
-    scaleSignal
+    preProcess:preProcess,
+    computeMfbank:computeMfbank,
+    resample:resample,
+    normalize:normalize,
+    clearBuffer:clearBuffer,
+    applyHammingWindow:applyHammingWindow,
+    scaleSignal:scaleSignal
 };

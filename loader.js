@@ -52,11 +52,10 @@ const loadWeights = function() {
             tempArray[j] = parsedResult['weight'].splice(0,parsedResult['noNeurons'][i-1]);
         }
         result['weight'][i-1] = tempArray;
-        //result['weight'][i-1] = parsedResult['weight'].splice(0, parsedResult['noNeurons'][i-1]*parsedResult['noNeurons'][i]);
     }
     return result;
 }
 
 module.exports = {
-    loadWeights
-}
+    loadWeights:loadWeights
+};

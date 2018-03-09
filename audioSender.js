@@ -16,32 +16,12 @@ var controller = new MainController();
 
 class AudioSender{
     constructor(buffer){
-        this._buffer = this.deepObjCopy(buffer);
+        this._buffer = buffer;
         this._client = null;
         this._isOpened = false;
         this._singleCommand = false;
         this.setClient();
     }
-
-    deepObjCopy (dupeObj) {
-        var retObj = new Object();
-        if (typeof(dupeObj) == 'object') {
-            if (typeof(dupeObj.length) != 'undefined')
-                var retObj = new Array();
-            for (var objInd in dupeObj) {
-                if (typeof(dupeObj[objInd]) == 'object') {
-                    retObj[objInd] = this.deepObjCopy(dupeObj[objInd]);
-                } else if (typeof(dupeObj[objInd]) == 'string') {
-                    retObj[objInd] = dupeObj[objInd];
-                } else if (typeof(dupeObj[objInd]) == 'number') {
-                    retObj[objInd] = dupeObj[objInd];
-                } else if (typeof(dupeObj[objInd]) == 'boolean') {
-                    ((dupeObj[objInd] == true) ? retObj[objInd] = true : retObj[objInd] = false);
-                }
-            }
-        }
-    return retObj;
-}
 
     setClient() {
         const tkn = jwt.decode(config.nanogrid.ntx_token);

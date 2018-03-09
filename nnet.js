@@ -81,6 +81,6 @@ function getActivation(type) {
 }
 
 module.exports = {
-    computeNetworkOutput
+    computeNetworkOutput:computeNetworkOutput
 };
 

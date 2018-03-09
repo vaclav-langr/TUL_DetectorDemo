@@ -25,7 +25,7 @@ Hodnota: <div id="thresh"></div>
 </footer>
 </body>
 <script>
-    require('./test.js')
+    var test = require('./test.js');
     var config = require('./config').config;
 
     document.getElementById("threshold").value = config.fsm.threshold;
@@ -33,5 +33,15 @@ Hodnota: <div id="thresh"></div>
     document.getElementById("threshold").addEventListener("change", function () {
         document.getElementById("thresh").innerText = document.getElementById("threshold").value;
     });
+
+    document.getElementById("stream-input").addEventListener("change", function () {
+        test.streamInput(this.files[0]);
+        this.value = "";
+    });
+
+    document.getElementById("file-input").addEventListener("change", function () {
+        test.fileInput(this.files[0]);
+        this.value = "";
+    })
 </script>
 </html>

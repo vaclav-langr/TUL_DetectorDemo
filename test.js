@@ -44,7 +44,6 @@ function extractFeaturesStream(data) {
     var normalized = library.normalize(mfbankFeatures);
     var transformed = transformator.transform(normalized);
     sequenceBuffer.addData(transformed);
-    document.getElementById("stream-input").value = "";
 }
 
 function extractFeaturesFile(data) {
@@ -68,7 +67,6 @@ function extractFeaturesFile(data) {
         transformed = transformator.transform(normalized);
         sequenceBuffer.addData(transformed); //Detection
     }
-    document.getElementById("file-input").value = "";
 }
 
 function onChange(file, onComplete) {
@@ -83,10 +81,15 @@ function onChange(file, onComplete) {
     fr.readAsArrayBuffer(file);
 }
 
-document.getElementById("stream-input").addEventListener("change", function () {
-    onChange(document.getElementById("stream-input").files[0], splitStreamLikeData);
-});
+const streamInput = function (file) {
+    onChange(file, splitStreamLikeData);
+};
 
-document.getElementById("file-input").addEventListener("change", function () {
-    onChange(document.getElementById("file-input").files[0], extractFeaturesFile);
-});
+const fileInput = function (file) {
+    onChange(file, extractFeaturesFile);
+};
+
+module.exports = {
+    streamInput:streamInput,
+    fileInput:fileInput
+};

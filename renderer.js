@@ -36,13 +36,19 @@ function extractFeatures(data) {
     sequenceBuffer.addData(transformed);
 }
 
-document.getElementById('stop-button').addEventListener('click', function () {
+const stopRecording = function() {
     Recorder.stopRecording();
     for(var i = 0; i < config.normalizer.position; i++) {
         prepareData(empty);
     }
-});
-document.getElementById('start-button').addEventListener('click', function () {
+};
+
+const startRecording = function () {
     library.clearBuffer();
     Recorder.startRecording(library.resample, prepareData);
-});
+};
+
+module.exports = {
+    stopRecording:stopRecording,
+    startRecording:startRecording
+};

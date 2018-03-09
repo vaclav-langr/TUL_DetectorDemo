@@ -46,5 +46,5 @@ class ShiftBuffer{
 }
 
 module.exports = {
-    ShiftBuffer
+    ShiftBuffer:ShiftBuffer
 };

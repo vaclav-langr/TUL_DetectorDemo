@@ -34,13 +34,20 @@
   </body>
 
   <script>
-      require('./renderer.js')
+      var renderer = require('./renderer.js');
       var config = require('./config').config;
 
       document.getElementById("threshold").value = config.fsm.threshold;
       document.getElementById("thresh").innerText = "Hodnota: " + document.getElementById("threshold").value;
       document.getElementById("threshold").addEventListener("change", function () {
           document.getElementById("thresh").innerText = "Hodnota: " + document.getElementById("threshold").value;
+      });
+
+      document.getElementById('stop-button').addEventListener('click', function () {
+          renderer.stopRecording();
+      });
+      document.getElementById('start-button').addEventListener('click', function () {
+          renderer.startRecording();
       });
 
       var controller_1 = require('./Controllers/MainController').MainController;

@@ -12,7 +12,7 @@ var formatVar;
 var isSpeech = false;
 
 function addToBuffer(raw) {
-    if(buffer.length == (config.sequencer.size * 2)) {
+    if(buffer.length == (config.sequencer.size * 1)) {
         buffer.shift()
     }
     buffer.push(raw)
@@ -48,7 +48,7 @@ const startRecording = function(onComplete, afterResample) {
             micStream.on('format', function(format) {
                 formatVar = format;
                 sampleRate = format.sampleRate;
-                console.log(format);
+                //console.log(format);
             });
         }).catch(function(error) {
         console.log(error);
@@ -77,7 +77,7 @@ const setSpeech = function(speech) {
 };
 
 module.exports = {
-    startRecording,
-    stopRecording,
-    setSpeech
+    startRecording:startRecording,
+    stopRecording:stopRecording,
+    setSpeech:setSpeech
 };

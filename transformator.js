@@ -71,5 +71,5 @@ const transform = function(input) {
 };
 
 module.exports = {
-    transform
+    transform:transform
 };
