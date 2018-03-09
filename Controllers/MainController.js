@@ -41,13 +41,9 @@ MainController.prototype.updateGUI = function (result, operation) {
 
     var commandElement = document.getElementById("lastCommand");
     commandElement.innerText = "";
-    if(result) {
-        if(operation != null) {
-            commandElement.appendChild(document.createTextNode(operation));
-        } else {
-            commandElement.appendChild(document.createTextNode("???"));
-        }
-    } else {
+    try {
+        commandElement.appendChild(document.createTextNode(result[1]));
+    } catch (e) {
         commandElement.appendChild(document.createTextNode("???"));
     }
 };

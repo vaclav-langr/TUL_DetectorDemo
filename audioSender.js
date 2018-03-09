@@ -91,13 +91,13 @@ class AudioSender{
                             {
                                 "user" : {
                                     "pron" : "dvojtíklik",
-                                    "sym" : "Dvojtý klik"
+                                    "sym" : "Dvojtýklik"
                                 }
                             },
                             {
                                 "user" : {
                                     "pron" : "pravíklik",
-                                    "sym" : "Pravý klik"
+                                    "sym" : "Pravýklik"
                                 }
                             },
                             {
@@ -127,8 +127,8 @@ class AudioSender{
                             ,
                             {
                                 "user" : {
-                                    "pron" : "hlavňískupina",
-                                    "sym" : "Hlavní skupina"
+                                    "pron" : "záklaďňískupina",
+                                    "sym" : "Základnískupina"
                                 }
                             }
                         ]
@@ -292,9 +292,9 @@ class AudioSender{
             this._result = this._client.v2t(this.sendAudio());
             this._result.subscribe((e) => {
                 if(e.hasOwnProperty('label')) {
+                    console.log(e.label)
                     if(e.label.hasOwnProperty('item')) {
                         if(this._singleCommand == false) {
-                            console.log(e.label)
                             this._singleCommand = true;
                             controller.doOperation(e.label.item)
                         }

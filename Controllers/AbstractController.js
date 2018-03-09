@@ -11,30 +11,31 @@ function AbstractController(){
 
 AbstractController.prototype.doOperation = function(operation){
     if(this.controller != null) {
-        if(this.controller.doOperation(operation)) {
-            return true;
+        var temp = this.controller.doOperation(operation);
+        if(temp[0]) {
+            return temp;
         }
     } else {
         for (var key in this.possibleGroups) {
-            if (key == operation) {
+            if (key.replace(" ", "") == operation) {
                 if (this.controller == null) {
                     this.controller = this.possibleGroups[key];
-                    return true;
+                    return [true, key];
                 }
             }
         }
         for (var key in this.possibleCommands) {
-            if (key == operation) {
+            if (key.replace(" ", "") == operation) {
                 this.possibleCommands[key]();
-                return true;
+                return [true, key];
             }
         }
     }
-    if(operation == this.returnCommand) {
+    if(operation == this.returnCommand.replace(" ", "")) {
         this.clearController();
-        return true;
+        return [true, this.returnCommand];
     }
-    return false;
+    return [false, "???"];
 };
 
 AbstractController.prototype.getPossibilities = function () {
