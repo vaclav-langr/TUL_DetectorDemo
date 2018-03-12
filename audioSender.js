@@ -5,6 +5,7 @@ const os = require('os');
 const jwt = require('jsonwebtoken');
 const MainController = require('./Controllers/MainController').MainController;
 const audioLogger = require('./audioLogger');
+const commandLogger = require('./commandLogger');
 
 const engine = engine_1.ntx.v2t.engine;
 var AudioChannel = engine.EngineContext.AudioChannel;
@@ -37,7 +38,10 @@ class AudioSender{
     }
 
     setFormat(format) {
+        var filename = (+new Date).toString()
         audioLogger.setSampleRate(format.sampleRate);
+        audioLogger.setFilename(filename);
+        commandLogger.setFilename(filename);
 
         _context = new engine.EngineContextStart({
             context: new engine.EngineContext({
@@ -292,8 +296,11 @@ class AudioSender{
             this._result = this._client.v2t(this.sendAudio());
             this._result.subscribe((e) => {
                 if(e.hasOwnProperty('label')) {
-                    console.log(e.label)
+                    if(e.label.hasOwnProperty('noise')) {
+                        commandLogger.saveItem(e.label.noise);
+                    }
                     if(e.label.hasOwnProperty('item')) {
+                        commandLogger.saveItem(e.label.item);
                         if(this._singleCommand == false) {
                             this._singleCommand = true;
                             controller.doOperation(e.label.item)
