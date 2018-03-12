@@ -31,10 +31,11 @@ MainController.prototype.updateGUI = function (result, operation) {
         text.style = "line-height: 5px;text-align: center;";
         text.appendChild(document.createTextNode(commands[i]));
         element.appendChild(text)
-        text.onclick = function (e) {
-            this.doOperation(e.target.innerText);
-        };
-        text.onclick = text.onclick.bind(this);
+
+        //text.onclick = function (e) {
+        //    this.doOperation(e.target.innerText.replace(" ", ""));
+        //};
+        //text.onclick = text.onclick.bind(this);
 
         element.appendChild(document.createElement("br"))
     }

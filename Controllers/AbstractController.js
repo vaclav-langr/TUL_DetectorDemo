@@ -31,9 +31,11 @@ AbstractController.prototype.doOperation = function(operation){
             }
         }
     }
-    if(operation == this.returnCommand.replace(" ", "")) {
-        this.clearController();
-        return [true, this.returnCommand];
+    if(this.returnCommand != null) {
+        if (operation == this.returnCommand.replace(" ", "")) {
+            this.clearController();
+            return [true, this.returnCommand];
+        }
     }
     return [false, "???"];
 };
