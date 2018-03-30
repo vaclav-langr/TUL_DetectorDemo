@@ -35,6 +35,10 @@ const startRecording = function(onComplete, afterResample) {
 
                 if(audioSender != null) {
                     if (audioSender.isOpened() && isSpeech) {
+                        if(buffer.length > 0) {
+                            audioSender.addBuffer(buffer)
+                            buffer = [];
+                        }
                         audioSender.addChunk(raw);
                     } else {
                         addToBuffer(raw);

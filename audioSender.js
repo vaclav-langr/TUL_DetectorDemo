@@ -24,6 +24,12 @@ class AudioSender{
         this.setClient();
     }
 
+    addBuffer(buffer) {
+        for(var i = 0; i < buffer.length; i++) {
+            this._buffer.push(buffer[i]);
+        }
+    }
+
     setClient() {
         const tkn = jwt.decode(config.nanogrid.ntx_token);
         const iss = tkn.iss;
