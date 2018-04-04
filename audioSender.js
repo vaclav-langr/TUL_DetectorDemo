@@ -1,26 +1,25 @@
-const config = require('./config').config;
-const ntx = require('../ntx-js/dist/src/clients/websocket').WSClient;
 const engine_1 = require('../ntx-js/dist/src/generated/engine');
-const os = require('os');
+const ntx = require('../ntx-js/dist/src/clients/websocket').WSClient;
+const engine = engine_1.ntx.v2t.engine;
+var AudioChannel = engine.EngineContext.AudioChannel;
 const jwt = require('jsonwebtoken');
+
+const config = require('./config').config;
+const os = require('os');
 const MainController = require('./Controllers/MainController').MainController;
 const audioLogger = require('./audioLogger');
 const commandLogger = require('./commandLogger');
-
-const engine = engine_1.ntx.v2t.engine;
-var AudioChannel = engine.EngineContext.AudioChannel;
+var SampleRate = engine.AudioFormat.SampleRate;
 var ChannelLayout = engine.AudioFormat.ChannelLayout;
 var AudioFormat = engine.AudioFormat.SampleFormat;
-var SampleRate = engine.AudioFormat.SampleRate;
-var _context = null;
 var controller = new MainController();
+var _context = null;
 
 class AudioSender{
     constructor(buffer){
         this._buffer = buffer;
         this._client = null;
         this._isOpened = false;
-        this._singleCommand = false;
         this.setClient();
     }
 
@@ -300,20 +299,22 @@ class AudioSender{
         if(!this._isOpened) {
             this._isOpened = true;
             this._result = this._client.v2t(this.sendAudio());
-            this._result.subscribe((e) => {
-                if(e.hasOwnProperty('label')) {
-                    if(e.label.hasOwnProperty('noise')) {
-                        commandLogger.saveItem(e.label.noise);
-                    }
-                    if(e.label.hasOwnProperty('item')) {
-                        commandLogger.saveItem(e.label.item);
-                        if(this._singleCommand == false) {
-                            this._singleCommand = true;
-                            controller.doOperation(e.label.item)
+
+            this._result.subscribe(e => {
+                if(!e.lookahead) {
+                    e.events.forEach(function (element) {
+                        if(element.hasOwnProperty("label")) {
+                            if(element.label.hasOwnProperty("noise")) {
+                                commandLogger.saveItem(element.label.noise);
+                            }
+                            if(element.label.hasOwnProperty("item")) {
+                                commandLogger.saveItem(element.label.item);
+                                controller.doOperation(element.label.item);
+                            }
                         }
-                    }
+                    });
                 }
-            }, (err) => {console.error("FAILED", err); this._singleCommand = false;}, () => {console.log("DONE"); this._singleCommand = false;});
+            }, err => console.error("FAILED", err), () => console.log("DONE"));
         }
     }
 
@@ -341,5 +342,5 @@ class AudioSender{
 }
 
 module.exports = {
-    AudioSender
+    AudioSender:AudioSender
 };
