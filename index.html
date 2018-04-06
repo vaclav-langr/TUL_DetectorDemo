@@ -35,9 +35,10 @@
 
   <script>
       var renderer = require('./renderer.js');
-      var config = require('./config').config;
+      var config_1 = require('./config');
+      var config = config_1.config;
 
-      document.getElementById("threshold").value = config.fsm.threshold;
+      document.getElementById("threshold").value = config.fsm.threshold.get;
       document.getElementById("thresh").innerText = "Hodnota: " + document.getElementById("threshold").value;
       document.getElementById("threshold").addEventListener("change", function () {
           document.getElementById("thresh").innerText = "Hodnota: " + document.getElementById("threshold").value;
@@ -57,57 +58,6 @@
       var detector = document.getElementById("detector");
       detector.setAttribute("fill", "#660000")
 
-      var store_1 = require('electron-store');
-      var store = new store_1();
-
-      function getNtx() {
-          const got = require("got");
-          var domain = store.get("nanogrid.domain");
-          var token = store.get("nanogrid.access_token");
-          (async() => {
-              try {
-                  const response = await got.post(domain + "store/ntx-token", {
-                      json: true,
-                      headers: {"Authorization" : "Bearer " + token},
-                      body: {
-                          "id":"ntx.v2t.engine.EngineService/cz/voice-control/v2t",
-                          "label":"v2t"
-                      }
-                  });
-                  store.set("nanogrid.ntx_token", response.body.ntxToken);
-              } catch (error) {
-                  //display error to user
-                  console.log(error);
-              }
-          })();
-      }
-
-      function login() {
-          var domain = store.get("nanogrid.domain");
-          var username = store.get("nanogrid.username");
-          var password = store.get("nanogrid.password");
-          if(store.get("nanogrid.domain") != "" && store.get("nanogrid.username") != "" && store.get("nanogrid.password") != "") {
-              const got = require("got");
-
-              (async() => {
-                  try {
-                      const response = await got.post(domain + "login/access-token", {
-                          json: true,
-                          body: {
-                              "username":username,
-                              "password":password
-                          }
-                      });
-                      store.set("nanogrid.access_token", response.body.accessToken);
-                      getNtx();
-                  } catch (error) {
-                      //display error
-                      console.log(error);
-                  }
-              })();
-          }
-      }
-
-      login()
+      config_1.login();
   </script>
 </html>

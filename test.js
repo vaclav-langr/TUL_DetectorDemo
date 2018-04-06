@@ -4,12 +4,12 @@ var extractor = require('sound-parameters-extractor');
 var network = require('./nnet');
 var ShiftBuffer = require('./ShiftBuffer').ShiftBuffer;
 var signalBuffer = new ShiftBuffer(
-    config.segmenter.windowSize,
-    config.segmenter.overlap,
+    config.segmenter.windowSize.get,
+    config.segmenter.overlap.get,
     extractFeaturesStream);
 var sequenceBuffer = new ShiftBuffer(
-    config.melfbank.channels * config.sequencer.size,
-    config.melfbank.channels,
+    config.melfbank.channels.get * config.sequencer.size.get,
+    config.melfbank.channels.get,
     forwardNetwork
 );
 var transformator = require('./transformator');
@@ -24,7 +24,7 @@ function forwardNetwork(data) {
 
 function splitStreamLikeData(data) {
     var toPad = 170 - (data.length % 170);
-    toPad += (config.normalizer.position * config.segmenter.overlap);
+    toPad += (config.normalizer.position.get * config.segmenter.overlap.get);
     data = Array.from(data).concat(new Array(toPad).fill(0));
     var lastSample = 0;
 
@@ -47,14 +47,14 @@ function extractFeaturesStream(data) {
 }
 
 function extractFeaturesFile(data) {
-    var empty = new Array(config.segmenter.windowSize).fill(0);
+    var empty = new Array(config.segmenter.windowSize.get).fill(0);
     var normalized, mfbankFeatures, transformed;
 
     var scaled = library.scaleSignal(data);
     var preProcessed = library.preProcess(scaled);
 
-    var framedSignal = extractor.framer(preProcessed, config.segmenter.windowSize, config.segmenter.overlapPercent);
-    for(var i = 0; i < config.normalizer.position; i++) {
+    var framedSignal = extractor.framer(preProcessed, config.segmenter.windowSize.get, config.segmenter.overlapPercent);
+    for(var i = 0; i < config.normalizer.position.get; i++) {
         framedSignal.push(empty);
     }
 

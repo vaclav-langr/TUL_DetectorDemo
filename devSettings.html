@@ -229,8 +229,7 @@
     <button type="submit">Uložit</button></div></form>
 </body>
 <script>
-    const store_1 = require('electron-store');
-    var store = new store_1();
+    var config = require('./config').config;
 
     var basicSettings = document.getElementById("formBasicSettings");
     basicSettings.addEventListener("submit", function (e) {
@@ -242,8 +241,8 @@
         sampleRate = parseInt(sampleRate);
         bitDepth = parseInt(bitDepth);
 
-        store.set("sampleRate", sampleRate);
-        store.set("bitDepth", bitDepth)
+        config.sampleRate.set(sampleRate);
+        config.bitDepth.set(bitDepth);
     });
 
     var segmenterSettings = document.getElementById("formSegmenterSettings");
@@ -256,13 +255,13 @@
         windowSize = parseInt(windowSize);
         overlapSize = parseInt(overlapSize);
 
-        store.set("segmenter.windowSize", windowSize);
-        store.set("segmenter.overlap", overlapSize);
+        config.segmenter.windowSize.set(windowSize);
+        config.segmenter.overlap.set(overlapSize);
     });
 
     var melbankSettings = document.getElementById("formMelbankSettings");
     melbankSettings.addEventListener("submit", function (e) {
-        e.preventDefault()
+        e.preventDefault();
 
         var noiseLower = this.querySelector("#noiseLower").value;
         var noiseHigher = this.querySelector("#noiseHigher").value;
@@ -283,15 +282,14 @@
         minValue = parseFloat(minValue);
         returnValue = parseFloat(returnValue);
 
-        store.set('melfbank.noiseCoefsLower', noiseLower);
-        store.set('melfbank.noiseCoefsHigher', noiseHigher);
-        store.set('melfbank.useRange', noiseRange);
-        store.set('melfbank.preemCoef', preemCoef);
-        store.set('melfbank.lowFrequency', lowFrequency);
-        store.set('melfbank.highFrequency', highFrequency);
-        store.set('melfbank.channels', channels);
-        store.set('melfbank.minValue', minValue);
-        store.set('melfbank.returnValue', returnValue);
+        config.melfbank.noiseCoefs.set([noiseLower, noiseHigher]);
+        config.melfbank.useRange.set(noiseRange);
+        config.melfbank.preemCoef.set(preemCoef);
+        config.melfbank.lowFrequency.set(lowFrequency);
+        config.melfbank.highFrequency.set(highFrequency);
+        config.melfbank.channels.set(channels);
+        config.melfbank.minValue.set(minValue);
+        config.melfbank.returnValue.set(returnValue);
     });
 
     var normalizerSettings = document.getElementById("formNormalizerSettings");
@@ -304,8 +302,8 @@
         size = parseInt(size);
         position = parseInt(position);
 
-        store.set("normalizer.size", size);
-        store.set("normalizer.position", position);
+        config.normalizer.size.set(size);
+        config.normalizer.position.set(position);
     });
 
     var sequencerSettings = document.getElementById("formSequencerSettings");
@@ -318,8 +316,8 @@
         size = parseInt(size);
         position = parseInt(position);
 
-        store.set("sequencer.size", size);
-        store.set("sequencer.position", position);
+        config.sequencer.size.set(size);
+        config.sequencer.position.set(position);
     });
 
     var neurotizerSettings = document.getElementById("formNeurotizerSettings");
@@ -329,8 +327,8 @@
         var path = "./Library/" + this.querySelector("#path").files[0].name;
         var layers = (this.querySelector("#layers").value).split(",");
 
-        store.set("neurotizer.nnetPath", path);
-        store.set("neurotizer.activations", layers);
+        config.neurotizer.nnetPath.set(path);
+        config.neurotizer.activations.set(layers);
     });
 
     var transformatorSettings = document.getElementById("formTransformatorSettings");
@@ -340,39 +338,39 @@
         var mean = "./Library/" + this.querySelector("#meanPath").files[0].name;
         var std = "./Library/" + this.querySelector("#stdPath").files[0].name;
 
-        store.set("transformator.mean.path",mean);
-        store.set("transformator.std.path",std);
+        config.transformator.mean.path.set(mean);
+        config.transformator.std.path.set(std);
     });
 
     function loadSettings() {
-        basicSettings.querySelector("#sampleRate").value = store.get("sampleRate");
-        basicSettings.querySelector("#bitDepth").value = store.get("bitDepth");
+        basicSettings.querySelector("#sampleRate").value = config.sampleRate.get;
+        basicSettings.querySelector("#bitDepth").value = config.bitDepth.get;
 
-        segmenterSettings.querySelector("#windowSize").value = store.get("segmenter.windowSize");
-        segmenterSettings.querySelector("#overlapSize").value = store.get("segmenter.overlap");
+        segmenterSettings.querySelector("#windowSize").value = config.segmenter.windowSize.get;
+        segmenterSettings.querySelector("#overlapSize").value = config.segmenter.overlap.get;
 
-        melbankSettings.querySelector("#noiseLower").value = store.get('melfbank.noiseCoefsLower');
-        melbankSettings.querySelector("#noiseHigher").value = store.get('melfbank.noiseCoefsHigher');
-        melbankSettings.querySelector("#noiseRange").checked = store.get('melfbank.useRange');
-        melbankSettings.querySelector("#preemCoef").value = store.get('melfbank.preemCoef');
-        melbankSettings.querySelector("#lowFrequency").value = store.get('melfbank.lowFrequency');
-        melbankSettings.querySelector("#highFrequency").value = store.get('melfbank.highFrequency');
-        melbankSettings.querySelector("#channels").value = store.get('melfbank.channels');
-        melbankSettings.querySelector("#minValue").value = store.get('melfbank.minValue');
-        melbankSettings.querySelector("#returnValue").value = store.get('melfbank.returnValue');
-        melbankSettings.querySelector("#highFrequency").max = store.get('sampleRate') / 2;
+        melbankSettings.querySelector("#noiseLower").value = config.melfbank.noiseCoefs.get[0];
+        melbankSettings.querySelector("#noiseHigher").value = config.melfbank.noiseCoefs.get[1];
+        melbankSettings.querySelector("#noiseRange").checked = config.melfbank.useRange.get;
+        melbankSettings.querySelector("#preemCoef").value = config.melfbank.preemCoef.get;
+        melbankSettings.querySelector("#lowFrequency").value = config.melfbank.lowFrequency.get;
+        melbankSettings.querySelector("#highFrequency").value = config.melfbank.highFrequency.get;
+        melbankSettings.querySelector("#channels").value = config.melfbank.channels.get;
+        melbankSettings.querySelector("#minValue").value = config.melfbank.minValue.get;
+        melbankSettings.querySelector("#returnValue").value = config.melfbank.returnValue.get;
+        melbankSettings.querySelector("#highFrequency").max = config.sampleRate.get / 2;
 
-        normalizerSettings.querySelector("#size").value = store.get("normalizer.size");
-        normalizerSettings.querySelector("#position").value = store.get("normalizer.position");
+        normalizerSettings.querySelector("#size").value = config.normalizer.size.get;
+        normalizerSettings.querySelector("#position").value = config.normalizer.position.get;
 
-        sequencerSettings.querySelector("#size").value = store.get("sequencer.size");
-        sequencerSettings.querySelector("#position").value = store.get("sequencer.position");
+        sequencerSettings.querySelector("#size").value = config.sequencer.size.get;
+        sequencerSettings.querySelector("#position").value = config.sequencer.position.get;
 
-        neurotizerSettings.querySelector("#pathLabel").innerText = store.get("neurotizer.nnetPath");
-        neurotizerSettings.querySelector("#layers").value = store.get("neurotizer.activations").join(",");
+        neurotizerSettings.querySelector("#pathLabel").innerText = config.neurotizer.nnetPath.get;
+        neurotizerSettings.querySelector("#layers").value = config.neurotizer.activations.get.join(",");
 
-        transformatorSettings.querySelector("#meanLabel").innerText = store.get("transformator.mean.path");
-        transformatorSettings.querySelector("#stdLabel").innerText = store.get("transformator.std.path");
+        transformatorSettings.querySelector("#meanLabel").innerText = config.transformator.mean.path.get;
+        transformatorSettings.querySelector("#stdLabel").innerText = config.transformator.std.path.get;
     }
 
     loadSettings();

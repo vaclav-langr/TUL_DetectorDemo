@@ -34,7 +34,7 @@ var nnet = new Parser()
     });
 
 const loadWeights = function() {
-    var buffer = fs.readFileSync(config.neurotizer.nnetPath);
+    var buffer = fs.readFileSync(config.neurotizer.nnetPath.get);
     var parsedResult = nnet.parse(buffer);
     var result = {};
     result['numlayers'] = parsedResult['numlayers'];

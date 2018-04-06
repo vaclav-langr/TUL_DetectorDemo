@@ -67,5 +67,5 @@ const switchState = function(label, prob) {
 };
 
 module.exports = {
-    switchState
-}
+    switchState:switchState
+};

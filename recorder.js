@@ -12,7 +12,7 @@ var formatVar;
 var isSpeech = false;
 
 function addToBuffer(raw) {
-    if(buffer.length == (config.sequencer.size * 1)) {
+    if(buffer.length == (config.sequencer.size.get * 1)) {
         buffer.shift()
     }
     buffer.push(raw)

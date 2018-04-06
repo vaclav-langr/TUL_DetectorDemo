@@ -30,7 +30,7 @@ class AudioSender{
     }
 
     setClient() {
-        const tkn = jwt.decode(config.nanogrid.ntx_token);
+        const tkn = jwt.decode(config.nanogrid.ntx_token.get());
         const iss = tkn.iss;
         var result;
         for(const a of tkn.aud) {
@@ -39,7 +39,7 @@ class AudioSender{
             }
         }
         result = result + "/ws/v1/v2t";
-        this._client = new ntx(result, config.nanogrid.ntx_token, _context);
+        this._client = new ntx(result, config.nanogrid.ntx_token.get(), _context);
     }
 
     setFormat(format) {
@@ -63,68 +63,20 @@ class AudioSender{
                         "items" : [
                             {
                                 "user" : {
-                                    "pron" : "doleva",
-                                    "sym" : "Doleva"
+                                    "pron" : "klikňi",
+                                    "sym" : "Klikni"
                                 }
                             },
                             {
                                 "user" : {
-                                    "pron" : "doprava",
-                                    "sym" : "Doprava"
-                                }
-                            },
-                            {
-                                "user" : {
-                                    "pron" : "nahoru",
-                                    "sym" : "Nahoru"
-                                }
-                            },
-                            {
-                                "user" : {
-                                    "pron" : "nahóru",
-                                    "sym" : "Nahoru"
-                                }
-                            },
-                            {
-                                "user" : {
-                                    "pron" : "dolu",
-                                    "sym" : "Dolu"
-                                }
-                            },
-                            {
-                                "user" : {
-                                    "pron" : "klik",
-                                    "sym" : "Klik"
-                                }
-                            },
-                            {
-                                "user" : {
-                                    "pron" : "dvojtíklik",
-                                    "sym" : "Dvojtýklik"
+                                    "pron" : "dvojklik",
+                                    "sym" : "Dvojklik"
                                 }
                             },
                             {
                                 "user" : {
                                     "pron" : "pravíklik",
                                     "sym" : "Pravýklik"
-                                }
-                            },
-                            {
-                                "user" : {
-                                    "pron" : "padesát",
-                                    "sym" : "50"
-                                }
-                            },
-                            {
-                                "user" : {
-                                    "pron" : "sto",
-                                    "sym" : "100"
-                                }
-                            },
-                            {
-                                "user" : {
-                                    "pron" : "pjetset",
-                                    "sym" : "500"
                                 }
                             },
                             {
@@ -138,6 +90,89 @@ class AudioSender{
                                 "user" : {
                                     "pron" : "záklaďňískupina",
                                     "sym" : "Základnískupina"
+                                }
+                            }
+                            ,
+                            {
+                                "user" : {
+                                    "pron" : "dolevapadesát",
+                                    "sym" : "Doleva50"
+                                }
+                            }
+                            ,
+                            {
+                                "user" : {
+                                    "pron" : "dolevasto",
+                                    "sym" : "Doleva100"
+                                }
+                            }
+                            ,
+                            {
+                                "user" : {
+                                    "pron" : "dolevapjetset",
+                                    "sym" : "Doleva500"
+                                }
+                            }
+                            ,
+                            {
+                                "user" : {
+                                    "pron" : "dopravapadesát",
+                                    "sym" : "Doprava50"
+                                }
+                            }
+                            ,
+                            {
+                                "user" : {
+                                    "pron" : "dopravasto",
+                                    "sym" : "Doprava100"
+                                }
+                            }
+                            ,
+                            {
+                                "user" : {
+                                    "pron" : "dopravapjetset",
+                                    "sym" : "Doprava500"
+                                }
+                            }
+                            ,
+                            {
+                                "user" : {
+                                    "pron" : "dolupadesát",
+                                    "sym" : "Dolu50"
+                                }
+                            }
+                            ,
+                            {
+                                "user" : {
+                                    "pron" : "dolusto",
+                                    "sym" : "Dolu100"
+                                }
+                            }
+                            ,
+                            {
+                                "user" : {
+                                    "pron" : "dolupjetset",
+                                    "sym" : "Dolu500"
+                                }
+                            },
+                            {
+                                "user" : {
+                                    "pron" : "nahorupadesát",
+                                    "sym" : "Nahoru50"
+                                }
+                            }
+                            ,
+                            {
+                                "user" : {
+                                    "pron" : "nahorusto",
+                                    "sym" : "Nahoru100"
+                                }
+                            }
+                            ,
+                            {
+                                "user" : {
+                                    "pron" : "nahorupjetset",
+                                    "sym" : "Nahoru500"
                                 }
                             }
                         ]
@@ -299,7 +334,6 @@ class AudioSender{
         if(!this._isOpened) {
             this._isOpened = true;
             this._result = this._client.v2t(this.sendAudio());
-
             this._result.subscribe(e => {
                 if(!e.lookahead) {
                     e.events.forEach(function (element) {

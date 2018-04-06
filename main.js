@@ -144,36 +144,34 @@ function createTestingWindow() {
 function testPersistentConfig() {
   var store_1 = require('electron-store');
   var store = new store_1();
+  var config = require('./config').config;
 
   if(store.size == 0) {
-    store.set("sampleRate", 16000);
-    store.set("bitDepth", 16);
-    store.set("segmenter.windowSize", 400);
-    store.set("segmenter.overlap", 160);
-    store.set("melfbank.noiseCoefsLower", -1);
-    store.set("melfbank.noiseCoefsHigher", 1);
-    store.set("melfbank.useRange", true);
-    store.set("melfbank.preemCoef", 0.97);
-    store.set("melfbank.lowFrequency", 0);
-    store.set("melfbank.highFrequency", 8000);
-    store.set("melfbank.channels", 39);
-    store.set("melfbank.minValue", 1.0);
-    store.set("melfbank.returnValue", 0.0);
-    store.set("normalizer.size", 51);
-    store.set("normalizer.position", 25);
-    store.set("sequencer.size", 51);
-    store.set("sequencer.position", 25);
-    store.set("neurotizer.nnetPath", '');
-    store.set("neurotizer.activations", ['Tanh','Tanh','Tanh','Tanh','Tanh','Tanh','Tanh']);
-    store.set("transformator.mean.path", "");
-    store.set("transformator.mean.operation", "sub");
-    store.set("transformator.std.path", "");
-    store.set("transformator.std.operation", "div");
-    store.set("nanogrid.domain", "");
-    store.set("nanogrid.username", "");
-    store.set("nanogrid.password", "");
-    store.set("nanogrid.access_token", "");
-    store.set("nanogrid.ntx_token", "");
-    store.set("fsm.threshold", 0.5);
+    config.sampleRate.set(16000);
+    config.bitDepth.set(16);
+    config.segmenter.windowSize.set(400);
+    config.segmenter.overlap.set(160);
+    config.melfbank.noiseCoefs.set([-1, 1]);
+    config.melfbank.useRange.set(true);
+    config.melfbank.preemCoef.set(0.97);
+    config.melfbank.lowFrequency.set(0);
+    config.melfbank.highFrequency.set(8000);
+    config.melfbank.channels.set(39);
+    config.melfbank.minValue.set(1.0);
+    config.melfbank.returnValue.set(0.0);
+    config.normalizer.size.set(51);
+    config.normalizer.position.set(25);
+    config.sequencer.size.set(51);
+    config.sequencer.position.set(25);
+    config.neurotizer.nnetPath.set('./Library/10.nnet');
+    config.neurotizer.activations.set(['Tanh','Tanh','Tanh','Tanh','Tanh','Tanh','Tanh']);
+    config.transformator.mean.path.set("./Library/mean.list");
+    config.transformator.std.path.set("./Library/std.list");
+    config.nanogrid.domain.set("");
+    config.nanogrid.username.set("");
+    config.nanogrid.password.set("");
+    config.nanogrid.access_token.set("");
+    config.nanogrid.ntx_token.set("");
+    config.fsm.threshold.set(0.5);
   }
 }

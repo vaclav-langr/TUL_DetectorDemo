@@ -6,7 +6,7 @@ const computeNetworkOutput = function(input) {
     var activation;
     for(var i = 0; i < network['numlayers']; i++) {
         output = computeOutput(output, i);
-        activation = getActivation(config.neurotizer.activations[i]);
+        activation = getActivation(config.neurotizer.activations.get[i]);
         output = activation(output);
     }
     var outputIndex = output.indexOf(Math.max(...output));

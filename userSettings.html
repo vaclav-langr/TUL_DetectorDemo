@@ -54,8 +54,8 @@
     <button type="submit">Uložit</button></div></form>
 </body>
 <script>
-    const store_1 = require('electron-store');
-    var store = new store_1();
+    var config_1 = require('./config');
+    var config = config_1.config;
     
     var nanogridSettings = document.getElementById("formNanogridSettings");
     nanogridSettings.addEventListener("submit", function (e) {
@@ -69,9 +69,10 @@
             domain = domain + "/";
         }
 
-        store.set("nanogrid.domain", domain);
-        store.set("nanogrid.username", username);
-        store.set("nanogrid.password", password);
+        config.nanogrid.domain.set(domain);
+        config.nanogrid.username.set(username);
+        config.nanogrid.password.set(password);
+        config_1.login();
     });
 
     var fsmSettings = document.getElementById("formFsmSettings");
@@ -82,15 +83,15 @@
 
         threshold = parseFloat(threshold);
 
-        store.set("fsm.threshold", threshold);
+        config.fsm.threshold.set(threshold);
     });
 
     function loadSettings() {
-        nanogridSettings.querySelector("#domain").value = store.get("nanogrid.domain");
-        nanogridSettings.querySelector("#username").value = store.get("nanogrid.username");
-        nanogridSettings.querySelector("#password").value = store.get("nanogrid.password");
+        nanogridSettings.querySelector("#domain").value = config.nanogrid.domain.get();
+        nanogridSettings.querySelector("#username").value = config.nanogrid.username.get();
+        nanogridSettings.querySelector("#password").value = config.nanogrid.password.get();
 
-        fsmSettings.querySelector("#threshold").value = store.get("fsm.threshold");
+        fsmSettings.querySelector("#threshold").value = config.fsm.threshold.get;
     }
 
     loadSettings();

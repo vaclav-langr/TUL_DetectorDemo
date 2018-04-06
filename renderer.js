@@ -3,13 +3,13 @@ var library = require('./library');
 var config = require('./config').config;
 var network = require('./nnet');
 var ShiftBuffer = require('./ShiftBuffer').ShiftBuffer;
-var signalBuffer = new ShiftBuffer(config.segmenter.windowSize, config.segmenter.overlap, extractFeatures);
-var sequenceBuffer = new ShiftBuffer(config.melfbank.channels * config.sequencer.size, config.melfbank.channels, forwardNetwork);
+var signalBuffer = new ShiftBuffer(config.segmenter.windowSize.get, config.segmenter.overlap.get, extractFeatures);
+var sequenceBuffer = new ShiftBuffer(config.melfbank.channels.get * config.sequencer.size.get, config.melfbank.channels.get, forwardNetwork);
 var FSM = require('./fsm');
 var transformator = require('./transformator');
 
 var lastSample = 0;
-var empty = new Array(config.segmenter.overlap).fill(0);
+var empty = new Array(config.segmenter.overlap.get).fill(0);
 
 function forwardNetwork(data) {
     var networkOutput = network.computeNetworkOutput(data);
@@ -38,7 +38,7 @@ function extractFeatures(data) {
 
 const stopRecording = function() {
     Recorder.stopRecording();
-    for(var i = 0; i < config.normalizer.position; i++) {
+    for(var i = 0; i < config.normalizer.position.get; i++) {
         prepareData(empty);
     }
 };

@@ -2,15 +2,14 @@
  * Created by vaclavlangr on 14.02.2018.
  */
 
+const MouseUp = require('./MouseUp').MouseUp;
+const MouseDown = require('./MouseDown').MouseDown;
+const MouseLeft = require('./MouseLeft').MouseLeft;
+const MouseRight = require('./MouseRight').MouseRight;
+
 var AbstractController = require('./../AbstractController').AbstractController;
 
-var MouseUp = require('./MouseUp').MouseUp;
-var MouseDown = require('./MouseDown').MouseDown;
-var MouseLeft = require('./MouseLeft').MouseLeft;
-var MouseRight = require('./MouseRight').MouseRight;
-
-function MouseController() {
-}
+function MouseController() {}
 
 MouseController.simpleClick = function () {
     var robotjs = require('robotjs');
@@ -32,16 +31,23 @@ MouseController.prototype = new AbstractController();
 MouseController.prototype.returnCommand = "Myš";
 
 MouseController.prototype.possibleCommands = {
-    "Klik": MouseController.simpleClick,
-    "Dvojitý klik": MouseController.doubleClick,
-    "Pravý klik": MouseController.rightClick
-}
-
-MouseController.prototype.possibleGroups = {
-    "Nahoru": new MouseUp(),
-    "Dolu": new MouseDown(),
-    "Doleva": new MouseLeft(),
-    "Doprava": new MouseRight()
+    "Klikni": MouseController.simpleClick,
+    "Dvojklik": MouseController.doubleClick,
+    "Pravý klik": MouseController.rightClick,
+    "Doleva 50": MouseLeft.moveMouse.bind({unit:50}),
+    "Doleva 100": MouseLeft.moveMouse.bind({unit:100}),
+    "Doleva 500": MouseLeft.moveMouse.bind({unit:500}),
+    "Doprava 50": MouseRight.moveMouse.bind({unit:50}),
+    "Doprava 100": MouseRight.moveMouse.bind({unit:100}),
+    "Doprava 500": MouseRight.moveMouse.bind({unit:500}),
+    "Dolu 50": MouseDown.moveMouse.bind({unit:50}),
+    "Dolu 100": MouseDown.moveMouse.bind({unit:100}),
+    "Dolu 500": MouseDown.moveMouse.bind({unit:500}),
+    "Nahoru 50": MouseUp.moveMouse.bind({unit:50}),
+    "Nahoru 100": MouseUp.moveMouse.bind({unit:100}),
+    "Nahoru 500": MouseUp.moveMouse.bind({unit:500})
 };
+
+MouseController.prototype.possibleGroups = {};
 
 module.exports = {MouseController:MouseController};

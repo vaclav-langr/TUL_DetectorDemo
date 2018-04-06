@@ -4,14 +4,14 @@ var config = require('./config').config;
 var mean, std;
 
 function loadFiles() {
-    var meanCharArray = fs.readFileSync(config.transformator.mean.path);
+    var meanCharArray = fs.readFileSync(config.transformator.mean.path.get);
     var meanString = String.fromCharCode.apply(null, meanCharArray).split("\n");
     meanString.splice(meanString.indexOf(""), 1);
     mean = meanString.map(function (item) {
         return parseFloat(item);
     });
 
-    var stdCharArray = fs.readFileSync(config.transformator.std.path);
+    var stdCharArray = fs.readFileSync(config.transformator.std.path.get);
     var stdString = String.fromCharCode.apply(null, stdCharArray).split("\n");
     stdString.splice(stdString.indexOf(""), 1);
     std = stdString.map(function (item) {
