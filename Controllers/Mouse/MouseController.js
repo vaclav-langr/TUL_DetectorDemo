@@ -50,4 +50,6 @@ MouseController.prototype.possibleCommands = {
 
 MouseController.prototype.possibleGroups = {};
 
-module.exports = {MouseController:MouseController};
+module.exports = {
+    MouseController:MouseController
+};

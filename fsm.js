@@ -1,12 +1,10 @@
 var States = {
     sS : 0,
     sN : 1,
-    sF1 : 2,
-    sF2 : 3,
-    sF3 : 4
+    sF : 2
 };
 
-var currentState = States.sF1;
+var currentState = States.sF;
 var buffer = new Array(11).fill(1);
 
 function getProbability() {
@@ -34,29 +32,24 @@ function updateGUI(state) {
 }
 
 const switchState = function(label, prob) {
-    var sum;
     addProbability(label, prob);
+    var sum = getProbability();
     var thresh = document.getElementById("threshold").value;
     switch(currentState) {
-        case States.sF1:
-            currentState = States.sF2;
+        case States.sF:
+            if(sum > thresh) {
+                currentState = States.sF;
+            } else {
+                currentState = States.sN;
+            }
             return 1;
-            break;
-        case States.sF2:
-            currentState = States.sF3;
-            return 1;
-            break;
-        case States.sF3:
-            currentState = States.sN;
             break;
         case States.sN:
-            sum = getProbability();
             if(sum > thresh) {
                 currentState = States.sS;
             }
             break;
         case States.sS:
-            sum = getProbability();
             if(sum < thresh) {
                 currentState = States.sN;
             }

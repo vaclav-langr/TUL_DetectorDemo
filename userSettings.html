@@ -72,7 +72,10 @@
         config.nanogrid.domain.set(domain);
         config.nanogrid.username.set(username);
         config.nanogrid.password.set(password);
-        config_1.login();
+
+        const electron = require('electron');
+        const {ipcRenderer} = electron;
+        ipcRenderer.send('user:login');
     });
 
     var fsmSettings = document.getElementById("formFsmSettings");

@@ -19,7 +19,7 @@ MainController.prototype.possibleGroups = {
 MainController.prototype.doOperation = function (operation) {
     var result = AbstractController.prototype.doOperation.call(this, operation);
     this.updateGUI(result, operation);
-}
+};
 
 MainController.prototype.updateGUI = function (result) {
     var element = document.getElementById("commands");
@@ -28,16 +28,17 @@ MainController.prototype.updateGUI = function (result) {
     var commands = this.getPossibilities();
     for(var i = 0; i < commands.length; i++) {
         var text = document.createElement("h5");
-        text.style = "line-height: 5px;text-align: center;";
+        text.style = "line-height: 0px;text-align: center; margin:0;padding:0;";
         text.appendChild(document.createTextNode(commands[i]));
-        element.appendChild(text)
+        element.appendChild(text);
 
-        text.onclick = function (e) {
-            this.doOperation(e.target.innerText.replace(" ", ""));
-        };
-        text.onclick = text.onclick.bind(this);
+        //text.onclick = function (e) {
+        //    this.doOperation(e.target.innerText.replace(" ", ""));
+        //};
+        //text.onclick = text.onclick.bind(this);
 
-        element.appendChild(document.createElement("br"))
+        var space = document.createElement("br");
+        element.appendChild(space);
     }
 
     var commandElement = document.getElementById("lastCommand");
@@ -49,4 +50,6 @@ MainController.prototype.updateGUI = function (result) {
     }
 };
 
-module.exports = {MainController:MainController};
+module.exports = {
+    MainController:MainController
+};

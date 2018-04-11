@@ -1,5 +1,5 @@
-const engine_1 = require('../ntx-js/dist/src/generated/engine');
-const ntx = require('../ntx-js/dist/src/clients/websocket').WSClient;
+﻿const engine_1 = require('ntx-js/dist/src/generated/engine');
+const ntx = require('ntx-js/dist/src/clients/websocket.js').WSClient;
 const engine = engine_1.ntx.v2t.engine;
 var AudioChannel = engine.EngineContext.AudioChannel;
 const jwt = require('jsonwebtoken');

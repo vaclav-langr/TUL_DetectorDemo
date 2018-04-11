@@ -1,11 +1,12 @@
-const electron = require('electron')
-const app = electron.app
-const BrowserWindow = electron.BrowserWindow
+﻿const electron = require('electron');
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
+const ipcMain = electron.ipcMain;
 
-const path = require('path')
-const url = require('url')
+const path = require('path');
+const url = require('url');
 
-process.env.NODE_ENV = 'development'
+process.env.NODE_ENV = 'development';
 
 let template = [
   {
@@ -22,47 +23,47 @@ let template = [
       }
     ]
   }
-]
+];
 
 let mainWindow, testingWindow, devSettingsWindow, userSettingsWindow;
 
 function createWindow () {
-  mainWindow = new BrowserWindow({width: 400, height: 600})
+  mainWindow = new BrowserWindow({width: 400, height: 600});
 
   mainWindow.setAlwaysOnTop(true, "normal");
   mainWindow.setMinimizable(false);
   //mainWindow.setResizable(false)
-  electron.Menu.setApplicationMenu(electron.Menu.buildFromTemplate(template))
+  electron.Menu.setApplicationMenu(electron.Menu.buildFromTemplate(template));
 
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),
     protocol: 'file:',
     slashes: true
-  }))
+  }));
 
   mainWindow.on('closed', function () {
     devSettingsWindow != null ? devSettingsWindow.close() : devSettingsWindow = null;
     testingWindow != null ? testingWindow.close() : testingWindow = null;
     userSettingsWindow != null ? userSettingsWindow.close() : userSettingsWindow = null;
-    mainWindow = null
-  })
+    mainWindow = null;
+  });
 
   testPersistentConfig();
 }
 
-app.on('ready', createWindow)
+app.on('ready', createWindow);
 
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
-    app.quit()
+    app.quit();
   }
-})
+});
 
 app.on('activate', function () {
   if (mainWindow === null) {
-    createWindow()
+    createWindow();
   }
-})
+});
 
 
 if(process.platform == 'darwin'){
@@ -141,6 +142,11 @@ function createTestingWindow() {
   })
 }
 
+ipcMain.on('user:login', function (e) {
+  const config_1 = require('./config');
+  config_1.login();
+});
+
 function testPersistentConfig() {
   var store_1 = require('electron-store');
   var store = new store_1();
@@ -163,10 +169,16 @@ function testPersistentConfig() {
     config.normalizer.position.set(25);
     config.sequencer.size.set(51);
     config.sequencer.position.set(25);
-    config.neurotizer.nnetPath.set('./Library/10.nnet');
     config.neurotizer.activations.set(['Tanh','Tanh','Tanh','Tanh','Tanh','Tanh','Tanh']);
-    config.transformator.mean.path.set("./Library/mean.list");
-    config.transformator.std.path.set("./Library/std.list");
+    if(process.env.NODE_ENV !== 'production') {
+      config.neurotizer.nnetPath.set('./Library/10.nnet');
+      config.transformator.mean.path.set("./Library/mean.list");
+      config.transformator.std.path.set("./Library/std.list");
+    } else {
+      config.neurotizer.nnetPath.set('./resources/app.asar/Library/10.nnet');
+      config.transformator.mean.path.set("./resources/app.asar/Library/mean.list");
+      config.transformator.std.path.set("./resources/app.asar/Library/std.list");
+    }
     config.nanogrid.domain.set("");
     config.nanogrid.username.set("");
     config.nanogrid.password.set("");

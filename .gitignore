@@ -29,7 +29,8 @@ Icon?
 Thumbs.db
 
 # Node Files #
-/node_modules
+/node_modules/*
+!/node_modules/ntx-js/
 /bower_components
 
 # Coverage #
@@ -55,6 +56,6 @@ __build__/**
 *.swp
 
 # Data #
-Data
 Library/
 log/
+release-builds/

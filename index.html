@@ -8,6 +8,7 @@
   </head>
   <body>
   <header>
+      <div id="header">
       Online stream:
       <br>
       <button id="stop-button">Stop</button>
@@ -15,6 +16,7 @@
       <br>
       <input type="range" min="0" max="1" step="any" id="threshold">
       <div id="thresh"></div>
+      </div>
   </header>
   <div class="content">
     <div id="scrollable">
@@ -39,9 +41,9 @@
       var config = config_1.config;
 
       document.getElementById("threshold").value = config.fsm.threshold.get;
-      document.getElementById("thresh").innerText = "Hodnota: " + document.getElementById("threshold").value;
+      document.getElementById("thresh").innerText = document.getElementById("threshold").value;
       document.getElementById("threshold").addEventListener("change", function () {
-          document.getElementById("thresh").innerText = "Hodnota: " + document.getElementById("threshold").value;
+          document.getElementById("thresh").innerText = document.getElementById("threshold").value;
       });
 
       document.getElementById('stop-button').addEventListener('click', function () {
