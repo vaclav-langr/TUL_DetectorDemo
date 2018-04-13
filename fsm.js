@@ -22,15 +22,6 @@ function addProbability(label, prob) {
     }
 }
 
-function updateGUI(state) {
-    var detector = document.getElementById("detector");
-    if(state == 0) {
-        detector.setAttribute("fill", "#ff4d4d")
-    } else {
-        detector.setAttribute("fill", "#660000")
-    }
-}
-
 const switchState = function(label, prob) {
     addProbability(label, prob);
     var sum = getProbability();
@@ -55,7 +46,6 @@ const switchState = function(label, prob) {
             }
             break;
     }
-    updateGUI(currentState);
     return currentState;
 };
 

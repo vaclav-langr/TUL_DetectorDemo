@@ -22,7 +22,7 @@ function getNtx() {
                 headers: {"Authorization" : "Bearer " + token},
                 body: {
                     "id":"devel/ntx.v2t.engine.EngineService/cz/myvoice/v2t",
-                    "label":"v2t"
+                    "label":"vad+v2t"
                 }
             });
             config.nanogrid.ntx_token.set(response.body.ntxToken);

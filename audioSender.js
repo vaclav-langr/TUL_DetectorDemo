@@ -21,6 +21,7 @@ class AudioSender{
         this._client = null;
         this._isOpened = false;
         this.setClient();
+        detector.setAttribute("fill", "#ff4d4d");
     }
 
     addBuffer(buffer) {
@@ -58,6 +59,7 @@ class AudioSender{
                     }
                 }),
                 v2t: new engine.EngineContext.V2TConfig({
+                    withVAD: new engine.EngineContext.VADConfig(),
                     withLexicon: new engine.Lexicon({
                         "alpha" : engine.Lexicon.Alphabet.LEXICON_ALPHABET_NONE,
                         "items" : [
@@ -335,6 +337,7 @@ class AudioSender{
             this._isOpened = true;
             this._result = this._client.v2t(this.sendAudio());
             this._result.subscribe(e => {
+                console.log(e);
                 if(!e.lookahead) {
                     e.events.forEach(function (element) {
                         if(element.hasOwnProperty("label")) {
@@ -348,7 +351,13 @@ class AudioSender{
                         }
                     });
                 }
-            }, err => console.error("FAILED", err), () => console.log("DONE"));
+            }, err => function (err) {
+                    console.error("FAILED", err);
+                    detector.setAttribute("fill", "#660000");
+            }(err), () => function () {
+                        console.log("DONE");
+                        detector.setAttribute("fill", "#660000");
+                    }());
         }
     }
 
@@ -357,6 +366,7 @@ class AudioSender{
             var chunk = this._buffer.shift();
             if(typeof chunk === 'undefined') {
                 this._isOpened = false;
+                detector.setAttribute("fill", "#660000");
                 audioLogger.saveToWav();
                 return Promise.resolve(null);
             }
