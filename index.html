@@ -11,7 +11,7 @@
       <div id="header">
       Online stream:
       <br>
-      <button id="stop-button">Stop</button>
+      <button id="stop-button" disabled>Stop</button>
       <button id="start-button">Start</button>
       <br>
       <input type="range" min="0" max="1" step="any" id="threshold">
@@ -48,9 +48,13 @@
 
       document.getElementById('stop-button').addEventListener('click', function () {
           renderer.stopRecording();
+          this.disabled = true;
+          document.getElementById('start-button').disabled = false;
       });
       document.getElementById('start-button').addEventListener('click', function () {
           renderer.startRecording();
+          this.disabled = true;
+          document.getElementById('stop-button').disabled = false;
       });
 
       var controller_1 = require('./Controllers/MainController').MainController;

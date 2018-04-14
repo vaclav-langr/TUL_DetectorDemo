@@ -21,7 +21,7 @@ class AudioSender{
         this._client = null;
         this._isOpened = false;
         this.setClient();
-        detector.setAttribute("fill", "#ff4d4d");
+        //detector.setAttribute("fill", "#ff4d4d");
     }
 
     addBuffer(buffer) {
@@ -353,10 +353,10 @@ class AudioSender{
                 }
             }, err => function (err) {
                     console.error("FAILED", err);
-                    detector.setAttribute("fill", "#660000");
+                    //detector.setAttribute("fill", "#660000");
             }(err), () => function () {
                         console.log("DONE");
-                        detector.setAttribute("fill", "#660000");
+                        //detector.setAttribute("fill", "#660000");
                     }());
         }
     }
@@ -366,7 +366,7 @@ class AudioSender{
             var chunk = this._buffer.shift();
             if(typeof chunk === 'undefined') {
                 this._isOpened = false;
-                detector.setAttribute("fill", "#660000");
+                //detector.setAttribute("fill", "#660000");
                 audioLogger.saveToWav();
                 return Promise.resolve(null);
             }
