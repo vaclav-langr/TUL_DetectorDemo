@@ -19,17 +19,42 @@ function addToBuffer(raw) {
     buffer.push(raw)
 }
 
+function removeLast() {
+    if(buffer.length > 0) {
+        buffer.pop();
+    }
+}
+
 function readBlob(input, callback) {
     fr.onload = () => {
         var data = wav.decode(fr.result).channelData[0];
         addToBuffer(data);
         if (audioSender != null && audioSender.isOpened() && isSpeech) {
             audioSender.addChunk(data);
+            removeLast();
         }
         callback(data);
     };
     fr.readAsArrayBuffer(input);
 }
+
+const readBlobAsync = function (input) {
+    return new Promise((resolve, reject) => {
+        fr.onerror = () => {
+            reject("ERROR");
+        };
+        fr.onload = () => {
+            var data = wav.decode(fr.result).channelData[0];
+            addToBuffer(data);
+            if (audioSender != null && audioSender.isOpened() && isSpeech) {
+                audioSender.addChunk(data);
+                removeLast();
+            }
+            resolve(data);
+        };
+        fr.readAsArrayBuffer(input);
+    });
+};
 
 const startRecording = function (onComplete) {
     if(isRecording) {
@@ -46,7 +71,8 @@ const startRecording = function (onComplete) {
             timeSlice:10,
             disableLogs: true,
             ondataavailable: function (blob) {
-                readBlob(blob, onComplete);
+                //readBlob(blob, onComplete);
+                readBlobAsync(blob).then(onComplete, console.error);
                 url.revokeObjectURL(url.createObjectURL(blob));
             }
         });

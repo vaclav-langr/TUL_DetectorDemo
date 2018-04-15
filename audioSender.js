@@ -24,6 +24,7 @@ class AudioSender{
         var filename = (+new Date).toString();
         audioLogger.setFilename(filename);
         commandLogger.setFilename(filename);
+        document.getElementById("lastCommand").innerText = "???";
     }
 
     setClient(context) {

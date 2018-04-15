@@ -9,6 +9,14 @@ function AbstractController(){
     this.returnCommand = null;
 }
 
+AbstractController.prototype.getCurrentGroup = function () {
+    if(this.controller != null) {
+        return this.controller.getCurrentGroup();
+    } else {
+        return this.returnCommand;
+    }
+};
+
 AbstractController.prototype.doOperation = function(operation){
     if(this.controller != null) {
         var temp = this.controller.doOperation(operation);

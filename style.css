@@ -56,3 +56,10 @@ svg {
     font-size: large;
     text-align: center;
 }
+
+#group {
+    text-align: center;
+    margin:0;
+    padding:0;
+    border: 0;
+}

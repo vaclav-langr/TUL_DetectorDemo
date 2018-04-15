@@ -10,7 +10,6 @@
   <header>
       <div id="header">
       <div id="group"></div>
-      <br>
       <button id="stop-button" disabled>Stop</button>
       <button id="start-button">Start</button>
       <br>
@@ -59,7 +58,7 @@
 
       var controller_1 = require('./Controllers/MainController').MainController;
       var controller = new controller_1();
-      controller.updateGUI();
+      controller.updateGUI([false, "???"]);
 
       var detector = document.getElementById("detector");
       detector.setAttribute("fill", "#660000")

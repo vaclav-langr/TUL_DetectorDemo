@@ -42,12 +42,10 @@ MainController.prototype.updateGUI = function (result) {
     }
 
     var commandElement = document.getElementById("lastCommand");
-    commandElement.innerText = "";
-    try {
-        commandElement.appendChild(document.createTextNode(result[1]));
-    } catch (e) {
-        commandElement.appendChild(document.createTextNode("???"));
-    }
+    commandElement.innerText = result[1];
+
+    var groupElement = document.getElementById("group");
+    groupElement.innerText = this.getCurrentGroup();
 };
 
 module.exports = {
