@@ -1,8 +1,8 @@
-var fs = require('fs');
-var Parser = require('binary-parser').Parser;
-var config = require('./config').config;
+const fs = require('fs');
+const Parser = require('binary-parser').Parser;
+const config = require('./config').config;
 
-var nnet = new Parser()
+const nnet = new Parser()
     .uint32le('nnet')
     .uint32le('zero')
     .uint32le('isize')
@@ -54,7 +54,7 @@ const loadWeights = function() {
         result['weight'][i-1] = tempArray;
     }
     return result;
-}
+};
 
 module.exports = {
     loadWeights:loadWeights

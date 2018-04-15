@@ -1,7 +1,3 @@
-/**
- * Created by vaclavlangr on 08.03.2018.
- */
-
 const fs = require("fs");
 const WavEncoder = require("wav-encoder");
 

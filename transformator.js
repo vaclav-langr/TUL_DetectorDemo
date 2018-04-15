@@ -1,5 +1,5 @@
-var fs = require('fs');
-var config = require('./config').config;
+const fs = require('fs');
+const config = require('./config').config;
 
 var mean, std;
 
@@ -59,9 +59,14 @@ const transform = function(input) {
         result[i] = input[i];
     }
 
-    var values = [mean, std];
-    var operationType = [config.transformator.mean.operation,
-        config.transformator.std.operation];
+    var values = [
+        mean,
+        std
+    ];
+    var operationType = [
+        config.transformator.mean.operation,
+        config.transformator.std.operation
+    ];
     var operation;
     for(var i = 0; i < operationType.length; i++) {
         operation = getOperation(operationType[i]);

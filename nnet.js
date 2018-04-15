@@ -1,5 +1,5 @@
-var config = require('./config').config;
-var network = require('./loader').loadWeights();
+const config = require('./config').config;
+const network = require('./loader').loadWeights();
 
 const computeNetworkOutput = function(input) {
     var output = input.slice();

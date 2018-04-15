@@ -1,7 +1,7 @@
-var config = require('./config').config;
+const config = require('./config').config;
 
 const FFT = require('fft.js');
-resampler = require('audio-resampler');
+const resampler = require('audio-resampler');
 var linspace = require('linspace');
 
 const f = new FFT(config.segmenter.windowsSizePower);

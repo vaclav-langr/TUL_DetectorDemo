@@ -1,8 +1,8 @@
-var library = require('./library');
-var config = require('./config').config;
-var extractor = require('sound-parameters-extractor');
-var network = require('./nnet');
-var ShiftBuffer = require('./ShiftBuffer').ShiftBuffer;
+const library = require('./library');
+const config = require('./config').config;
+const extractor = require('sound-parameters-extractor');
+const network = require('./nnet');
+const ShiftBuffer = require('./ShiftBuffer').ShiftBuffer;
 var signalBuffer = new ShiftBuffer(
     config.segmenter.windowSize.get,
     config.segmenter.overlap.get,
@@ -12,8 +12,8 @@ var sequenceBuffer = new ShiftBuffer(
     config.melfbank.channels.get,
     forwardNetwork
 );
-var transformator = require('./transformator');
-var FSM = require('./fsm');
+const transformator = require('./transformator');
+const FSM = require('./fsm');
 
 function forwardNetwork(data) {
     var networkResult = network.computeNetworkOutput(data);

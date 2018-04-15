@@ -1,19 +1,18 @@
 ﻿const engine_1 = require('ntx-js/dist/src/generated/engine');
 const ntx = require('ntx-js/dist/src/clients/websocket.js').WSClient;
 const engine = engine_1.ntx.v2t.engine;
-var AudioChannel = engine.EngineContext.AudioChannel;
+const AudioChannel = engine.EngineContext.AudioChannel;
+const SampleRate = engine.AudioFormat.SampleRate;
+const ChannelLayout = engine.AudioFormat.ChannelLayout;
+const AudioFormat = engine.AudioFormat.SampleFormat;
 const jwt = require('jsonwebtoken');
+const os = require('os');
 
 const config = require('./config').config;
-const os = require('os');
-const MainController = require('./Controllers/MainController').MainController;
 const audioLogger = require('./audioLogger');
 const commandLogger = require('./commandLogger');
-var SampleRate = engine.AudioFormat.SampleRate;
-var ChannelLayout = engine.AudioFormat.ChannelLayout;
-var AudioFormat = engine.AudioFormat.SampleFormat;
+const MainController = require('./Controllers/MainController').MainController;
 var controller = new MainController();
-var _context = null;
 
 class AudioSender{
     constructor(buffer){
@@ -21,16 +20,13 @@ class AudioSender{
         this._client = null;
         this._isOpened = false;
         this.setClient();
-        //detector.setAttribute("fill", "#ff4d4d");
+
+        var filename = (+new Date).toString();
+        audioLogger.setFilename(filename);
+        commandLogger.setFilename(filename);
     }
 
-    addBuffer(buffer) {
-        for(var i = 0; i < buffer.length; i++) {
-            this._buffer.push(buffer[i]);
-        }
-    }
-
-    setClient() {
+    setClient(context) {
         const tkn = jwt.decode(config.nanogrid.ntx_token.get());
         const iss = tkn.iss;
         var result;
@@ -40,16 +36,13 @@ class AudioSender{
             }
         }
         result = result + "/ws/v1/v2t";
-        this._client = new ntx(result, config.nanogrid.ntx_token.get(), _context);
+        this._client = new ntx(result, config.nanogrid.ntx_token.get(), context);
     }
 
     setFormat(format) {
-        var filename = (+new Date).toString()
         audioLogger.setSampleRate(format.sampleRate);
-        audioLogger.setFilename(filename);
-        commandLogger.setFilename(filename);
 
-        _context = new engine.EngineContextStart({
+        var _context = new engine.EngineContextStart({
             context: new engine.EngineContext({
                 audioFormat: new engine.AudioFormat({
                     pcm: {
@@ -316,8 +309,7 @@ class AudioSender{
                 }
                 break;
         }
-
-        this.setClient();
+        this.setClient(_context);
     }
 
     addChunk(chunk) {
@@ -325,11 +317,7 @@ class AudioSender{
     }
 
     isOpened() {
-        if(this._isOpened) {
-            return true;
-        } else {
-            return false;
-        }
+        return this._isOpened;
     }
 
     startSpeech() {
@@ -337,7 +325,6 @@ class AudioSender{
             this._isOpened = true;
             this._result = this._client.v2t(this.sendAudio());
             this._result.subscribe(e => {
-                console.log(e);
                 if(!e.lookahead) {
                     e.events.forEach(function (element) {
                         if(element.hasOwnProperty("label")) {
@@ -353,10 +340,8 @@ class AudioSender{
                 }
             }, err => function (err) {
                     console.error("FAILED", err);
-                    //detector.setAttribute("fill", "#660000");
             }(err), () => function () {
                         console.log("DONE");
-                        //detector.setAttribute("fill", "#660000");
                     }());
         }
     }
@@ -366,7 +351,6 @@ class AudioSender{
             var chunk = this._buffer.shift();
             if(typeof chunk === 'undefined') {
                 this._isOpened = false;
-                //detector.setAttribute("fill", "#660000");
                 audioLogger.saveToWav();
                 return Promise.resolve(null);
             }

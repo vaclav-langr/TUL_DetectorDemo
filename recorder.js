@@ -1,61 +1,59 @@
-var getUserMedia = require('get-user-media-promise');
-var MicrophoneStream = require('microphone-stream');
-const audioSender_1 = require('./audioSender');
-const config = require('./config').config;
-var audioSender = null;
+const recordRTC = require('recordrtc');
+const wav = require('node-wav');
 
-var sampleRate;
-var micStream;
-var isRecording = false;
+const audioSender_1 = require('./audioSender');
+var audioSender = null;
+const config = require('./config').config;
+
+var fr = new FileReader();
 var buffer = new Array();
-var formatVar;
+var isRecording = false;
 var isSpeech = false;
+var url = (window.URL || window.webkitURL);
+var recorder;
 
 function addToBuffer(raw) {
     if(buffer.length == (config.sequencer.size.get * 1)) {
-        buffer.shift()
+        buffer.shift();
     }
     buffer.push(raw)
 }
 
-const startRecording = function(onComplete, afterResample) {
+function readBlob(input, callback) {
+    fr.onload = () => {
+        var data = wav.decode(fr.result).channelData[0];
+        addToBuffer(data);
+        if (audioSender != null && audioSender.isOpened() && isSpeech) {
+            audioSender.addChunk(data);
+        }
+        callback(data);
+    };
+    fr.readAsArrayBuffer(input);
+}
+
+const startRecording = function (onComplete) {
     if(isRecording) {
         return;
     }
     isRecording = true;
-    getUserMedia({ video: false, audio: true })
-        .then(function(stream) {
-            var options = {
-                objectMode: false,
-                bufferSize: 512
-            };
-            micStream = new MicrophoneStream(stream, options);
-            micStream.on('data', function(chunk) {
-                var raw = MicrophoneStream.toRaw(chunk);
-
-                if(audioSender != null) {
-                    if (audioSender.isOpened() && isSpeech) {
-                        if(buffer.length > 0) {
-                            audioSender.addBuffer(buffer)
-                            buffer = [];
-                        }
-                        audioSender.addChunk(raw);
-                    } else {
-                        addToBuffer(raw);
-                    }
-                } else {
-                    addToBuffer(raw)
-                }
-
-                onComplete(raw, sampleRate, afterResample);
-            });
-            micStream.on('format', function(format) {
-                formatVar = format;
-                sampleRate = format.sampleRate;
-                //console.log(format);
-            });
-        }).catch(function(error) {
-        console.log(error);
+    navigator.mediaDevices.getUserMedia({audio:true, video:false}).then(function (microphone) {
+        recorder = new recordRTC(microphone, {
+            recorderType: recordRTC.StereoAudioRecorder,
+            numberOfAudioChannels:1,
+            mimeType:'audio/wav',
+            desiredSampRate: config.sampleRate.get,
+            audioBitsPerSecond: config.bitDepth.get,
+            timeSlice:10,
+            disableLogs: true,
+            ondataavailable: function (blob) {
+                readBlob(blob, onComplete);
+                url.revokeObjectURL(url.createObjectURL(blob));
+            }
+        });
+        recorder.microphone = microphone;
+        recorder.startRecording();
+    }).catch(function (error) {
+        console.error(error);
     });
 };
 
@@ -64,7 +62,8 @@ const stopRecording = function() {
         return;
     }
     isRecording = false;
-    micStream.stop();
+    recorder.stopRecording();
+    recorder.microphone.stop();
 };
 
 const setSpeech = function(speech) {
@@ -72,16 +71,28 @@ const setSpeech = function(speech) {
     if(speech) {
         if (audioSender == null || !audioSender.isOpened()) {
             audioSender = new audioSender_1.AudioSender(buffer);
-            audioSender.setFormat(formatVar);
+            audioSender.setFormat({
+                sampleRate:config.sampleRate.get,
+                channels:1,
+                float:true,
+                bitDepth:32
+            });
             audioSender.startSpeech();
 
             buffer = new Array();
         }
+    } else {
+        audioSender = null;
     }
+};
+
+const getIsSpeech = function() {
+    return isSpeech;
 };
 
 module.exports = {
     startRecording:startRecording,
     stopRecording:stopRecording,
-    setSpeech:setSpeech
+    setSpeech:setSpeech,
+    getIsSpeech:getIsSpeech
 };

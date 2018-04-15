@@ -1,23 +1,43 @@
-var Recorder = require('./recorder');
-var library = require('./library');
-var config = require('./config').config;
-var network = require('./nnet');
-var ShiftBuffer = require('./ShiftBuffer').ShiftBuffer;
+const Recorder = require('./recorder');
+const library = require('./library');
+const config = require('./config').config;
+const network = require('./nnet');
+const ShiftBuffer = require('./ShiftBuffer').ShiftBuffer;
 var signalBuffer = new ShiftBuffer(config.segmenter.windowSize.get, config.segmenter.overlap.get, extractFeatures);
 var sequenceBuffer = new ShiftBuffer(config.melfbank.channels.get * config.sequencer.size.get, config.melfbank.channels.get, forwardNetwork);
-var FSM = require('./fsm');
-var transformator = require('./transformator');
+const FSM = require('./fsm');
+const transformator = require('./transformator');
+const stopper = require('./stopper');
+stopper.setLength(40);
 
 var lastSample = 0;
 var empty = new Array(config.segmenter.overlap.get).fill(0);
 
+function updateGUI(status) {
+    var detector = document.getElementById("detector");
+    if(status) {
+        detector.setAttribute("fill", "#ff4d4d")
+    } else {
+        detector.setAttribute("fill", "#660000")
+    }
+}
+
 function forwardNetwork(data) {
     var networkOutput = network.computeNetworkOutput(data);
     var fsm = FSM.switchState(networkOutput[0], networkOutput[1]);
-    if(fsm == 0) {
-        Recorder.setSpeech(true);
+    var stop = stopper.switchState(fsm);
+
+    if(Recorder.getIsSpeech()) {
+        if(stop && !fsm) {
+            Recorder.setSpeech(false);
+            updateGUI(false);
+        }
     } else {
-        Recorder.setSpeech(false);
+        if(fsm) {
+            Recorder.setSpeech(true);
+            stopper.reset();
+            updateGUI(true);
+        }
     }
 }
 
@@ -45,7 +65,7 @@ const stopRecording = function() {
 
 const startRecording = function () {
     library.clearBuffer();
-    Recorder.startRecording(library.resample, prepareData);
+    Recorder.startRecording(prepareData);
 };
 
 module.exports = {

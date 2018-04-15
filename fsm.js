@@ -1,4 +1,4 @@
-var States = {
+const States = {
     sS : 0,
     sN : 1,
     sF : 2
@@ -11,15 +11,6 @@ function getProbability() {
     var sum = buffer.reduce(function(a,b){return a+b});
     sum /= buffer.length;
     return sum;
-}
-
-function updateGUI(state) {
-    var detector = document.getElementById("detector");
-    if(state == 0) {
-        detector.setAttribute("fill", "#ff4d4d")
-    } else {
-        detector.setAttribute("fill", "#660000")
-    }
 }
 
 function addProbability(label, prob) {
@@ -42,7 +33,7 @@ const switchState = function(label, prob) {
             } else {
                 currentState = States.sN;
             }
-            return 1;
+            return false;
             break;
         case States.sN:
             if(sum > thresh) {
@@ -55,8 +46,7 @@ const switchState = function(label, prob) {
             }
             break;
     }
-    updateGUI(currentState);
-    return currentState;
+    return currentState == 0;
 };
 
 module.exports = {
