@@ -1,16 +1,16 @@
 html, body {
-    height:100%;
-    margin:0;
-    padding:0;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
-header{
+header {
     width: 100%;
     background: lightgray;
     position: fixed;
     top: 0;
     height: 110px !important;
-    z-index:100;
+    z-index: 100;
 }
 
 #header {
@@ -18,22 +18,22 @@ header{
 }
 
 .content {
-    position:relative;
+    position: relative;
     min-height: 100%;
     width: 100%; /* Sizing - any length */
-    padding:130px 0 155px 0; /* Header height and footer height */
-    margin:0 auto 0 auto; /* Center content */
+    padding: 130px 0 155px 0; /* Header height and footer height */
+    margin: 0 auto 0 auto; /* Center content */
 }
 
 #scrollable {
-    height:100%;
-    background:white;
+    height: 100%;
+    background: white;
     /*min-width: 300px;*/
-    -moz-box-sizing:border-box;
-    -webkit-box-sizing:border-box;
-    -o-box-sizing:border-box;
-    -ms-box-sizing:border-box;
-    box-sizing:border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 footer {
@@ -59,7 +59,7 @@ svg {
 
 #group {
     text-align: center;
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
     border: 0;
 }

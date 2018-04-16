@@ -16,7 +16,7 @@ const saveItem = function (item) {
 };
 
 module.exports = {
-    setFilename:setFilename,
-    saveItem:saveItem
+    setFilename: setFilename,
+    saveItem: saveItem
 };
 

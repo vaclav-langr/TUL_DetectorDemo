@@ -19,6 +19,7 @@ MainController.prototype.possibleGroups = {
 MainController.prototype.doOperation = function (operation) {
     var result = AbstractController.prototype.doOperation.call(this, operation);
     this.updateGUI(result, operation);
+    return result;
 };
 
 MainController.prototype.updateGUI = function (result) {
@@ -26,7 +27,7 @@ MainController.prototype.updateGUI = function (result) {
     element.innerText = "";
 
     var commands = this.getPossibilities();
-    for(var i = 0; i < commands.length; i++) {
+    for (var i = 0; i < commands.length; i++) {
         var text = document.createElement("h5");
         text.style = "line-height: 0px;text-align: center; margin:0;padding:0;";
         text.appendChild(document.createTextNode(commands[i]));
@@ -48,6 +49,17 @@ MainController.prototype.updateGUI = function (result) {
     groupElement.innerText = this.getCurrentGroup();
 };
 
+MainController.prototype.doOperationPromise = function (label) {
+    return new Promise((reject, recall) => {
+        var result = this.doOperation(label);
+        if (result[0]) {
+            reject("Succesful recognition of: " + result[1]);
+        } else {
+            recall("Unable to do command: " + result[1]);
+        }
+    });
+};
+
 module.exports = {
-    MainController:MainController
+    MainController: MainController
 };

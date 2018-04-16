@@ -15,7 +15,7 @@ var empty = new Array(config.segmenter.overlap.get).fill(0);
 
 function updateGUI(status) {
     var detector = document.getElementById("detector");
-    if(status) {
+    if (status) {
         detector.setAttribute("fill", "#ff4d4d")
     } else {
         detector.setAttribute("fill", "#660000")
@@ -27,13 +27,13 @@ function forwardNetwork(data) {
     var fsm = FSM.switchState(networkOutput[0], networkOutput[1]);
     var stop = stopper.switchState(fsm);
 
-    if(Recorder.getIsSpeech()) {
-        if(stop && !fsm) {
+    if (Recorder.getIsSpeech()) {
+        if (stop && !fsm) {
             Recorder.setSpeech(false);
             updateGUI(false);
         }
     } else {
-        if(fsm) {
+        if (fsm) {
             Recorder.setSpeech(true);
             stopper.reset();
             updateGUI(true);
@@ -56,9 +56,9 @@ function extractFeatures(data) {
     sequenceBuffer.addData(transformed);
 }
 
-const stopRecording = function() {
+const stopRecording = function () {
     Recorder.stopRecording();
-    for(var i = 0; i < config.normalizer.position.get; i++) {
+    for (var i = 0; i < config.normalizer.position.get; i++) {
         prepareData(empty);
     }
 };
@@ -69,6 +69,6 @@ const startRecording = function () {
 };
 
 module.exports = {
-    stopRecording:stopRecording,
-    startRecording:startRecording
+    stopRecording: stopRecording,
+    startRecording: startRecording
 };

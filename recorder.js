@@ -13,14 +13,14 @@ var url = (window.URL || window.webkitURL);
 var recorder;
 
 function addToBuffer(raw) {
-    if(buffer.length == (config.sequencer.size.get * 1)) {
+    if (buffer.length == (config.sequencer.size.get * 1)) {
         buffer.shift();
     }
     buffer.push(raw)
 }
 
 function removeLast() {
-    if(buffer.length > 0) {
+    if (buffer.length > 0) {
         buffer.pop();
     }
 }
@@ -41,7 +41,7 @@ function readBlob(input, callback) {
 const readBlobAsync = function (input) {
     return new Promise((resolve, reject) => {
         fr.onerror = () => {
-            reject("ERROR");
+            reject("Unable to parse file");
         };
         fr.onload = () => {
             var data = wav.decode(fr.result).channelData[0];
@@ -57,18 +57,18 @@ const readBlobAsync = function (input) {
 };
 
 const startRecording = function (onComplete) {
-    if(isRecording) {
+    if (isRecording) {
         return;
     }
     isRecording = true;
-    navigator.mediaDevices.getUserMedia({audio:true, video:false}).then(function (microphone) {
+    navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(function (microphone) {
         recorder = new recordRTC(microphone, {
             recorderType: recordRTC.StereoAudioRecorder,
-            numberOfAudioChannels:1,
-            mimeType:'audio/wav',
+            numberOfAudioChannels: 1,
+            mimeType: 'audio/wav',
             desiredSampRate: config.sampleRate.get,
             audioBitsPerSecond: config.bitDepth.get,
-            timeSlice:10,
+            timeSlice: 10,
             disableLogs: true,
             ondataavailable: function (blob) {
                 //readBlob(blob, onComplete);
@@ -83,8 +83,8 @@ const startRecording = function (onComplete) {
     });
 };
 
-const stopRecording = function() {
-    if(!isRecording) {
+const stopRecording = function () {
+    if (!isRecording) {
         return;
     }
     isRecording = false;
@@ -92,16 +92,16 @@ const stopRecording = function() {
     recorder.microphone.stop();
 };
 
-const setSpeech = function(speech) {
+const setSpeech = function (speech) {
     isSpeech = speech;
-    if(speech) {
+    if (speech) {
         if (audioSender == null || !audioSender.isOpened()) {
             audioSender = new audioSender_1.AudioSender(buffer);
             audioSender.setFormat({
-                sampleRate:config.sampleRate.get,
-                channels:1,
-                float:true,
-                bitDepth:32
+                sampleRate: config.sampleRate.get,
+                channels: 1,
+                float: true,
+                bitDepth: 32
             });
             audioSender.startSpeech();
 
@@ -112,13 +112,13 @@ const setSpeech = function(speech) {
     }
 };
 
-const getIsSpeech = function() {
+const getIsSpeech = function () {
     return isSpeech;
 };
 
 module.exports = {
-    startRecording:startRecording,
-    stopRecording:stopRecording,
-    setSpeech:setSpeech,
-    getIsSpeech:getIsSpeech
+    startRecording: startRecording,
+    stopRecording: stopRecording,
+    setSpeech: setSpeech,
+    getIsSpeech: getIsSpeech
 };

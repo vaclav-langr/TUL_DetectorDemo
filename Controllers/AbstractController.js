@@ -2,7 +2,7 @@
  * Created by vaclavlangr on 14.02.2018.
  */
 
-function AbstractController(){
+function AbstractController() {
     this.controller = null;
     this.possibleGroups = {};
     this.possibleCommands = {};
@@ -10,17 +10,17 @@ function AbstractController(){
 }
 
 AbstractController.prototype.getCurrentGroup = function () {
-    if(this.controller != null) {
+    if (this.controller != null) {
         return this.controller.getCurrentGroup();
     } else {
         return this.returnCommand;
     }
 };
 
-AbstractController.prototype.doOperation = function(operation){
-    if(this.controller != null) {
+AbstractController.prototype.doOperation = function (operation) {
+    if (this.controller != null) {
         var temp = this.controller.doOperation(operation);
-        if(temp[0]) {
+        if (temp[0]) {
             return temp;
         }
     } else {
@@ -39,7 +39,7 @@ AbstractController.prototype.doOperation = function(operation){
             }
         }
     }
-    if(this.returnCommand != null) {
+    if (this.returnCommand != null) {
         if (operation == this.returnCommand.replace(" ", "")) {
             this.clearController();
             return [true, this.returnCommand];
@@ -50,7 +50,7 @@ AbstractController.prototype.doOperation = function(operation){
 
 AbstractController.prototype.getPossibilities = function () {
     var poss = [];
-    if(this.controller == null) {
+    if (this.controller == null) {
         poss = poss.concat(Object.getOwnPropertyNames(this.possibleCommands));
         poss = poss.concat(Object.getOwnPropertyNames(this.possibleGroups));
         return poss
@@ -62,7 +62,7 @@ AbstractController.prototype.getPossibilities = function () {
 };
 
 AbstractController.prototype.clearController = function () {
-    if(this.controller != null) {
+    if (this.controller != null) {
         this.controller.clearController();
     }
     this.controller = null;
@@ -72,4 +72,4 @@ AbstractController.prototype.updateGUI = function () {
     throw new Error("Abstract method!");
 };
 
-module.exports = {AbstractController:AbstractController};
+module.exports = {AbstractController: AbstractController};

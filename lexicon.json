@@ -1,0 +1,106 @@
+﻿{
+  "items": [
+    {
+      "user": {
+        "pron": "klikňi",
+        "sym": "Klikni"
+      }
+    },
+    {
+      "user": {
+        "pron": "dvojklik",
+        "sym": "Dvojklik"
+      }
+    },
+    {
+      "user": {
+        "pron": "pravíklik",
+        "sym": "Pravýklik"
+      }
+    },
+    {
+      "user": {
+        "pron": "miš",
+        "sym": "Myš"
+      }
+    },
+    {
+      "user": {
+        "pron": "záklaďňískupina",
+        "sym": "Základnískupina"
+      }
+    },
+    {
+      "user": {
+        "pron": "dolevapadesát",
+        "sym": "Doleva50"
+      }
+    },
+    {
+      "user": {
+        "pron": "dolevasto",
+        "sym": "Doleva100"
+      }
+    },
+    {
+      "user": {
+        "pron": "dolevapjetset",
+        "sym": "Doleva500"
+      }
+    },
+    {
+      "user": {
+        "pron": "dopravapadesát",
+        "sym": "Doprava50"
+      }
+    },
+    {
+      "user": {
+        "pron": "dopravasto",
+        "sym": "Doprava100"
+      }
+    },
+    {
+      "user": {
+        "pron": "dopravapjetset",
+        "sym": "Doprava500"
+      }
+    },
+    {
+      "user": {
+        "pron": "dolupadesát",
+        "sym": "Dolu50"
+      }
+    },
+    {
+      "user": {
+        "pron": "dolusto",
+        "sym": "Dolu100"
+      }
+    },
+    {
+      "user": {
+        "pron": "dolupjetset",
+        "sym": "Dolu500"
+      }
+    },
+    {
+      "user": {
+        "pron": "nahorupadesát",
+        "sym": "Nahoru50"
+      }
+    },
+    {
+      "user": {
+        "pron": "nahorusto",
+        "sym": "Nahoru100"
+      }
+    },
+    {
+      "user": {
+        "pron": "nahorupjetset",
+        "sym": "Nahoru500"
+      }
+    }
+  ]
+}

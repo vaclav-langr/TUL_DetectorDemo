@@ -16,7 +16,7 @@ const addToBuffer = function (buffer) {
 const setFilename = function (filename) {
     _filename = "./log/" + filename + ".wav";
 
-    if(!fs.existsSync("./log")) {
+    if (!fs.existsSync("./log")) {
         fs.mkdir("./log")
     }
 };
@@ -35,8 +35,8 @@ const saveToWav = function () {
 };
 
 module.exports = {
-    setSampleRate:setSampleRate,
-    addToBuffer:addToBuffer,
-    saveToWav:saveToWav,
-    setFilename:setFilename
+    setSampleRate: setSampleRate,
+    addToBuffer: addToBuffer,
+    saveToWav: saveToWav,
+    setFilename: setFilename
 };

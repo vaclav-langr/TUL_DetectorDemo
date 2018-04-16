@@ -20,29 +20,29 @@ function loadFiles() {
 }
 
 function subFunction(minuend, subtrahend) {
-    if(minuend.length != subtrahend.length) {
+    if (minuend.length != subtrahend.length) {
         throw new RangeError("Lengths must match");
     }
     var result = new Array(minuend.length);
-    for(var i = 0; i < minuend.length; i++) {
+    for (var i = 0; i < minuend.length; i++) {
         result[i] = minuend[i] - subtrahend[i];
     }
     return result;
 }
 
 function divFunction(dividend, divisor) {
-    if(dividend.length != divisor.length) {
+    if (dividend.length != divisor.length) {
         throw new RangeError("Lengths must match");
     }
     var result = new Array(dividend.length);
-    for(var i = 0; i < dividend.length; i++) {
+    for (var i = 0; i < dividend.length; i++) {
         result[i] = dividend[i] / divisor[i];
     }
     return result;
 }
 
 function getOperation(type) {
-    switch(type) {
+    switch (type) {
         case 'sub':
             return subFunction;
         case 'div':
@@ -50,12 +50,12 @@ function getOperation(type) {
     }
 }
 
-const transform = function(input) {
-    if(mean == null || std == null) {
+const transform = function (input) {
+    if (mean == null || std == null) {
         loadFiles();
     }
     var result = new Array(input.length);
-    for(var i = 0; i < input.length; i++) {
+    for (var i = 0; i < input.length; i++) {
         result[i] = input[i];
     }
 
@@ -68,7 +68,7 @@ const transform = function(input) {
         config.transformator.std.operation
     ];
     var operation;
-    for(var i = 0; i < operationType.length; i++) {
+    for (var i = 0; i < operationType.length; i++) {
         operation = getOperation(operationType[i]);
         result = operation(result, values[i]);
     }
@@ -76,5 +76,5 @@ const transform = function(input) {
 };
 
 module.exports = {
-    transform:transform
+    transform: transform
 };

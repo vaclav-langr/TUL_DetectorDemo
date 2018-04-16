@@ -14,8 +14,10 @@ const commandLogger = require('./commandLogger');
 const MainController = require('./Controllers/MainController').MainController;
 var controller = new MainController();
 
-class AudioSender{
-    constructor(buffer){
+const lexicon = require('./lexicon.json');
+
+class AudioSender {
+    constructor(buffer) {
         this._buffer = buffer;
         this._client = null;
         this._isOpened = false;
@@ -31,8 +33,8 @@ class AudioSender{
         const tkn = jwt.decode(config.nanogrid.ntx_token.get());
         const iss = tkn.iss;
         var result;
-        for(const a of tkn.aud) {
-            if(!a.startsWith(iss)) {
+        for (const a of tkn.aud) {
+            if (!a.startsWith(iss)) {
                 result = a.replace(/\/$/, "");
             }
         }
@@ -55,123 +57,8 @@ class AudioSender{
                 v2t: new engine.EngineContext.V2TConfig({
                     withVAD: new engine.EngineContext.VADConfig(),
                     withLexicon: new engine.Lexicon({
-                        "alpha" : engine.Lexicon.Alphabet.LEXICON_ALPHABET_NONE,
-                        "items" : [
-                            {
-                                "user" : {
-                                    "pron" : "klikňi",
-                                    "sym" : "Klikni"
-                                }
-                            },
-                            {
-                                "user" : {
-                                    "pron" : "dvojklik",
-                                    "sym" : "Dvojklik"
-                                }
-                            },
-                            {
-                                "user" : {
-                                    "pron" : "pravíklik",
-                                    "sym" : "Pravýklik"
-                                }
-                            },
-                            {
-                                "user" : {
-                                    "pron" : "miš",
-                                    "sym" : "Myš"
-                                }
-                            }
-                            ,
-                            {
-                                "user" : {
-                                    "pron" : "záklaďňískupina",
-                                    "sym" : "Základnískupina"
-                                }
-                            }
-                            ,
-                            {
-                                "user" : {
-                                    "pron" : "dolevapadesát",
-                                    "sym" : "Doleva50"
-                                }
-                            }
-                            ,
-                            {
-                                "user" : {
-                                    "pron" : "dolevasto",
-                                    "sym" : "Doleva100"
-                                }
-                            }
-                            ,
-                            {
-                                "user" : {
-                                    "pron" : "dolevapjetset",
-                                    "sym" : "Doleva500"
-                                }
-                            }
-                            ,
-                            {
-                                "user" : {
-                                    "pron" : "dopravapadesát",
-                                    "sym" : "Doprava50"
-                                }
-                            }
-                            ,
-                            {
-                                "user" : {
-                                    "pron" : "dopravasto",
-                                    "sym" : "Doprava100"
-                                }
-                            }
-                            ,
-                            {
-                                "user" : {
-                                    "pron" : "dopravapjetset",
-                                    "sym" : "Doprava500"
-                                }
-                            }
-                            ,
-                            {
-                                "user" : {
-                                    "pron" : "dolupadesát",
-                                    "sym" : "Dolu50"
-                                }
-                            }
-                            ,
-                            {
-                                "user" : {
-                                    "pron" : "dolusto",
-                                    "sym" : "Dolu100"
-                                }
-                            }
-                            ,
-                            {
-                                "user" : {
-                                    "pron" : "dolupjetset",
-                                    "sym" : "Dolu500"
-                                }
-                            },
-                            {
-                                "user" : {
-                                    "pron" : "nahorupadesát",
-                                    "sym" : "Nahoru50"
-                                }
-                            }
-                            ,
-                            {
-                                "user" : {
-                                    "pron" : "nahorusto",
-                                    "sym" : "Nahoru100"
-                                }
-                            }
-                            ,
-                            {
-                                "user" : {
-                                    "pron" : "nahorupjetset",
-                                    "sym" : "Nahoru500"
-                                }
-                            }
-                        ]
+                        "alpha": engine.Lexicon.Alphabet.LEXICON_ALPHABET_NONE,
+                        "items": lexicon.items
                     })
                 }),
                 audioChannel: AudioChannel.AUDIO_CHANNEL_LEFT,
@@ -222,8 +109,8 @@ class AudioSender{
 
         switch (os.endianness()) {
             case 'BE':
-                if(format.float) {
-                    switch(format.bitDepth) {
+                if (format.float) {
+                    switch (format.bitDepth) {
                         case 32:
                             _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_F32BE;
                             break;
@@ -232,8 +119,8 @@ class AudioSender{
                             break;
                     }
                 } else {
-                    if(format.signed) {
-                        switch(format.bitDepth) {
+                    if (format.signed) {
+                        switch (format.bitDepth) {
                             case 8:
                                 _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S8;
                                 break;
@@ -248,7 +135,7 @@ class AudioSender{
                                 break;
                         }
                     } else {
-                        switch(format.bitDepth) {
+                        switch (format.bitDepth) {
                             case 8:
                                 _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U8;
                                 break;
@@ -266,8 +153,8 @@ class AudioSender{
                 }
                 break;
             case 'LE':
-                if(format.float) {
-                    switch(format.bitDepth) {
+                if (format.float) {
+                    switch (format.bitDepth) {
                         case 32:
                             _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_F32LE;
                             break;
@@ -276,8 +163,8 @@ class AudioSender{
                             break;
                     }
                 } else {
-                    if(format.signed) {
-                        switch(format.bitDepth) {
+                    if (format.signed) {
+                        switch (format.bitDepth) {
                             case 8:
                                 _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_S8;
                                 break;
@@ -292,7 +179,7 @@ class AudioSender{
                                 break;
                         }
                     } else {
-                        switch(format.bitDepth) {
+                        switch (format.bitDepth) {
                             case 8:
                                 _context.context.audioFormat.pcm.sampleFormat = AudioFormat.AUDIO_SAMPLE_FORMAT_U8;
                                 break;
@@ -322,35 +209,36 @@ class AudioSender{
     }
 
     startSpeech() {
-        if(!this._isOpened) {
+        if (!this._isOpened) {
             this._isOpened = true;
             this._result = this._client.v2t(this.sendAudio());
             this._result.subscribe(e => {
-                if(!e.lookahead) {
+                console.log(e);
+                if (!e.lookahead) {
                     e.events.forEach(function (element) {
-                        if(element.hasOwnProperty("label")) {
-                            if(element.label.hasOwnProperty("noise")) {
+                        if (element.hasOwnProperty("label")) {
+                            if (element.label.hasOwnProperty("noise")) {
                                 commandLogger.saveItem(element.label.noise);
                             }
-                            if(element.label.hasOwnProperty("item")) {
+                            if (element.label.hasOwnProperty("item")) {
                                 commandLogger.saveItem(element.label.item);
-                                controller.doOperation(element.label.item);
+                                controller.doOperationPromise(element.label.item).then(console.info, console.warn);
                             }
                         }
                     });
                 }
             }, err => function (err) {
-                    console.error("FAILED", err);
+                console.error("FAILED", err);
             }(err), () => function () {
-                        console.log("DONE");
-                    }());
+                console.info("DONE");
+            }());
         }
     }
 
     sendAudio() {
         var fn = function () {
             var chunk = this._buffer.shift();
-            if(typeof chunk === 'undefined') {
+            if (typeof chunk === 'undefined') {
                 this._isOpened = false;
                 audioLogger.saveToWav();
                 return Promise.resolve(null);
@@ -371,5 +259,5 @@ class AudioSender{
 }
 
 module.exports = {
-    AudioSender:AudioSender
+    AudioSender: AudioSender
 };
