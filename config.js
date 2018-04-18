@@ -11,6 +11,10 @@ function compute() {
     config.segmenter.windowsSizePower = powerOfTwo;
 }
 
+const isDev = function() {
+    return process.mainModule.filename.indexOf('app.asar') === -1;
+};
+
 const getNtxPromise = function (token) {
     return new Promise((recall, reject) => {
         const got = require("got");
@@ -68,6 +72,29 @@ const loginPromise = function () {
 const login = function (onError) {
     loginPromise().then(getNtxPromise, onError).then(console.info, onError);
 };
+
+function setPath() {
+    if(isDev()) {
+        config.neurotizer.nnetPath.get = './Library/10.nnet';
+        config.transformator.mean.path.get = "./Library/mean.list";
+        config.transformator.std.path.get = "./Library/std.list";
+    } else {
+        switch (process.platform) {
+            case "win32":
+                config.neurotizer.nnetPath.get = './resources/app.asar/Library/10.nnet';
+                config.transformator.mean.path.get = './resources/app.asar/Library/mean.list';
+                config.transformator.std.path.get = './resources/app.asar/Library/std.list';
+                break;
+            case "darwin":
+                config.neurotizer.nnetPath.get = './Contents/Resources/app.asar/Library/10.nnet';
+                config.transformator.mean.path.get = './Contents/Resources/app.asar/Library/mean.list';
+                config.transformator.std.path.get = './Contents/Resources/app.asar/Library/std.list';
+                break;
+            case "linux":
+                break;
+        }
+    }
+}
 
 const config = {
     sampleRate: {
@@ -179,10 +206,7 @@ const config = {
     },
     neurotizer: {
         nnetPath: {
-            get: store.get("neurotizer.nnetPath"),
-            set: function (value) {
-                store.set("neurotizer.nnetPath", value)
-            }
+            get: isDev() ? './Library/10.nnet' : './resources/app.asar/Library/10.nnet',
         },
         activations: {
             get: store.get("neurotizer.activations"),
@@ -194,19 +218,13 @@ const config = {
     transformator: {
         mean: {
             path: {
-                get: store.get("transformator.mean.path"),
-                set: function (value) {
-                    store.set("transformator.mean.path", value)
-                }
+                get: isDev() ? "./Library/mean.list" : "./resources/app.asar/Library/mean.list",
             },
             operation: 'sub'
         },
         std: {
             path: {
-                get: store.get("transformator.std.path"),
-                set: function (value) {
-                    store.set("transformator.std.path", value)
-                }
+                get: isDev() ? "./Library/std.list" : "./resources/app.asar/Library/std.list",
             },
             operation: 'div'
         }
@@ -264,8 +282,10 @@ const config = {
 };
 
 compute();
+setPath();
 
 module.exports = {
     config: config,
-    login: login
+    login: login,
+    isDev: isDev
 };

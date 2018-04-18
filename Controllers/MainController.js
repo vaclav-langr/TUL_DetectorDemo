@@ -55,7 +55,7 @@ MainController.prototype.doOperationPromise = function (label) {
         if (result[0]) {
             reject("Succesful recognition of: " + result[1]);
         } else {
-            recall("Unable to do command: " + result[1]);
+            recall("Unable to do command: " + label + "\nProbably it is an active group or command from different group.");
         }
     });
 };

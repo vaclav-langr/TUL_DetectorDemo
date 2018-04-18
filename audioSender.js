@@ -8,7 +8,8 @@ const AudioFormat = engine.AudioFormat.SampleFormat;
 const jwt = require('jsonwebtoken');
 const os = require('os');
 
-const config = require('./config').config;
+const config_1 = require('./config');
+const config = config_1.config;
 const audioLogger = require('./audioLogger');
 const commandLogger = require('./commandLogger');
 const MainController = require('./Controllers/MainController').MainController;
@@ -24,8 +25,10 @@ class AudioSender {
         this.setClient();
 
         var filename = (+new Date).toString();
-        audioLogger.setFilename(filename);
-        commandLogger.setFilename(filename);
+        if(config_1.isDev()) {
+            audioLogger.setFilename(filename);
+            commandLogger.setFilename(filename);
+        }
         document.getElementById("lastCommand").innerText = "???";
     }
 
@@ -43,7 +46,9 @@ class AudioSender {
     }
 
     setFormat(format) {
-        audioLogger.setSampleRate(format.sampleRate);
+        if(config_1.isDev()) {
+            audioLogger.setSampleRate(format.sampleRate);
+        }
 
         var _context = new engine.EngineContextStart({
             context: new engine.EngineContext({
@@ -217,11 +222,13 @@ class AudioSender {
                 if (!e.lookahead) {
                     e.events.forEach(function (element) {
                         if (element.hasOwnProperty("label")) {
-                            if (element.label.hasOwnProperty("noise")) {
+                            if (element.label.hasOwnProperty("noise") && config_1.isDev()) {
                                 commandLogger.saveItem(element.label.noise);
                             }
                             if (element.label.hasOwnProperty("item")) {
-                                commandLogger.saveItem(element.label.item);
+                                if(config_1.isDev()) {
+                                    commandLogger.saveItem(element.label.item);
+                                }
                                 controller.doOperationPromise(element.label.item).then(console.info, console.warn);
                             }
                         }
@@ -240,10 +247,14 @@ class AudioSender {
             var chunk = this._buffer.shift();
             if (typeof chunk === 'undefined') {
                 this._isOpened = false;
-                audioLogger.saveToWav();
+                if(config_1.isDev()) {
+                    audioLogger.saveToWav();
+                }
                 return Promise.resolve(null);
             }
-            audioLogger.addToBuffer(chunk);
+            if(config_1.isDev()) {
+                audioLogger.addToBuffer(chunk);
+            }
             const events = new engine.Events({
                 events: [new engine.Event({
                     audio: new engine.Event.Audio({

@@ -39,7 +39,7 @@ AbstractController.prototype.doOperation = function (operation) {
             }
         }
     }
-    if (this.returnCommand != null) {
+    if (this.returnCommand != null && this.controller != null) {
         if (operation == this.returnCommand.replace(" ", "")) {
             this.clearController();
             return [true, this.returnCommand];

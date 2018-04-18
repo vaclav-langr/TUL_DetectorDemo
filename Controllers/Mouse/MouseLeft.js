@@ -9,9 +9,9 @@ MouseLeft.moveMouse = function () {
     this.robotjs = require('robotjs');
     var mouse = this.robotjs.getMousePos();
     if ((mouse.x - this.unit) >= 0) {
-        this.robotjs.moveMouseSmooth(mouse.x - this.unit, mouse.y);
+        this.robotjs.moveMouse(mouse.x - this.unit, mouse.y);
     } else {
-        this.robotjs.moveMouseSmooth(0, mouse.y);
+        this.robotjs.moveMouse(0, mouse.y);
     }
 };
 

@@ -10,9 +10,9 @@ MouseDown.moveMouse = function () {
     var mouse = this.robotjs.getMousePos();
     var screenSize = this.robotjs.getScreenSize();
     if ((mouse.y + this.unit) < screenSize.height) {
-        this.robotjs.moveMouseSmooth(mouse.x, mouse.y + this.unit);
+        this.robotjs.moveMouse(mouse.x, mouse.y + this.unit);
     } else {
-        this.robotjs.moveMouseSmooth(mouse.x, screenSize.height);
+        this.robotjs.moveMouse(mouse.x, screenSize.height);
     }
 };
 

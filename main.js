@@ -1,13 +1,9 @@
 ﻿const electron = require('electron');
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
-const ipcMain = electron.ipcMain;
-const dialog = electron.dialog;
+const {app, BrowserWindow, ipcMain} = electron;
 
 const path = require('path');
 const url = require('url');
-
-process.env.NODE_ENV = 'development';
+const config_1 = require('./config')
 
 let template = [
     {
@@ -21,6 +17,11 @@ let template = [
                 label: 'Zavřít',
                 accelerator: process.platform === 'darwin' ? "Command+Q" : "Ctrl+Q",
                 click: () => app.quit()
+            },
+            {
+                label: 'Development tools',
+                accelerator: process === 'darwin' ? 'Command+I' : 'Ctrl+I',
+                click: (item, focusedWindow) => focusedWindow.toggleDevTools()
             }
         ]
     }
@@ -33,7 +34,6 @@ function createWindow() {
 
     mainWindow.setAlwaysOnTop(true, "normal");
     mainWindow.setMinimizable(false);
-    //mainWindow.setResizable(false)
     electron.Menu.setApplicationMenu(electron.Menu.buildFromTemplate(template));
 
     mainWindow.loadURL(url.format({
@@ -71,7 +71,7 @@ if (process.platform == 'darwin') {
     template.unshift({});
 }
 
-if (process.env.NODE_ENV !== 'production') {
+if (config_1.isDev()) {
     template.push({
         label: 'Development',
         submenu: [
@@ -155,7 +155,7 @@ ipcMain.on('user:login', function (e) {
 function testPersistentConfig() {
     var store_1 = require('electron-store');
     var store = new store_1();
-    var config = require('./config').config;
+    var config = config_1.config;
 
     if (store.size == 0) {
         config.sampleRate.set(16000);
@@ -175,15 +175,6 @@ function testPersistentConfig() {
         config.sequencer.size.set(51);
         config.sequencer.position.set(25);
         config.neurotizer.activations.set(['Tanh', 'Tanh', 'Tanh', 'Tanh', 'Tanh', 'Tanh', 'Tanh']);
-        if (process.env.NODE_ENV !== 'production') {
-            config.neurotizer.nnetPath.set('./Library/10.nnet');
-            config.transformator.mean.path.set("./Library/mean.list");
-            config.transformator.std.path.set("./Library/std.list");
-        } else {
-            config.neurotizer.nnetPath.set('./resources/app.asar/Library/10.nnet');
-            config.transformator.mean.path.set("./resources/app.asar/Library/mean.list");
-            config.transformator.std.path.set("./resources/app.asar/Library/std.list");
-        }
         config.nanogrid.domain.set("");
         config.nanogrid.username.set("");
         config.nanogrid.password.set("");

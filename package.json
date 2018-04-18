@@ -7,13 +7,15 @@
     "start": "electron .",
     "firstStart": "npm install && npm run robotRebuild && electron .",
     "robotRebuild": "npm rebuild --runtime=electron --target=1.6.15 --disturl=https://atom.io/download/atom-shell --abi=53",
-    "packageWin": "electron-packager . TUL_DP --overwrite --asar=true --platform=win32 --arch=ia32 --out=release-builds  --no-prune"
+    "packageWin64": "electron-packager . TUL_DP --overwrite --asar=true --platform=win32 --arch=x64 --out=release-builds  --no-prune" ,
+    "packageMac": "electron-packager . TUL_DP --overwrite --asar=true --platform=darwin --arch=x64 --out=release-builds  --no-prune"
   },
   "repository": "https://github.com/vaclav-langr/TUL_DetectorDemo",
   "keywords": [],
   "author": "Václav Langr",
   "license": "",
   "devDependencies": {
+    "cross-env": "^5.1.4",
     "electron": "~1.6.2",
     "electron-connect": "^0.6.1",
     "electron-packager": "^12.0.0"

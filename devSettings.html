@@ -205,50 +205,11 @@
         <label>Neurotizér</label>
         <div class="row">
             <div class="col">
-                Neuronová síť
-            </div>
-            <div class="col">
-                <div>
-                    <label for="path" id="pathLabel"></label><input id="path" type="file" class="form-control"
-                                                                    accept=".nnet" required>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
                 Aktivační funkce
             </div>
             <div class="col">
                 <div>
                     <input id="layers" type="text" class="form-control">
-                </div>
-            </div>
-        </div>
-        <button type="submit">Uložit</button>
-    </div>
-</form>
-<form id="formTransformatorSettings" class="container-fluid">
-    <div class="form-group border border-top-0">
-        <label>Transformátor</label>
-        <div class="row">
-            <div class="col">
-                Střední hodnota
-            </div>
-            <div class="col">
-                <div>
-                    <label for="meanPath" id="meanLabel"></label><input id="meanPath" type="file" class="form-control"
-                                                                        accept=".list">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                Směrodatná odchylka
-            </div>
-            <div class="col">
-                <div>
-                    <label for="stdPath" id="stdLabel"></label><input id="stdPath" type="file" class="form-control"
-                                                                      accept=".list">
                 </div>
             </div>
         </div>
@@ -352,22 +313,9 @@
     neurotizerSettings.addEventListener("submit", function (e) {
         e.preventDefault();
 
-        var path = "./Library/" + this.querySelector("#path").files[0].name;
         var layers = (this.querySelector("#layers").value).split(",");
 
-        config.neurotizer.nnetPath.set(path);
         config.neurotizer.activations.set(layers);
-    });
-
-    var transformatorSettings = document.getElementById("formTransformatorSettings");
-    transformatorSettings.addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        var mean = "./Library/" + this.querySelector("#meanPath").files[0].name;
-        var std = "./Library/" + this.querySelector("#stdPath").files[0].name;
-
-        config.transformator.mean.path.set(mean);
-        config.transformator.std.path.set(std);
     });
 
     function loadSettings() {
@@ -394,11 +342,7 @@
         sequencerSettings.querySelector("#size").value = config.sequencer.size.get;
         sequencerSettings.querySelector("#position").value = config.sequencer.position.get;
 
-        neurotizerSettings.querySelector("#pathLabel").innerText = config.neurotizer.nnetPath.get;
         neurotizerSettings.querySelector("#layers").value = config.neurotizer.activations.get.join(",");
-
-        transformatorSettings.querySelector("#meanLabel").innerText = config.transformator.mean.path.get;
-        transformatorSettings.querySelector("#stdLabel").innerText = config.transformator.std.path.get;
     }
 
     loadSettings();

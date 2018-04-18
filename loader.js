@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Parser = require('binary-parser').Parser;
 const config = require('./config').config;
+console.log(config)
 
 const nnet = new Parser()
     .uint32le('nnet')
