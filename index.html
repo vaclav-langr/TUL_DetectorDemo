@@ -36,9 +36,9 @@
 </body>
 
 <script>
-    var renderer = require('./renderer.js');
-    var config_1 = require('./config');
-    var config = config_1.config;
+    const renderer = require('./renderer.js');
+    const config_1 = require('./config');
+    const config = config_1.config;
 
     document.getElementById("threshold").value = config.fsm.threshold.get;
     document.getElementById("thresh").innerText = document.getElementById("threshold").value;
@@ -56,13 +56,6 @@
         this.disabled = true;
         document.getElementById('stop-button').disabled = false;
     });
-
-    var controller_1 = require('./Controllers/MainController').MainController;
-    var controller = new controller_1();
-    controller.updateGUI([false, "???"]);
-
-    var detector = document.getElementById("detector");
-    detector.setAttribute("fill", "#660000");
 
     const electron = require('electron');
     const {ipcRenderer} = electron;

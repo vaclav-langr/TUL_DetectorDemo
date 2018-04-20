@@ -7,7 +7,7 @@ function MouseUp() {
 
 MouseUp.moveMouse = function () {
     this.robotjs = require('robotjs');
-    var mouse = this.robotjs.getMousePos();
+    let mouse = this.robotjs.getMousePos();
     if (mouse.y - this.unit >= 0) {
         this.robotjs.moveMouse(mouse.x, mouse.y - this.unit);
     } else {

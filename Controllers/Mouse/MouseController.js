@@ -7,23 +7,23 @@ const MouseDown = require('./MouseDown').MouseDown;
 const MouseLeft = require('./MouseLeft').MouseLeft;
 const MouseRight = require('./MouseRight').MouseRight;
 
-var AbstractController = require('./../AbstractController').AbstractController;
+const AbstractController = require('./../AbstractController').AbstractController;
 
 function MouseController() {
 }
 
 MouseController.simpleClick = function () {
-    var robotjs = require('robotjs');
+    let robotjs = require('robotjs');
     robotjs.mouseClick();
 };
 
 MouseController.doubleClick = function () {
-    var robotjs = require('robotjs');
+    let robotjs = require('robotjs');
     robotjs.mouseClick("left", true);
 };
 
 MouseController.rightClick = function () {
-    var robotjs = require('robotjs');
+    let robotjs = require('robotjs');
     robotjs.mouseClick("right");
 };
 

@@ -2,10 +2,11 @@
  * Created by vaclavlangr on 14.02.2018.
  */
 
-var AbstractController = require('./AbstractController').AbstractController;
-var MouseController = require('./Mouse/MouseController').MouseController;
+const AbstractController = require('./AbstractController').AbstractController;
+const MouseController = require('./Mouse/MouseController').MouseController;
 
 function MainController() {
+    this.updateGUI([false, "???"])
 }
 
 MainController.prototype = new AbstractController();
@@ -17,18 +18,18 @@ MainController.prototype.possibleGroups = {
 };
 
 MainController.prototype.doOperation = function (operation) {
-    var result = AbstractController.prototype.doOperation.call(this, operation);
+    let result = AbstractController.prototype.doOperation.call(this, operation);
     this.updateGUI(result, operation);
     return result;
 };
 
 MainController.prototype.updateGUI = function (result) {
-    var element = document.getElementById("commands");
+    let element = document.getElementById("commands");
     element.innerText = "";
 
-    var commands = this.getPossibilities();
-    for (var i = 0; i < commands.length; i++) {
-        var text = document.createElement("h5");
+    let commands = this.getPossibilities();
+    for (let i = 0; i < commands.length; i++) {
+        let text = document.createElement("h5");
         text.style = "line-height: 0px;text-align: center; margin:0;padding:0;";
         text.appendChild(document.createTextNode(commands[i]));
         element.appendChild(text);
@@ -38,20 +39,20 @@ MainController.prototype.updateGUI = function (result) {
         //};
         //text.onclick = text.onclick.bind(this);
 
-        var space = document.createElement("br");
+        let space = document.createElement("br");
         element.appendChild(space);
     }
 
-    var commandElement = document.getElementById("lastCommand");
+    let commandElement = document.getElementById("lastCommand");
     commandElement.innerText = result[1];
 
-    var groupElement = document.getElementById("group");
+    let groupElement = document.getElementById("group");
     groupElement.innerText = this.getCurrentGroup();
 };
 
 MainController.prototype.doOperationPromise = function (label) {
     return new Promise((reject, recall) => {
-        var result = this.doOperation(label);
+        let result = this.doOperation(label);
         if (result[0]) {
             reject("Succesful recognition of: " + result[1]);
         } else {

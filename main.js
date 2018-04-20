@@ -17,11 +17,6 @@ let template = [
                 label: 'Zavřít',
                 accelerator: process.platform === 'darwin' ? "Command+Q" : "Ctrl+Q",
                 click: () => app.quit()
-            },
-            {
-                label: 'Development tools',
-                accelerator: process === 'darwin' ? 'Command+I' : 'Ctrl+I',
-                click: (item, focusedWindow) => focusedWindow.toggleDevTools()
             }
         ]
     }
@@ -153,10 +148,10 @@ ipcMain.on('user:login', function (e) {
 });
 
 function testPersistentConfig() {
-    var store_1 = require('electron-store');
-    var store = new store_1();
-    var config = config_1.config;
-
+    const store_1 = require('electron-store');
+    const store = new store_1();
+    let config = config_1.config;
+    config.appPath.set(app.getAppPath());
     if (store.size == 0) {
         config.sampleRate.set(16000);
         config.bitDepth.set(16);

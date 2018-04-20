@@ -13,7 +13,7 @@ var url = (window.URL || window.webkitURL);
 var recorder;
 
 function addToBuffer(raw) {
-    if (buffer.length == (config.sequencer.size.get * 1)) {
+    if (buffer.length >= Math.floor(config.sequencer.size.get * 0.5)) {
         buffer.shift();
     }
     buffer.push(raw)
@@ -25,26 +25,13 @@ function removeLast() {
     }
 }
 
-function readBlob(input, callback) {
-    fr.onload = () => {
-        var data = wav.decode(fr.result).channelData[0];
-        addToBuffer(data);
-        if (audioSender != null && audioSender.isOpened() && isSpeech) {
-            audioSender.addChunk(data);
-            removeLast();
-        }
-        callback(data);
-    };
-    fr.readAsArrayBuffer(input);
-}
-
 const readBlobAsync = function (input) {
     return new Promise((resolve, reject) => {
         fr.onerror = () => {
             reject("Unable to parse file");
         };
         fr.onload = () => {
-            var data = wav.decode(fr.result).channelData[0];
+            let data = wav.decode(fr.result).channelData[0];
             addToBuffer(data);
             if (audioSender != null && audioSender.isOpened() && isSpeech) {
                 audioSender.addChunk(data);
@@ -71,7 +58,6 @@ const startRecording = function (onComplete) {
             timeSlice: 10,
             disableLogs: true,
             ondataavailable: function (blob) {
-                //readBlob(blob, onComplete);
                 readBlobAsync(blob).then(onComplete, console.error);
                 url.revokeObjectURL(url.createObjectURL(blob));
             }
@@ -90,7 +76,17 @@ const stopRecording = function () {
     isRecording = false;
     recorder.stopRecording();
     recorder.microphone.stop();
+    updateGUI(false);
 };
+
+function updateGUI(status) {
+    let detector = document.getElementById("detector");
+    if (status) {
+        detector.setAttribute("fill", "#ff4d4d")
+    } else {
+        detector.setAttribute("fill", "#660000")
+    }
+}
 
 const setSpeech = function (speech) {
     isSpeech = speech;
@@ -110,11 +106,14 @@ const setSpeech = function (speech) {
     } else {
         audioSender = null;
     }
+    updateGUI(isSpeech);
 };
 
 const getIsSpeech = function () {
     return isSpeech;
 };
+
+updateGUI(false);
 
 module.exports = {
     startRecording: startRecording,

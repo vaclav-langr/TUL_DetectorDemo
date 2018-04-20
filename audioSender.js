@@ -24,7 +24,7 @@ class AudioSender {
         this._isOpened = false;
         this.setClient();
 
-        var filename = (+new Date).toString();
+        let filename = (+new Date).toString();
         if(config_1.isDev()) {
             audioLogger.setFilename(filename);
             commandLogger.setFilename(filename);
@@ -35,7 +35,7 @@ class AudioSender {
     setClient(context) {
         const tkn = jwt.decode(config.nanogrid.ntx_token.get());
         const iss = tkn.iss;
-        var result;
+        let result;
         for (const a of tkn.aud) {
             if (!a.startsWith(iss)) {
                 result = a.replace(/\/$/, "");
@@ -50,7 +50,7 @@ class AudioSender {
             audioLogger.setSampleRate(format.sampleRate);
         }
 
-        var _context = new engine.EngineContextStart({
+        let _context = new engine.EngineContextStart({
             context: new engine.EngineContext({
                 audioFormat: new engine.AudioFormat({
                     pcm: {
@@ -243,7 +243,7 @@ class AudioSender {
     }
 
     sendAudio() {
-        var fn = function () {
+        let fn = function () {
             var chunk = this._buffer.shift();
             if (typeof chunk === 'undefined') {
                 this._isOpened = false;
@@ -264,7 +264,7 @@ class AudioSender {
             });
             return Promise.resolve(events);
         };
-        var instance = this;
+        let instance = this;
         return fn.bind(instance);
     }
 }

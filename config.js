@@ -1,10 +1,10 @@
-var store_1 = require('electron-store');
-var store = new store_1();
+const store_1 = require('electron-store');
+const store = new store_1();
 
 function compute() {
     config.segmenter.overlapPercent = (100 * config.segmenter.overlap.get / config.segmenter.windowSize.get) + '%';
 
-    var powerOfTwo = 1;
+    let powerOfTwo = 1;
     while (powerOfTwo < config.segmenter.windowSize.get) {
         powerOfTwo = powerOfTwo * 2;
     }
@@ -18,7 +18,7 @@ const isDev = function() {
 const getNtxPromise = function (token) {
     return new Promise((recall, reject) => {
         const got = require("got");
-        var domain = config.nanogrid.domain.get();
+        let domain = config.nanogrid.domain.get();
         (async() => {
             try {
                 const response = await got.post(domain + "store/ntx-token", {
@@ -32,9 +32,7 @@ const getNtxPromise = function (token) {
                 config.nanogrid.ntx_token.set(response.body.ntxToken);
                 recall("Logged in succesfully to Nanogrid.");
             } catch (error) {
-                //display error to user
                 reject("Unable to get token.\n" + error);
-                //return error;
             }
         })();
     });
@@ -42,9 +40,9 @@ const getNtxPromise = function (token) {
 
 const loginPromise = function () {
     return new Promise((recall, reject) => {
-        var domain = config.nanogrid.domain.get();
-        var username = config.nanogrid.username.get();
-        var password = config.nanogrid.password.get();
+        let domain = config.nanogrid.domain.get();
+        let username = config.nanogrid.username.get();
+        let password = config.nanogrid.password.get();
         if (domain != "" && username != "" && password != "") {
             const got = require("got");
 
@@ -57,11 +55,10 @@ const loginPromise = function () {
                             "password": password
                         }
                     });
-                    var token = response.body.accessToken;
+                    let token = response.body.accessToken;
                     config.nanogrid.access_token.set(token);
                     recall(token);
                 } catch (error) {
-                    //display error
                     reject("Unable to login.\n" + error);
                 }
             })();
@@ -79,24 +76,21 @@ function setPath() {
         config.transformator.mean.path.get = "./Library/mean.list";
         config.transformator.std.path.get = "./Library/std.list";
     } else {
-        switch (process.platform) {
-            case "win32":
-                config.neurotizer.nnetPath.get = './resources/app.asar/Library/10.nnet';
-                config.transformator.mean.path.get = './resources/app.asar/Library/mean.list';
-                config.transformator.std.path.get = './resources/app.asar/Library/std.list';
-                break;
-            case "darwin":
-                config.neurotizer.nnetPath.get = './Contents/Resources/app.asar/Library/10.nnet';
-                config.transformator.mean.path.get = './Contents/Resources/app.asar/Library/mean.list';
-                config.transformator.std.path.get = './Contents/Resources/app.asar/Library/std.list';
-                break;
-            case "linux":
-                break;
-        }
+        config.neurotizer.nnetPath.get = config.appPath.get() + '/Library/10.nnet';
+        config.transformator.mean.path.get = config.appPath.get() +'/Library/mean.list';
+        config.transformator.std.path.get = config.appPath.get() +'/Library/std.list';
     }
 }
 
 const config = {
+    appPath: {
+        get: function () {
+            return store.get("appPath");
+        },
+        set: function (value) {
+            store.set("appPath", value);
+        }
+    },
     sampleRate: {
         get: store.get("sampleRate", 16000),
         set: function (value) {
@@ -206,7 +200,7 @@ const config = {
     },
     neurotizer: {
         nnetPath: {
-            get: isDev() ? './Library/10.nnet' : './resources/app.asar/Library/10.nnet',
+            get: '',
         },
         activations: {
             get: store.get("neurotizer.activations"),
@@ -218,13 +212,13 @@ const config = {
     transformator: {
         mean: {
             path: {
-                get: isDev() ? "./Library/mean.list" : "./resources/app.asar/Library/mean.list",
+                get: '',
             },
             operation: 'sub'
         },
         std: {
             path: {
-                get: isDev() ? "./Library/std.list" : "./resources/app.asar/Library/std.list",
+                get: '',
             },
             operation: 'div'
         }

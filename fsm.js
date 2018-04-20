@@ -8,7 +8,7 @@ var currentState = States.sF;
 var buffer = new Array(21).fill(1);
 
 function getProbability() {
-    var sum = buffer.reduce(function (a, b) {
+    let sum = buffer.reduce(function (a, b) {
         return a + b
     });
     sum /= buffer.length;
@@ -26,8 +26,8 @@ function addProbability(label, prob) {
 
 const switchState = function (label, prob) {
     addProbability(label, prob);
-    var sum = getProbability();
-    var thresh = document.getElementById("threshold").value;
+    let sum = getProbability();
+    let thresh = document.getElementById("threshold").value;
     switch (currentState) {
         case States.sF:
             if (sum > thresh) {

@@ -14,7 +14,7 @@ const reset = function () {
 };
 
 const switchState = function (input) {
-    var result = false;
+    let result = false;
     switch (currentState) {
         case stopperStates.sS:
             if (input) {
@@ -42,7 +42,7 @@ const switchState = function (input) {
 };
 
 const setLength = function (length) {
-    for (var i = 0; i < length; i++) {
+    for (let i = 0; i < length; i++) {
         stopperStates['sF' + (i + 1)] = (i + 1);
         endState = i + 1;
     }
