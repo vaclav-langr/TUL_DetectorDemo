@@ -4,7 +4,7 @@ const States = {
     sF: 2
 };
 
-var currentState = States.sF;
+var currentState = States.sS;
 var buffer = new Array(21).fill(1);
 
 function getProbability() {

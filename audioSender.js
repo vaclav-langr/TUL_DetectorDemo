@@ -60,7 +60,7 @@ class AudioSender {
                     }
                 }),
                 v2t: new engine.EngineContext.V2TConfig({
-                    withVAD: new engine.EngineContext.VADConfig(),
+                    //withVAD: new engine.EngineContext.VADConfig(),
                     withLexicon: new engine.Lexicon({
                         "alpha": engine.Lexicon.Alphabet.LEXICON_ALPHABET_NONE,
                         "items": lexicon.items
