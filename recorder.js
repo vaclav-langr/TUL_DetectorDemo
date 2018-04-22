@@ -19,12 +19,6 @@ function addToBuffer(raw) {
     buffer.push(raw)
 }
 
-function removeLast() {
-    if (buffer.length > 0) {
-        buffer.pop();
-    }
-}
-
 const readBlobAsync = function (input) {
     return new Promise((resolve, reject) => {
         fr.onerror = () => {
@@ -32,10 +26,10 @@ const readBlobAsync = function (input) {
         };
         fr.onload = () => {
             let data = wav.decode(fr.result).channelData[0];
-            addToBuffer(data);
             if (audioSender != null && audioSender.isOpened() && isSpeech) {
                 audioSender.addChunk(data);
-                removeLast();
+            } else {
+                addToBuffer(data);
             }
             resolve(data);
         };
@@ -76,7 +70,7 @@ const stopRecording = function () {
     isRecording = false;
     recorder.stopRecording();
     recorder.microphone.stop();
-    updateGUI(false);
+    setSpeech(false);
 };
 
 function updateGUI(status) {
@@ -104,7 +98,7 @@ const setSpeech = function (speech) {
             buffer = new Array();
         }
     } else {
-        audioSender = null;
+        audioSender.setSend(speech);
     }
     updateGUI(isSpeech);
 };

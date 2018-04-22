@@ -23,13 +23,18 @@ class AudioSender {
         this._client = null;
         this._isOpened = false;
         this.setClient();
+        this._shouldSend = true;
 
         let filename = (+new Date).toString();
-        if(config_1.isDev()) {
+        if (config_1.isDev()) {
             audioLogger.setFilename(filename);
             commandLogger.setFilename(filename);
         }
         document.getElementById("lastCommand").innerText = "???";
+    }
+
+    setSend(send) {
+        this._shouldSend = send;
     }
 
     setClient(context) {
@@ -46,7 +51,7 @@ class AudioSender {
     }
 
     setFormat(format) {
-        if(config_1.isDev()) {
+        if (config_1.isDev()) {
             audioLogger.setSampleRate(format.sampleRate);
         }
 
@@ -226,7 +231,7 @@ class AudioSender {
                                 commandLogger.saveItem(element.label.noise);
                             }
                             if (element.label.hasOwnProperty("item")) {
-                                if(config_1.isDev()) {
+                                if (config_1.isDev()) {
                                     commandLogger.saveItem(element.label.item);
                                 }
                                 controller.doOperationPromise(element.label.item).then(console.info, console.warn);
@@ -245,12 +250,25 @@ class AudioSender {
     sendAudio() {
         let fn = function () {
             var chunk = this._buffer.shift();
-            if (typeof chunk === 'undefined') {
+            if(typeof chunk === 'undefined' && !this._shouldSend) {
                 this._isOpened = false;
                 if(config_1.isDev()) {
                     audioLogger.saveToWav();
                 }
                 return Promise.resolve(null);
+            }
+            if(typeof chunk === 'undefined' && this._shouldSend) {
+                let t1 = [];
+                let t2 = new Float32Array(t1);
+                let t3 = new Uint8Array(t2.buffer);
+                const events = new engine.Events({
+                    events: [new engine.Event({
+                        audio: new engine.Event.Audio({
+                            body: Array.from(t3),
+                        })
+                    })]
+                });
+                return Promise.resolve(events);
             }
             if(config_1.isDev()) {
                 audioLogger.addToBuffer(chunk);
