@@ -12,6 +12,7 @@ stopper.setLength(60);
 
 var lastSample = 0;
 var empty = new Array(config.segmenter.overlap.get).fill(0);
+var isStop;
 
 function forwardNetwork(data) {
     let networkOutput = network.computeNetworkOutput(data);
@@ -24,7 +25,7 @@ function forwardNetwork(data) {
         }
     } else {
         if (fsm) {
-            Recorder.setSpeech(true);
+            Recorder.setSpeech(true && !isStop);
             stopper.reset();
         }
     }
@@ -47,6 +48,7 @@ function extractFeatures(data) {
 
 const stopRecording = function () {
     Recorder.stopRecording();
+    isStop = true;
     for (let i = 0; i < config.normalizer.position.get; i++) {
         prepareData(empty);
     }
@@ -55,6 +57,7 @@ const stopRecording = function () {
 const startRecording = function () {
     library.clearBuffer();
     Recorder.startRecording(prepareData);
+    isStop = false;
 };
 
 module.exports = {

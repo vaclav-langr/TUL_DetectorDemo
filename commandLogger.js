@@ -12,7 +12,7 @@ const setFilename = function (filename) {
 };
 
 const saveItem = function (item) {
-    fs.appendFileSync(_filename, item + "\n")
+    fs.appendFileSync(_filename, item + "\r\n")
 };
 
 module.exports = {
