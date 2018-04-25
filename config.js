@@ -272,6 +272,14 @@ const config = {
                 store.set("fsm.threshold", value)
             }
         }
+    },
+    microphone: {
+        id: {
+            get: store.get("microphone.id", "default"),
+            set: function (value) {
+                store.set("microphone.id", value)
+            }
+        }
     }
 };
 

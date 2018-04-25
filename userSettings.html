@@ -3,60 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <title>Nastavení</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-<form id="formNanogridSettings" class="container-fluid"><div class="form-group border border-top-0">
-    <label>Nanogrid</label>
-    <div class="row">
-        <div class="col">
-            Doména
-        </div>
-        <div class="col">
-            <div>
-                <input id="domain" type="text" class="form-control">
+<form id="formNanogridSettings" class="container-fluid">
+    <div class="form-group border border-top-0">
+        <label>Nanogrid</label>
+        <div class="row">
+            <div class="col">
+                Doména
+            </div>
+            <div class="col">
+                <div>
+                    <input id="domain" type="text" class="form-control">
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            Přihlašovací jméno
-        </div>
-        <div class="col">
-            <div>
-                <input id="username" type="email" class="form-control">
+        <div class="row">
+            <div class="col">
+                Přihlašovací jméno
+            </div>
+            <div class="col">
+                <div>
+                    <input id="username" type="email" class="form-control">
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            Heslo
-        </div>
-        <div class="col">
-            <div>
-                <input id="password" type="password" class="form-control">
+        <div class="row">
+            <div class="col">
+                Heslo
+            </div>
+            <div class="col">
+                <div>
+                    <input id="password" type="password" class="form-control">
+                </div>
             </div>
         </div>
+        <button type="submit">Uložit</button>
     </div>
-    <button type="submit">Uložit</button></div></form>
-<form id="formFsmSettings" class="container-fluid"><div class="form-group border border-top-0">
-    <label>FSM</label>
-    <div class="row">
-        <div class="col">
-            Práh
-        </div>
-        <div class="col">
-            <div>
-                <input id="threshold" type="number" class="form-control" step="any" max="1.0" min="0.0">
+</form>
+<form id="formFsmSettings" class="container-fluid">
+    <div class="form-group border border-top-0">
+        <label>FSM (je vyžadován restart při změně)</label>
+            <div class="row">
+                <div class="col">
+                    Práh
+                </div>
+                <div class="col">
+                    <div>
+                        <input id="threshold" type="number" class="form-control" step="any" max="1.0" min="0.0">
+                    </div>
+                </div>
+            </div>
+            <button type="submit">Uložit</button></div>
+</form>
+<form id="formMicrophone" class="container-fluid">
+    <div class="form-group border border-top-0">
+        <label>Výběr mikrofonu (je vyžadován restart při změně)</label>
+        <div class="row">
+            <div class="col">
+                Mikrofon:
+            </div>
+            <div class="col">
+                <select id="microphoneSelect"></select>
             </div>
         </div>
+        <button type="submit">Uložit</button>
     </div>
-    <button type="submit">Uložit</button></div></form>
+</form>
 </body>
 <script>
-    var config_1 = require('./config');
+    const config_1 = require('./config');
     var config = config_1.config;
-    
+
     var nanogridSettings = document.getElementById("formNanogridSettings");
     nanogridSettings.addEventListener("submit", function (e) {
         e.preventDefault();
@@ -65,7 +85,7 @@
         var username = this.querySelector("#username").value;
         var password = this.querySelector("#password").value;
 
-        if(domain.slice(-1) != '/') {
+        if (domain.slice(-1) != '/') {
             domain = domain + "/";
         }
 
@@ -89,12 +109,35 @@
         config.fsm.threshold.set(threshold);
     });
 
+    var micForm = document.getElementById("formMicrophone");
+    micForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var select = e.srcElement[0];
+        config.microphone.id.set(select.options[select.selectedIndex].value);
+    });
+
+    var micSelect = document.getElementById('microphoneSelect');
+    function devices(listDevices) {
+        listDevices = listDevices.filter(device => device.kind == 'audioinput');
+        listDevices.forEach(device => {
+            var option = document.createElement("option");
+            option.value = device.deviceId;
+            option.text = device.label;
+            if (option.value == config.microphone.id.get) {
+                option.selected = true;
+            }
+            micSelect.appendChild(option);
+        });
+    }
+
     function loadSettings() {
         nanogridSettings.querySelector("#domain").value = config.nanogrid.domain.get();
         nanogridSettings.querySelector("#username").value = config.nanogrid.username.get();
         nanogridSettings.querySelector("#password").value = config.nanogrid.password.get();
 
         fsmSettings.querySelector("#threshold").value = config.fsm.threshold.get;
+
+        navigator.mediaDevices.enumerateDevices().then(devices)
     }
 
     loadSettings();

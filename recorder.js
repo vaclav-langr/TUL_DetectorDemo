@@ -42,7 +42,9 @@ const startRecording = function (onComplete) {
         return;
     }
     isRecording = true;
-    navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(function (microphone) {
+    navigator.mediaDevices.getUserMedia({audio: {
+        deviceId: {exact: config.microphone.id.get}
+    }, video: false}).then(function (microphone) {
         recorder = new recordRTC(microphone, {
             recorderType: recordRTC.StereoAudioRecorder,
             numberOfAudioChannels: 1,
