@@ -8,7 +8,7 @@ const sequenceBuffer = new ShiftBuffer(config.melfbank.channels.get * config.seq
 const FSM = require('./fsm');
 const transformator = require('./transformator');
 const stopper = require('./stopper');
-stopper.setLength(60);
+stopper.setLength(40);
 
 var lastSample = 0;
 var empty = new Array(config.segmenter.overlap.get).fill(0);

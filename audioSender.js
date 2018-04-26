@@ -17,6 +17,8 @@ var controller = new MainController();
 
 const lexicon = require('./lexicon.json');
 
+let lastTime = "";
+
 class AudioSender {
     constructor(buffer) {
         this._buffer = buffer;
@@ -237,11 +239,20 @@ class AudioSender {
                                 controller.doOperationPromise(element.label.item).then(console.info, console.warn);
                             }
                         }
+                        if (element.hasOwnProperty("timestamp") && element.timestamp.hasOwnProperty("timestamp")) {
+                            lastTime = element.timestamp.timestamp;
+                        }
                     });
                 }
             }, err => function (err) {
+                if (config_1.isDev()) {
+                    commandLogger.saveItem(lastTime);
+                }
                 console.error("FAILED", err);
             }(err), () => function () {
+                if (config_1.isDev()) {
+                    commandLogger.saveItem(lastTime);
+                }
                 console.info("DONE");
             }());
         }
@@ -250,14 +261,14 @@ class AudioSender {
     sendAudio() {
         let fn = function () {
             var chunk = this._buffer.shift();
-            if(typeof chunk === 'undefined' && !this._shouldSend) {
+            if (typeof chunk === 'undefined' && !this._shouldSend) {
                 this._isOpened = false;
-                if(config_1.isDev()) {
+                if (config_1.isDev()) {
                     audioLogger.saveToWav();
                 }
                 return Promise.resolve(null);
             }
-            if(typeof chunk === 'undefined' && this._shouldSend) {
+            if (typeof chunk === 'undefined' && this._shouldSend) {
                 let t1 = [];
                 let t2 = new Float32Array(t1);
                 let t3 = new Uint8Array(t2.buffer);
@@ -270,7 +281,7 @@ class AudioSender {
                 });
                 return Promise.resolve(events);
             }
-            if(config_1.isDev()) {
+            if (config_1.isDev()) {
                 audioLogger.addToBuffer(chunk);
             }
             const events = new engine.Events({

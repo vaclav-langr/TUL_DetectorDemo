@@ -13,7 +13,7 @@ var url = (window.URL || window.webkitURL);
 var recorder;
 
 function addToBuffer(raw) {
-    if (buffer.length >= Math.floor(config.sequencer.size.get * 0.5)) {
+    if (buffer.length >= Math.floor(config.sequencer.size.get * 0.3)) {
         buffer.shift();
     }
     buffer.push(raw)

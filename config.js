@@ -71,15 +71,9 @@ const login = function (onError) {
 };
 
 function setPath() {
-    if(isDev()) {
-        config.neurotizer.nnetPath.get = './Library/10.nnet';
-        config.transformator.mean.path.get = "./Library/mean.list";
-        config.transformator.std.path.get = "./Library/std.list";
-    } else {
-        config.neurotizer.nnetPath.get = config.appPath.get() + '/Library/10.nnet';
-        config.transformator.mean.path.get = config.appPath.get() +'/Library/mean.list';
-        config.transformator.std.path.get = config.appPath.get() +'/Library/std.list';
-    }
+    config.neurotizer.nnetPath.get = config.appPath.get() + '/Library/10.nnet';
+    config.transformator.mean.path.get = config.appPath.get() + '/Library/mean.list';
+    config.transformator.std.path.get = config.appPath.get() + '/Library/std.list';
 }
 
 const config = {
@@ -203,7 +197,7 @@ const config = {
             get: '',
         },
         activations: {
-            get: store.get("neurotizer.activations"),
+            get: store.get("neurotizer.activations", ['Tanh', 'Tanh', 'Tanh', 'Tanh', 'Tanh', 'Tanh', 'Tanh']),
             set: function (value) {
                 store.set("neurotizer.activations", value)
             }
@@ -226,7 +220,7 @@ const config = {
     nanogrid: {
         ntx_token: {
             get: function () {
-                return store.get("nanogrid.ntx_token");
+                return store.get("nanogrid.ntx_token", "");
             },
             set: function (value) {
                 store.set("nanogrid.ntx_token", value)
@@ -234,7 +228,7 @@ const config = {
         },
         domain: {
             get: function () {
-                return store.get("nanogrid.domain");
+                return store.get("nanogrid.domain", "");
             },
             set: function (value) {
                 store.set("nanogrid.domain", value);
@@ -242,7 +236,7 @@ const config = {
         },
         username: {
             get: function () {
-                return store.get("nanogrid.username");
+                return store.get("nanogrid.username", "");
             },
             set: function (value) {
                 store.set("nanogrid.username", value)
@@ -250,7 +244,7 @@ const config = {
         },
         password: {
             get: function () {
-                return store.get("nanogrid.password");
+                return store.get("nanogrid.password", "");
             },
             set: function (value) {
                 store.set("nanogrid.password", value)
@@ -258,7 +252,7 @@ const config = {
         },
         access_token: {
             get: function () {
-                return store.get("nanogrid.access_token");
+                return store.get("nanogrid.access_token", "");
             },
             set: function (value) {
                 store.set("nanogrid.access_token", value)
@@ -267,7 +261,7 @@ const config = {
     },
     fsm: {
         threshold: {
-            get: store.get("fsm.threshold", 0),
+            get: store.get("fsm.threshold", 0.5),
             set: function (value) {
                 store.set("fsm.threshold", value)
             }

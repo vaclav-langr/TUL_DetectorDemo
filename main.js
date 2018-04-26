@@ -44,7 +44,7 @@ function createWindow() {
         mainWindow = null;
     });
 
-    testPersistentConfig();
+    setPath();
 }
 
 app.on('ready', createWindow);
@@ -147,34 +147,7 @@ ipcMain.on('user:login', function (e) {
     mainWindow.webContents.send('user:login-main');
 });
 
-function testPersistentConfig() {
-    const store_1 = require('electron-store');
-    const store = new store_1();
+function setPath() {
     let config = config_1.config;
     config.appPath.set(app.getAppPath());
-    if (store.size == 0) {
-        config.sampleRate.set(16000);
-        config.bitDepth.set(16);
-        config.segmenter.windowSize.set(400);
-        config.segmenter.overlap.set(160);
-        config.melfbank.noiseCoefs.set([-1, 1]);
-        config.melfbank.useRange.set(true);
-        config.melfbank.preemCoef.set(0.97);
-        config.melfbank.lowFrequency.set(0);
-        config.melfbank.highFrequency.set(8000);
-        config.melfbank.channels.set(39);
-        config.melfbank.minValue.set(1.0);
-        config.melfbank.returnValue.set(0.0);
-        config.normalizer.size.set(51);
-        config.normalizer.position.set(25);
-        config.sequencer.size.set(51);
-        config.sequencer.position.set(25);
-        config.neurotizer.activations.set(['Tanh', 'Tanh', 'Tanh', 'Tanh', 'Tanh', 'Tanh', 'Tanh']);
-        config.nanogrid.domain.set("");
-        config.nanogrid.username.set("");
-        config.nanogrid.password.set("");
-        config.nanogrid.access_token.set("");
-        config.nanogrid.ntx_token.set("");
-        config.fsm.threshold.set(0.5);
-    }
 }
