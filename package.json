@@ -7,8 +7,11 @@
     "start": "electron .",
     "firstStart": "npm install && npm run robotRebuild && electron .",
     "robotRebuild": "npm rebuild --runtime=electron --target=1.6.15 --disturl=https://atom.io/download/atom-shell --abi=53",
-    "packageWin64": "electron-packager . TUL_DP --overwrite --asar=true --platform=win32 --arch=x64 --out=release-builds  --no-prune" ,
-    "packageMac": "electron-packager . TUL_DP --overwrite --asar=true --platform=darwin --arch=x64 --out=release-builds  --no-prune"
+    "packageWin64": "electron-packager . TUL_DP --overwrite --asar=true --platform=win32 --arch=x64 --out=release-builds  --no-prune",
+    "packageMac": "electron-packager . TUL_DP --overwrite --asar=true --platform=darwin --arch=x64 --out=release-builds  --no-prune",
+    "packageLinux": "electron-packager . TUL_DP --overwrite --asar=true --platform=linux --arch=x64 --out=release-builds  --no-prune",
+    "installerMac": "electron-installer-dmg ./release-builds/TUL_DP-darwin-x64/TUL_DP.app TUL_DP --out=release-builds --overwrite",
+    "installerDebian": "electron-installer-debian --src release-builds/TUL_DP-linux-x64/ --arch amd64 --config release-configs/debian.json"
   },
   "repository": "https://github.com/vaclav-langr/TUL_DetectorDemo",
   "keywords": [],
@@ -18,7 +21,10 @@
     "cross-env": "^5.1.4",
     "electron": "~1.6.2",
     "electron-connect": "^0.6.1",
-    "electron-packager": "^12.0.0"
+    "electron-installer-debian": "^0.8.1",
+    "electron-installer-dmg": "^0.2.1",
+    "electron-packager": "^12.0.0",
+    "electron-winstaller": "^2.6.4"
   },
   "dependencies": {
     "audio-resampler": "^1.0.1",
