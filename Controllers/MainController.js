@@ -44,7 +44,13 @@ MainController.prototype.updateGUI = function (result) {
     }
 
     let commandElement = document.getElementById("lastCommand");
-    commandElement.innerText = result[1];
+    commandElement.innerHTML = '';
+    let lastCommand = document.createElement("div");
+    lastCommand.innerText = result[1];
+    if(result[0]) {
+        lastCommand.className = "blink_me";
+    }
+    commandElement.appendChild(lastCommand);
 
     let groupElement = document.getElementById("group");
     groupElement.innerText = this.getCurrentGroup();

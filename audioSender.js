@@ -32,7 +32,7 @@ class AudioSender {
             audioLogger.setFilename(filename);
             commandLogger.setFilename(filename);
         }
-        document.getElementById("lastCommand").innerText = "???";
+        controller.updateGUI([false, "???"])
     }
 
     setSend(send) {

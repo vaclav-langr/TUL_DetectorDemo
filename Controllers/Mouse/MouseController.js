@@ -41,9 +41,9 @@ MouseController.prototype.possibleCommands = {
     "Doprava 50": MouseRight.moveMouse.bind({unit: 50}),
     "Doprava 100": MouseRight.moveMouse.bind({unit: 100}),
     "Doprava 500": MouseRight.moveMouse.bind({unit: 500}),
-    "Dolu 50": MouseDown.moveMouse.bind({unit: 50}),
-    "Dolu 100": MouseDown.moveMouse.bind({unit: 100}),
-    "Dolu 500": MouseDown.moveMouse.bind({unit: 500}),
+    "Dolů 50": MouseDown.moveMouse.bind({unit: 50}),
+    "Dolů 100": MouseDown.moveMouse.bind({unit: 100}),
+    "Dolů 500": MouseDown.moveMouse.bind({unit: 500}),
     "Nahoru 50": MouseUp.moveMouse.bind({unit: 50}),
     "Nahoru 100": MouseUp.moveMouse.bind({unit: 100}),
     "Nahoru 500": MouseUp.moveMouse.bind({unit: 500})
