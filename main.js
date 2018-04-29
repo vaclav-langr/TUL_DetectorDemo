@@ -182,7 +182,7 @@ function winEvents() {
         case '--squirrel-install':
         case '--squirrel-updated':
             spawnUpdate(['--createShortcut', exeName]);
-            setTimeout(app.quit, 1000);
+            setTimeout(app.quit, 100);
             return true;
         case '--squirrel-uninstall':
             spawnUpdate(['--removeShortcut', exeName]);
@@ -192,4 +192,5 @@ function winEvents() {
             app.quit();
             return true;
     }
+    return false;
 }
