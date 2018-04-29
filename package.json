@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "firstStart": "npm install && npm run robotRebuild && electron .",
+    "firstStart": "npm install && npm run robotRebuild && cd ./node_modules/ntx-js && npm run build && cd ../../ && electron .",
     "robotRebuild": "npm rebuild --runtime=electron --target=1.6.15 --disturl=https://atom.io/download/atom-shell --abi=53",
     "packageWin64": "electron-packager . TUL_DP --overwrite --asar=true --platform=win32 --arch=x64 --out=release-builds  --no-prune",
     "packageMac": "electron-packager . TUL_DP --overwrite --asar=true --platform=darwin --arch=x64 --out=release-builds  --no-prune",
@@ -18,14 +18,23 @@
   "keywords": [],
   "author": "Václav Langr",
   "license": "",
+  "optionalDependencies": {
+    "electron-installer-debian": "^0.8.1",
+    "electron-installer-dmg": "^0.2.1",
+  },
   "devDependencies": {
     "cross-env": "^5.1.4",
     "electron": "~1.6.2",
     "electron-connect": "^0.6.1",
     "electron-packager": "^12.0.0",
-    "electron-installer-debian": "^0.8.1",
-    "electron-installer-dmg": "^0.2.1",
-    "electron-winstaller": "^2.6.4"
+    "electron-winstaller": "^2.6.4",
+    "@types/node": "^6.0.0",
+    "@types/form-data": "^2.2.0",
+    "@types/ws": "^3.0.2",
+    "ts-node": "^3.2.1",
+    "tsc-watch": "^1.0.7",
+    "tslint": "^5.5.0",
+    "typescript": "^2.4.1"
   },
   "dependencies": {
     "audio-resampler": "^1.0.1",
