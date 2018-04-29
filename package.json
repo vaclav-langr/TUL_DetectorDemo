@@ -20,7 +20,7 @@
   "license": "",
   "optionalDependencies": {
     "electron-installer-debian": "^0.8.1",
-    "electron-installer-dmg": "^0.2.1",
+    "electron-installer-dmg": "^0.2.1"
   },
   "devDependencies": {
     "cross-env": "^5.1.4",
@@ -48,7 +48,7 @@
     "jsonwebtoken": "^8.1.0",
     "linspace": "^1.0.0",
     "microphone-stream": "^3.0.7",
-    "ntx-js": "file:./external/ntx-js",
+    "ntx-js": "https://gitlab.com/nanotrix/ntx-js",
     "recordrtc": "^5.4.6",
     "robotjs": "^0.4.7",
     "rxjs": "^5.5.8",
