@@ -10,6 +10,7 @@
     "packageWin64": "electron-packager . TUL_DP --overwrite --asar=true --platform=win32 --arch=x64 --out=release-builds  --no-prune",
     "packageMac": "electron-packager . TUL_DP --overwrite --asar=true --platform=darwin --arch=x64 --out=release-builds  --no-prune",
     "packageLinux": "electron-packager . TUL_DP --overwrite --asar=true --platform=linux --arch=x64 --out=release-builds  --no-prune",
+    "installerWin64": "node ./release-configs/winstaller.js",
     "installerMac": "electron-installer-dmg ./release-builds/TUL_DP-darwin-x64/TUL_DP.app TUL_DP --out=release-builds --overwrite",
     "installerDebian": "electron-installer-debian --src release-builds/TUL_DP-linux-x64/ --arch amd64 --config release-configs/debian.json"
   },
@@ -21,9 +22,9 @@
     "cross-env": "^5.1.4",
     "electron": "~1.6.2",
     "electron-connect": "^0.6.1",
+    "electron-packager": "^12.0.0",
     "electron-installer-debian": "^0.8.1",
     "electron-installer-dmg": "^0.2.1",
-    "electron-packager": "^12.0.0",
     "electron-winstaller": "^2.6.4"
   },
   "dependencies": {
@@ -38,7 +39,7 @@
     "jsonwebtoken": "^8.1.0",
     "linspace": "^1.0.0",
     "microphone-stream": "^3.0.7",
-    "ntx-js": "./node_modules/ntx-js",
+    "ntx-js": "file:./external/ntx-js",
     "recordrtc": "^5.4.6",
     "robotjs": "^0.4.7",
     "rxjs": "^5.5.8",

@@ -29,8 +29,7 @@ Icon?
 Thumbs.db
 
 # Node Files #
-/node_modules/*
-!/node_modules/ntx-js/
+node_modules/
 /bower_components
 
 # Coverage #

@@ -13,10 +13,10 @@ function getInstallerConfig () {
   const outPath = path.join(rootPath, 'release-builds')
 
   return Promise.resolve({
-    appDirectory: path.join(outPath, 'Electron-tutorial-app-win32-ia32/'),
+    appDirectory: path.join(outPath, 'TUL_DP-win32-x64/'),
     authors: 'Václav Langr',
     noMsi: true,
-    outputDirectory: path.join(outPath, 'windows-installer'),
+    outputDirectory: path.join(outPath, ''),
     exe: 'TUL_DP.exe',
     setupExe: 'TUL_DP_Installer.exe'
   })
