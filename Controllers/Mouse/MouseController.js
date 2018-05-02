@@ -15,6 +15,9 @@ function MouseController() {
 MouseController.simpleClick = function () {
     let robotjs = require('robotjs');
     robotjs.mouseClick();
+
+    let pos = robotjs.getMousePos();
+    robotjs.moveMouse(pos.x, pos.y);
 };
 
 MouseController.doubleClick = function () {
