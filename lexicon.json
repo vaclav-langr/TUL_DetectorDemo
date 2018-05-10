@@ -605,6 +605,36 @@
         "pron": "mínus",
         "sym": "Mínus"
       }
+    },
+    {
+      "user": {
+        "pron": "okno",
+        "sym": "Okno"
+      }
+    },
+    {
+      "user": {
+        "pron": "pŘepninadalší",
+        "sym": "Přepninadalší"
+      }
+    },
+    {
+      "user": {
+        "pron": "zavřiokno",
+        "sym": "Zavřiokno"
+      }
+    },
+    {
+      "user": {
+        "pron": "maksimalizuj",
+        "sym": "Maximalizuj"
+      }
+    },
+    {
+      "user": {
+        "pron": "minimalizuj",
+        "sym": "Minimalizuj"
+      }
     }
   ]
 }

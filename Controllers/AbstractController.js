@@ -25,7 +25,7 @@ AbstractController.prototype.doOperation = function (operation) {
         }
     } else {
         for (let key in this.possibleGroups) {
-            if (key.replace(" ", "") == operation) {
+            if (key.split(" ").join("") == operation) {
                 if (this.controller == null) {
                     this.controller = this.possibleGroups[key];
                     return [true, key];
@@ -33,14 +33,14 @@ AbstractController.prototype.doOperation = function (operation) {
             }
         }
         for (let key in this.possibleCommands) {
-            if (key.replace(" ", "") == operation) {
+            if (key.split(" ").join("") == operation) {
                 this.possibleCommands[key]();
                 return [true, key];
             }
         }
     }
     if (this.returnCommand != null && this.controller != null) {
-        if (operation == this.returnCommand.replace(" ", "")) {
+        if (operation == this.returnCommand.split(" ").join("")) {
             this.clearController();
             return [true, this.returnCommand];
         }

@@ -4,7 +4,8 @@
 
 const AbstractController = require('./AbstractController').AbstractController;
 const MouseController = require('./Mouse/MouseController').MouseController;
-const KeyboardController = require('./Keyboard/KeyboardController').KeyboardController;
+const KeyboardController = require('./Keyboard/KeyboardControllerWindows').KeyboardController;
+const WindowController = require('./Window/WindowControllerWindows').WindowController;
 
 function MainController() {
     this.updateGUI([false, "???"])
@@ -16,7 +17,8 @@ MainController.prototype.returnCommand = "Základní skupina";
 
 MainController.prototype.possibleGroups = {
     "Myš": new MouseController(),
-    "Klávesnice": new KeyboardController()
+    "Klávesnice": new KeyboardController(),
+    "Okno": new WindowController()
 };
 
 MainController.prototype.doOperation = function (operation) {
