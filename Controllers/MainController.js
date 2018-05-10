@@ -4,6 +4,7 @@
 
 const AbstractController = require('./AbstractController').AbstractController;
 const MouseController = require('./Mouse/MouseController').MouseController;
+const KeyboardController = require('./Keyboard/KeyboardController').KeyboardController;
 
 function MainController() {
     this.updateGUI([false, "???"])
@@ -14,7 +15,8 @@ MainController.prototype = new AbstractController();
 MainController.prototype.returnCommand = "Základní skupina";
 
 MainController.prototype.possibleGroups = {
-    "Myš": new MouseController()
+    "Myš": new MouseController(),
+    "Klávesnice": new KeyboardController()
 };
 
 MainController.prototype.doOperation = function (operation) {
@@ -34,10 +36,10 @@ MainController.prototype.updateGUI = function (result) {
         text.appendChild(document.createTextNode(commands[i]));
         element.appendChild(text);
 
-        //text.onclick = function (e) {
-        //    this.doOperation(e.target.innerText.replace(" ", ""));
-        //};
-        //text.onclick = text.onclick.bind(this);
+        text.onclick = function (e) {
+            this.doOperation(e.target.innerText.replace(" ", ""));
+        };
+        text.onclick = text.onclick.bind(this);
 
         let space = document.createElement("br");
         element.appendChild(space);

@@ -101,6 +101,510 @@
         "pron": "nahorupjetset",
         "sym": "Nahoru500"
       }
+    },
+    {
+      "user": {
+        "pron": "klávesňice",
+        "sym": "Klávesnice"
+      }
+    },
+    {
+      "user": {
+        "pron": "adam",
+        "sym": "Adam"
+      }
+    },
+    {
+      "user": {
+        "pron": "božena",
+        "sym": "Božena"
+      }
+    },
+    {
+      "user": {
+        "pron": "ciril",
+        "sym": "Cyril"
+      }
+    },
+    {
+      "user": {
+        "pron": "davit",
+        "sym": "David"
+      }
+    },
+    {
+      "user": {
+        "pron": "emil",
+        "sym": "Emil"
+      }
+    },
+    {
+      "user": {
+        "pron": "fraňtišek",
+        "sym": "František"
+      }
+    },
+    {
+      "user": {
+        "pron": "gustaf",
+        "sym": "Gustav"
+      }
+    },
+    {
+      "user": {
+        "pron": "helena",
+        "sym": "Helena"
+      }
+    },
+    {
+      "user": {
+        "pron": "ivan",
+        "sym": "Ivan"
+      }
+    },
+    {
+      "user": {
+        "pron": "jozef",
+        "sym": "Josef"
+      }
+    },
+    {
+      "user": {
+        "pron": "karel",
+        "sym": "Karel"
+      }
+    },
+    {
+      "user": {
+        "pron": "ludvík",
+        "sym": "Ludvík"
+      }
+    },
+    {
+      "user": {
+        "pron": "marije",
+        "sym": "Marie"
+      }
+    },
+    {
+      "user": {
+        "pron": "norbert",
+        "sym": "Norbert"
+      }
+    },
+    {
+      "user": {
+        "pron": "oto",
+        "sym": "Oto"
+      }
+    },
+    {
+      "user": {
+        "pron": "petr",
+        "sym": "Petr"
+      }
+    },
+    {
+      "user": {
+        "pron": "kvido",
+        "sym": "Quido"
+      }
+    },
+    {
+      "user": {
+        "pron": "rudolf",
+        "sym": "Rudolf"
+      }
+    },
+    {
+      "user": {
+        "pron": "svatopluk",
+        "sym": "Svatopluk"
+      }
+    },
+    {
+      "user": {
+        "pron": "tomáš",
+        "sym": "Tomáš"
+      }
+    },
+    {
+      "user": {
+        "pron": "urban",
+        "sym": "Urban"
+      }
+    },
+    {
+      "user": {
+        "pron": "václaf",
+        "sym": "Václav"
+      }
+    },
+    {
+      "user": {
+        "pron": "dvojitévé",
+        "sym": "DvojitéW"
+      }
+    },
+    {
+      "user": {
+        "pron": "ksaver",
+        "sym": "Xaver"
+      }
+    },
+    {
+      "user": {
+        "pron": "ipsilon",
+        "sym": "Ypsilon"
+      }
+    },
+    {
+      "user": {
+        "pron": "zuzana",
+        "sym": "Zuzana"
+      }
+    },
+    {
+      "user": {
+        "pron": "mezera",
+        "sym": "Mezera"
+      }
+    },
+    {
+      "user": {
+        "pron": "eskejp",
+        "sym": "Escape"
+      }
+    },
+    {
+      "user": {
+        "pron": "bekspejs",
+        "sym": "Backspace"
+      }
+    },
+    {
+      "user": {
+        "pron": "tabulátor",
+        "sym": "Tabulátor"
+      }
+    },
+    {
+      "user": {
+        "pron": "nahoru",
+        "sym": "Nahoru"
+      }
+    },
+    {
+      "user": {
+        "pron": "dolú",
+        "sym": "Dolů"
+      }
+    },
+    {
+      "user": {
+        "pron": "doprava",
+        "sym": "Doprava"
+      }
+    },
+    {
+      "user": {
+        "pron": "doleva",
+        "sym": "Doleva"
+      }
+    },
+    {
+      "user": {
+        "pron": "vimaš",
+        "sym": "Vymaž"
+      }
+    },
+    {
+      "user": {
+        "pron": "dilít",
+        "sym": "Delete"
+      }
+    },
+    {
+      "user": {
+        "pron": "vezmi",
+        "sym": "Vezmi"
+      }
+    },
+    {
+      "user": {
+        "pron": "entr",
+        "sym": "Enter"
+      }
+    },
+    {
+      "user": {
+        "pron": "fuNkcejedna",
+        "sym": "Funkce1"
+      }
+    },
+    {
+      "user": {
+        "pron": "fuNkcedva",
+        "sym": "Funkce2"
+      }
+    },
+    {
+      "user": {
+        "pron": "fuNkcetŘi",
+        "sym": "Funkce3"
+      }
+    },
+    {
+      "user": {
+        "pron": "fuNkcečtiři",
+        "sym": "Funkce4"
+      }
+    },
+    {
+      "user": {
+        "pron": "fuNkcepjet",
+        "sym": "Funkce5"
+      }
+    },
+    {
+      "user": {
+        "pron": "fuNkcešest",
+        "sym": "Funkce6"
+      }
+    },
+    {
+      "user": {
+        "pron": "fuNkcesedum",
+        "sym": "Funkce7"
+      }
+    },
+    {
+      "user": {
+        "pron": "fuNkceosum",
+        "sym": "Funkce8"
+      }
+    },
+    {
+      "user": {
+        "pron": "fuNkcedevjet",
+        "sym": "Funkce9"
+      }
+    },
+    {
+      "user": {
+        "pron": "fuNkcedeset",
+        "sym": "Funkce10"
+      }
+    },
+    {
+      "user": {
+        "pron": "fuNkcejedenáct",
+        "sym": "Funkce11"
+      }
+    },
+    {
+      "user": {
+        "pron": "fuNkcedvanáct",
+        "sym": "Funkce12"
+      }
+    },
+    {
+      "user": {
+        "pron": "novířádek",
+        "sym": "Novýřádek"
+      }
+    },
+    {
+      "user": {
+        "pron": "zruš",
+        "sym": "Zruš"
+      }
+    },
+    {
+      "user": {
+        "pron": "spátki",
+        "sym": "Zpátky"
+      }
+    },
+    {
+      "user": {
+        "pron": "mínus",
+        "sym": "Mínus"
+      }
+    },
+    {
+      "user": {
+        "pron": "nula",
+        "sym": "Nula"
+      }
+    },
+    {
+      "user": {
+        "pron": "jedna",
+        "sym": "Jedna"
+      }
+    },
+    {
+      "user": {
+        "pron": "jednotka",
+        "sym": "Jednotka"
+      }
+    },
+    {
+      "user": {
+        "pron": "jeďňička",
+        "sym": "Jednička"
+      }
+    },
+    {
+      "user": {
+        "pron": "dva",
+        "sym": "Dva"
+      }
+    },
+    {
+      "user": {
+        "pron": "dvojka",
+        "sym": "Dvojka"
+      }
+    },
+    {
+      "user": {
+        "pron": "tŘi",
+        "sym": "Tři"
+      }
+    },
+    {
+      "user": {
+        "pron": "trojka",
+        "sym": "Trojka"
+      }
+    },
+    {
+      "user": {
+        "pron": "čtiři",
+        "sym": "Čtyři"
+      }
+    },
+    {
+      "user": {
+        "pron": "čtiŘka",
+        "sym": "Čtyřka"
+      }
+    },
+    {
+      "user": {
+        "pron": "pjet",
+        "sym": "Pět"
+      }
+    },
+    {
+      "user": {
+        "pron": "pjetka",
+        "sym": "Pětka"
+      }
+    },
+    {
+      "user": {
+        "pron": "šest",
+        "sym": "Šest"
+      }
+    },
+    {
+      "user": {
+        "pron": "šestka",
+        "sym": "Šestka"
+      }
+    },
+    {
+      "user": {
+        "pron": "sedum",
+        "sym": "Sedm"
+      }
+    },
+    {
+      "user": {
+        "pron": "sedma",
+        "sym": "Sedma"
+      }
+    },
+    {
+      "user": {
+        "pron": "sedmička",
+        "sym": "Sedmička"
+      }
+    },
+    {
+      "user": {
+        "pron": "osum",
+        "sym": "Osm"
+      }
+    },
+    {
+      "user": {
+        "pron": "osma",
+        "sym": "Osma"
+      }
+    },
+    {
+      "user": {
+        "pron": "osmička",
+        "sym": "Osmička"
+      }
+    },
+    {
+      "user": {
+        "pron": "devjet",
+        "sym": "Devět"
+      }
+    },
+    {
+      "user": {
+        "pron": "devítka",
+        "sym": "Devítka"
+      }
+    },
+    {
+      "user": {
+        "pron": "kapslok",
+        "sym": "CapsLock"
+      }
+    },
+    {
+      "user": {
+        "pron": "lomítko",
+        "sym": "Lomítko"
+      }
+    },
+    {
+      "user": {
+        "pron": "lomeno",
+        "sym": "Lomeno"
+      }
+    },
+    {
+      "user": {
+        "pron": "hvjezďička",
+        "sym": "Hvězdička"
+      }
+    },
+    {
+      "user": {
+        "pron": "krát",
+        "sym": "Krát"
+      }
+    },
+    {
+      "user": {
+        "pron": "plus",
+        "sym": "Plus"
+      }
+    },
+    {
+      "user": {
+        "pron": "mínus",
+        "sym": "Mínus"
+      }
     }
   ]
 }
