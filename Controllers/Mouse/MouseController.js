@@ -6,6 +6,8 @@ const AbstractController = require('./../AbstractController').AbstractController
 
 function MouseController() {
     this.prototype = new AbstractController();
+    this.prototype.returnCommand = "Myš";
+    this.prototype.pronunc = "miš";
 
     this.simpleClick = function () {
         this.prototype.robot.mouseClick();
@@ -61,25 +63,24 @@ function MouseController() {
         }
     };
 
-    this.prototype.returnCommand = "Myš";
-    this.prototype.possibleGroups = {};
-    this.prototype.possibleCommands = {
-        "Klikni": this.simpleClick.bind(this),
-        "Dvojklik": this.doubleClick.bind(this),
-        "Pravý klik": this.rightClick.bind(this),
-        "Doleva 50": this.moveMouseLeft.bind(this,50),
-        "Doleva 100": this.moveMouseLeft.bind(this,100),
-        "Doleva 500": this.moveMouseLeft.bind(this,500),
-        "Doprava 50": this.moveMouseRight.bind(this,50),
-        "Doprava 100": this.moveMouseRight.bind(this,100),
-        "Doprava 500": this.moveMouseRight.bind(this,500),
-        "Dolů 50": this.moveMouseDown.bind(this,50),
-        "Dolů 100": this.moveMouseDown.bind(this,100),
-        "Dolů 500": this.moveMouseDown.bind(this,500),
-        "Nahoru 50": this.moveMouseUp.bind(this,50),
-        "Nahoru 100": this.moveMouseUp.bind(this,100),
-        "Nahoru 500": this.moveMouseUp.bind(this,500)
-    };
+    this.prototype.possibleGroups = [];
+    this.prototype.possibleCommands = [
+        {word: "Klikni", operation: this.simpleClick.bind(this), pronunc: "klikňi"},
+        {word: "Dvojklik", operation: this.doubleClick.bind(this), pronunc: "dvojklik"},
+        {word: "Pravý klik", operation: this.rightClick.bind(this), pronunc: "pravíklik"},
+        {word: "Doleva 50", operation: this.moveMouseLeft.bind(this, 50), pronunc: "dolevapadesát"},
+        {word: "Doleva 100", operation: this.moveMouseLeft.bind(this, 100), pronunc: "dolevasto"},
+        {word: "Doleva 500", operation: this.moveMouseLeft.bind(this, 500), pronunc: "dolevapjetset"},
+        {word: "Doprava 50", operation: this.moveMouseRight.bind(this, 50), pronunc: "dopravapadesát"},
+        {word: "Doprava 100", operation: this.moveMouseRight.bind(this, 100), pronunc: "dopravasto"},
+        {word: "Doprava 500", operation: this.moveMouseRight.bind(this, 500), pronunc: "dopravapjetset"},
+        {word: "Dolů 50", operation: this.moveMouseDown.bind(this, 50), pronunc: "dolúpadesát"},
+        {word: "Dolů 100", operation: this.moveMouseDown.bind(this, 100), pronunc: "dolústo"},
+        {word: "Dolů 500", operation: this.moveMouseDown.bind(this, 500), pronunc: "dolúpjetset"},
+        {word: "Nahoru 50", operation: this.moveMouseUp.bind(this, 50), pronunc: "nahorupadesát"},
+        {word: "Nahoru 100", operation: this.moveMouseUp.bind(this, 100), pronunc: "nahorusto"},
+        {word: "Nahoru 500", operation: this.moveMouseUp.bind(this, 500), pronunc: "nahorupjetset"}
+    ];
 }
 
 

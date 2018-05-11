@@ -14,12 +14,13 @@ function MainController() {
 MainController.prototype = new AbstractController();
 
 MainController.prototype.returnCommand = "Základní skupina";
+MainController.prototype.pronunc = "základňískupina";
 
-MainController.prototype.possibleGroups = {
-    "Myš": new MouseController(),
-    "Klávesnice": new KeyboardController(),
-    "Okno": new WindowController()
-};
+MainController.prototype.possibleGroups = [
+    {word:"Myš",operation: new MouseController()},
+    {word:"Klávesnice",operation: new KeyboardController()},
+    {word:"Okno",operation: new WindowController()}
+];
 
 MainController.prototype.doOperation = function (operation) {
     let result = AbstractController.prototype.doOperation.call(this, operation);
@@ -35,7 +36,7 @@ MainController.prototype.updateGUI = function (result) {
     for (let i = 0; i < commands.length; i++) {
         let text = document.createElement("h5");
         text.style = "line-height: 0px;text-align: center; margin:0;padding:0;";
-        text.appendChild(document.createTextNode(commands[i]));
+        text.appendChild(document.createTextNode(commands[i]["word"]));
         element.appendChild(text);
 
         text.onclick = function (e) {
@@ -68,6 +69,7 @@ MainController.prototype.doOperationPromise = function (label) {
         } else {
             recall("Unable to do command: " + label + "\nProbably it is an active group or command from different group.");
         }
+        console.log(this.getLexicon())
     });
 };
 

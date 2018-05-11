@@ -4,6 +4,10 @@
 const AbstractController = require('./../AbstractController').AbstractController;
 
 function WindowController() {
+    this.prototype = new AbstractController();
+    this.prototype.returnCommand = "Okno";
+    this.prototype.pronunc = "okno";
+
     this.doShortcut = function () {
         let keys = arguments[0];
         for(let i = 0; i < keys.length; i++) {
@@ -14,16 +18,25 @@ function WindowController() {
         }
     };
 
-    this.prototype = new AbstractController();
-
-    this.prototype.returnCommand = "Okno";
-    this.prototype.possibleCommands = {
-        "Přepni na další": this.doShortcut.bind(this,["alt", "escape"]),
-        "Zavři okno": this.doShortcut.bind(this,["alt", "f4"]),
-        "Minimalizuj": this.doShortcut.bind(this,["command", "down"]),
-        "Maximalizuj": this.doShortcut.bind(this,["command", "up"])
-    };
-    this.prototype.possibleGroups = {};
+    this.prototype.possibleCommands = [
+        {   word:"Přepni na další",
+            operation: this.doShortcut.bind(this,["alt", "escape"]),
+            pronunc: "pŘepňinadalší"
+        },
+        {   word: "Zavři okno",
+            operation: this.doShortcut.bind(this,["alt", "f4"]),
+            pronunc: "zavřiokno"
+        },
+        {   word:"Minimalizuj",
+            operation: this.doShortcut.bind(this,["command", "down"]),
+            pronunc: "minimalizuj"
+        },
+        {   word:"Maximalizuj",
+            operation: this.doShortcut.bind(this,["command", "up"]),
+            pronunc: "maksimalizuj"
+        }
+    ];
+    this.prototype.possibleGroups = [];
 }
 
 module.exports = {

@@ -13,9 +13,7 @@ const config = config_1.config;
 const audioLogger = require('./audioLogger');
 const commandLogger = require('./commandLogger');
 const MainController = require('./Controllers/MainController').MainController;
-var controller = new MainController();
-
-const lexicon = require('./lexicon.json');
+let controller = new MainController();
 
 let lastTime = "";
 
@@ -56,7 +54,6 @@ class AudioSender {
         if (config_1.isDev()) {
             audioLogger.setSampleRate(format.sampleRate);
         }
-
         let _context = new engine.EngineContextStart({
             context: new engine.EngineContext({
                 audioFormat: new engine.AudioFormat({
@@ -70,7 +67,7 @@ class AudioSender {
                     withVAD: new engine.EngineContext.VADConfig(),
                     withLexicon: new engine.Lexicon({
                         "alpha": engine.Lexicon.Alphabet.LEXICON_ALPHABET_NONE,
-                        "items": lexicon.items
+                        "items": controller.getLexicon()["items"]
                     })
                 }),
                 audioChannel: AudioChannel.AUDIO_CHANNEL_LEFT,
