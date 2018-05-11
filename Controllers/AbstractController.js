@@ -7,11 +7,12 @@ function AbstractController() {
     this.possibleGroups = {};
     this.possibleCommands = {};
     this.returnCommand = null;
+    this.robot = require('robotjs');
 }
 
 AbstractController.prototype.getCurrentGroup = function () {
     if (this.controller != null) {
-        return this.controller.getCurrentGroup();
+        return this.controller.prototype.getCurrentGroup();
     } else {
         return this.returnCommand;
     }
@@ -19,7 +20,7 @@ AbstractController.prototype.getCurrentGroup = function () {
 
 AbstractController.prototype.doOperation = function (operation) {
     if (this.controller != null) {
-        let temp = this.controller.doOperation(operation);
+        let temp = this.controller.prototype.doOperation(operation);
         if (temp[0]) {
             return temp;
         }
@@ -55,7 +56,7 @@ AbstractController.prototype.getPossibilities = function () {
         poss = poss.concat(Object.getOwnPropertyNames(this.possibleGroups));
         return poss
     } else {
-        poss = this.controller.getPossibilities();
+        poss = this.controller.prototype.getPossibilities();
         poss = poss.concat(this.returnCommand);
         return poss;
     }
@@ -63,7 +64,7 @@ AbstractController.prototype.getPossibilities = function () {
 
 AbstractController.prototype.clearController = function () {
     if (this.controller != null) {
-        this.controller.clearController();
+        this.controller.prototype.clearController();
     }
     this.controller = null;
 };
