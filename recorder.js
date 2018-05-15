@@ -5,7 +5,7 @@ const audioSender_1 = require('./audioSender');
 var audioSender = null;
 const config = require('./config').config;
 
-var fr = new FileReader();
+var fr;
 var buffer = new Array();
 var isRecording = false;
 var isSpeech = false;
@@ -20,6 +20,7 @@ function addToBuffer(raw) {
 }
 
 const readBlobAsync = function (input) {
+    fr = new FileReader();
     return new Promise((resolve, reject) => {
         fr.onerror = () => {
             reject("Unable to parse file");
