@@ -1,7 +1,7 @@
 const fs = require('fs');
 const config = require('./config').config;
 
-var mean, std;
+let mean, std;
 
 function loadFiles() {
     let meanCharArray = fs.readFileSync(config.transformator.mean.path.get);

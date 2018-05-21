@@ -222,7 +222,7 @@ class AudioSender {
             this._isOpened = true;
             this._result = this._client.v2t(this.sendAudio());
             this._result.subscribe(e => {
-                console.log(e);
+                //console.log(e);
                 if (!e.lookahead) {
                     e.events.forEach(function (element) {
                         if (element.hasOwnProperty("label")) {
@@ -257,7 +257,7 @@ class AudioSender {
 
     sendAudio() {
         let fn = function () {
-            var chunk = this._buffer.shift();
+            let chunk = this._buffer.shift();
             if (typeof chunk === 'undefined' && !this._shouldSend) {
                 this._isOpened = false;
                 if (config_1.isDev()) {

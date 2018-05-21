@@ -10,9 +10,9 @@ const transformator = require('./transformator');
 const stopper = require('./stopper');
 stopper.setLength(40);
 
-var lastSample = 0;
-var empty = new Array(config.segmenter.overlap.get).fill(0);
-var isStop;
+let lastSample = 0;
+let empty = new Array(config.segmenter.overlap.get).fill(0);
+let isStop;
 
 function forwardNetwork(data) {
     let networkOutput = network.computeNetworkOutput(data);

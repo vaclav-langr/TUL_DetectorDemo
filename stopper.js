@@ -1,9 +1,9 @@
-var stopperStates = {
+let stopperStates = {
     sS: 0
 };
 
-var endState;
-var currentState = stopperStates.sS;
+let endState;
+let currentState = stopperStates.sS;
 
 function getKey(value) {
     return Object.keys(stopperStates).find(key => stopperStates[key] == value);

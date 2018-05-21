@@ -2,13 +2,13 @@ const config = require('./config').config;
 
 const FFT = require('fft.js');
 const resampler = require('audio-resampler');
-var linspace = require('linspace');
+let linspace = require('linspace');
 
 const f = new FFT(config.segmenter.windowsSizePower);
 const phasors = f.createComplexArray();
-var audioCtx = new AudioContext(); //Limited number of AudioContexts
-var index = 0;
-var filters, bufferNorm;
+let audioCtx = new AudioContext(); //Limited number of AudioContexts
+let index = 0;
+let filters, bufferNorm;
 
 function mel2hz(mel) {
     return 700 * (Math.exp(mel / 1127) - 1);
@@ -142,7 +142,7 @@ const computeMfbank = function (frame) {
     return melspec;
 };
 
-var buffer;
+let buffer;
 const resample = function (data, sampleRate, onCompleteFunction) {
     if (buffer == null) {
         buffer = audioCtx.createBuffer(1, data.length, sampleRate);

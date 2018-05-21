@@ -3,11 +3,11 @@ const config = require('./config').config;
 const extractor = require('sound-parameters-extractor');
 const network = require('./nnet');
 const ShiftBuffer = require('./ShiftBuffer').ShiftBuffer;
-var signalBuffer = new ShiftBuffer(
+let signalBuffer = new ShiftBuffer(
     config.segmenter.windowSize.get,
     config.segmenter.overlap.get,
     extractFeaturesStream);
-var sequenceBuffer = new ShiftBuffer(
+let sequenceBuffer = new ShiftBuffer(
     config.melfbank.channels.get * config.sequencer.size.get,
     config.melfbank.channels.get,
     forwardNetwork

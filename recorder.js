@@ -2,16 +2,15 @@ const recordRTC = require('recordrtc');
 const wav = require('node-wav');
 
 const audioSender_1 = require('./audioSender');
-var audioSender = null;
+let audioSender = null;
 const config = require('./config').config;
 
-var fr;
-var buffer = new Array();
-var isRecording = false;
-var isSpeech = false;
-var url = (window.URL || window.webkitURL);
-var recorder;
-
+let fr = new FileReader();
+let buffer = new Array();
+let isRecording = false;
+let isSpeech = false;
+let url = (window.URL || window.webkitURL);
+let recorder;
 function addToBuffer(raw) {
     if (buffer.length >= Math.floor(config.sequencer.size.get * 0.3)) {
         buffer.shift();
@@ -20,7 +19,6 @@ function addToBuffer(raw) {
 }
 
 const readBlobAsync = function (input) {
-    fr = new FileReader();
     return new Promise((resolve, reject) => {
         fr.onerror = () => {
             reject("Unable to parse file");
@@ -56,7 +54,8 @@ const startRecording = function (onComplete) {
             disableLogs: true,
             ondataavailable: function (blob) {
                 readBlobAsync(blob).then(onComplete, console.error);
-                url.revokeObjectURL(url.createObjectURL(blob));
+                //url.revokeObjectURL(url.createObjectURL(blob));
+                //blob = null;
             }
         });
         recorder.microphone = microphone;
@@ -101,7 +100,9 @@ const setSpeech = function (speech) {
             buffer = new Array();
         }
     } else {
-        audioSender.setSend(speech);
+        if(audioSender != null) {
+            audioSender.setSend(speech);
+        }
     }
     updateGUI(isSpeech);
 };

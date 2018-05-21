@@ -4,7 +4,7 @@
 
 const fs = require("fs");
 
-var _filename;
+let _filename;
 
 const setFilename = function (filename) {
     _filename = './log/' + filename + ".txt";

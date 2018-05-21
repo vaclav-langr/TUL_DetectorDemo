@@ -69,7 +69,7 @@ MainController.prototype.doOperationPromise = function (label) {
         } else {
             recall("Unable to do command: " + label + "\nProbably it is an active group or command from different group.");
         }
-        console.log(this.getLexicon())
+        //console.log(this.getLexicon())
     });
 };
 

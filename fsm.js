@@ -4,8 +4,8 @@ const States = {
     sF: 2
 };
 
-var currentState = States.sF;
-var buffer = new Array(21).fill(1);
+let currentState = States.sF;
+let buffer = new Array(21).fill(1);
 
 function getProbability() {
     let sum = buffer.reduce(function (a, b) {

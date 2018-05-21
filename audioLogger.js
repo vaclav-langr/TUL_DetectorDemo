@@ -1,9 +1,9 @@
 const fs = require("fs");
 const WavEncoder = require("wav-encoder");
 
-var _buffer = [];
-var _sampleRate;
-var _filename;
+let _buffer = [];
+let _sampleRate;
+let _filename;
 
 const setSampleRate = function (sampleRate) {
     _sampleRate = sampleRate;
