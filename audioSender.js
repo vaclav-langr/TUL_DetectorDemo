@@ -44,6 +44,7 @@ class AudioSender {
         for (const a of tkn.aud) {
             if (!a.startsWith(iss)) {
                 result = a.replace(/\/$/, "");
+                break;
             }
         }
         result = result + "/ws/v1/v2t";
